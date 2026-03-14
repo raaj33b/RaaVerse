@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RaastroDoc ∴ Astro Doctor</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;500;600&family=IM+Fell+English:ital@0;1&family=Share+Tech+Mono&display=swap');
+
+:root {
+  --void:#040008;
+  --deep:#08000f;
+  --nebula:#110020;
+  --card:#0d001a;
+  --cardb:#160029;
+  --gold:#c9a227;
+  --goldl:#f0c040;
+  --goldd:#8a6c10;
+  --violet:#7c3aed;
+  --violetl:#a78bfa;
+  --pink:#d946ef;
+  --cyan:#06b6d4;
+  --teal:#2dd4bf;
+  --red:#ef4444;
+  --green:#22c55e;
+  --wh:#f5f0ff;
+  --gr:#9ca3af;
+  --dim:#4b5563;
+  --border:rgba(201,162,39,0.25);
+  --glowg:rgba(201,162,39,0.15);
+  --glowv:rgba(124,58,237,0.2);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{min-height:100vh;background:var(--void);color:var(--wh);font-family:'Cinzel',serif;overflow-x:hidden;}
+
+/* ═══ COSMIC BACKGROUND ═══ */
+.cosmos{position:fixed;inset:0;z-index:0;overflow:hidden;}
+.cosmos::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 20%, rgba(124,58,237,0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(217,70,239,0.12) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 60% at 50% 50%, rgba(6,182,212,0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 100% 100% at 50% 100%, rgba(201,162,39,0.08) 0%, transparent 50%);
+}
+.stars{position:absolute;inset:0;}
+.star{position:absolute;border-radius:50%;animation:twinkle var(--d,3s) ease-in-out infinite;opacity:0;}
+@keyframes twinkle{0%,100%{opacity:0;}50%{opacity:var(--op,0.8);}}
+.nebula-ring{
+  position:absolute;top:50%;left:50%;
+  width:min(900px,130vw);height:min(900px,130vw);
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  border:1px solid rgba(201,162,39,0.05);
+  box-shadow:0 0 120px rgba(124,58,237,0.1),inset 0 0 120px rgba(217,70,239,0.05);
+  animation:pulse-ring 8s ease-in-out infinite;
+}
+@keyframes pulse-ring{0%,100%{opacity:0.4;transform:translate(-50%,-50%) scale(1);}50%{opacity:0.8;transform:translate(-50%,-50%) scale(1.02);}}
+
+/* ═══ LAYOUT ═══ */
+.page{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px 16px 60px;}
+
+/* ═══ HEADER ═══ */
+.hdr{text-align:center;padding:40px 0 30px;max-width:700px;}
+.logo-sigil{font-size:48px;line-height:1;margin-bottom:12px;filter:drop-shadow(0 0 16px rgba(201,162,39,0.6));}
+.logo-title{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,5vw,38px);font-weight:700;letter-spacing:4px;
+  background:linear-gradient(135deg,var(--goldd),var(--goldl),var(--gold),var(--violetl));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  text-shadow:none;filter:drop-shadow(0 0 20px rgba(201,162,39,0.4));
+  margin-bottom:6px;}
+.logo-sub{font-family:'IM Fell English',serif;font-style:italic;font-size:15px;color:var(--violetl);letter-spacing:3px;opacity:0.9;}
+.sep-line{width:240px;height:1px;background:linear-gradient(to right,transparent,var(--gold),transparent);margin:18px auto;opacity:0.5;}
+
+/* ═══ MAIN CARD ═══ */
+.card{
+  background:linear-gradient(145deg,var(--card),var(--cardb));
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:clamp(24px,4vw,40px);
+  width:100%;max-width:640px;
+  box-shadow:0 0 40px rgba(124,58,237,0.2),0 0 80px rgba(201,162,39,0.08),inset 0 1px 0 rgba(201,162,39,0.15);
+  position:relative;overflow:hidden;
+}
+.card::before{
+  content:'';position:absolute;top:-1px;left:20%;right:20%;height:1px;
+  background:linear-gradient(to right,transparent,var(--goldl),transparent);
+}
+.card::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:120px;
+  background:radial-gradient(ellipse at 50% 100%,rgba(124,58,237,0.1),transparent);
+  pointer-events:none;
+}
+
+.section-title{
+  font-family:'Cinzel Decorative',serif;
+  font-size:11px;letter-spacing:4px;color:var(--gold);
+  text-transform:uppercase;margin-bottom:20px;
+  display:flex;align-items:center;gap:12px;
+}
+.section-title::before,.section-title::after{content:'';flex:1;height:1px;background:linear-gradient(to right,transparent,rgba(201,162,39,0.3));}
+.section-title::after{background:linear-gradient(to left,transparent,rgba(201,162,39,0.3));}
+
+/* ═══ FORM FIELDS ═══ */
+.field-group{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.field-group.full{grid-template-columns:1fr;}
+.field{position:relative;}
+.field label{
+  display:block;font-size:10px;letter-spacing:3px;color:var(--violetl);
+  text-transform:uppercase;margin-bottom:8px;font-family:'Cinzel',serif;
+}
+.field input,.field select{
+  width:100%;
+  background:rgba(0,0,0,0.4);
+  border:1px solid rgba(124,58,237,0.3);
+  border-radius:8px;
+  color:var(--wh);
+  font-family:'Share Tech Mono',monospace;
+  font-size:14px;
+  padding:12px 14px;
+  outline:none;
+  transition:border-color .2s,box-shadow .2s;
+}
+.field input:focus,.field select:focus{
+  border-color:var(--gold);
+  box-shadow:0 0 0 3px rgba(201,162,39,0.12),0 0 16px rgba(201,162,39,0.1);
+}
+.field input::placeholder{color:var(--dim);}
+.field select option{background:#1a0030;color:var(--wh);}
+.field .icon{
+  position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  font-size:16px;margin-top:10px;opacity:0.5;pointer-events:none;
+}
+
+/* TIME FIELD */
+.time-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.time-row .field label{font-size:9px;}
+
+/* ═══ ASTRO MAGIC BUTTON ═══ */
+.btn-magic{
+  width:100%;margin-top:24px;padding:16px;
+  background:linear-gradient(135deg,rgba(124,58,237,0.3),rgba(201,162,39,0.2));
+  border:1px solid var(--gold);
+  border-radius:12px;
+  color:var(--goldl);
+  font-family:'Cinzel Decorative',serif;
+  font-size:14px;letter-spacing:3px;
+  cursor:pointer;
+  position:relative;overflow:hidden;
+  transition:all .3s;
+  text-shadow:0 0 12px rgba(201,162,39,0.6);
+  box-shadow:0 0 20px rgba(201,162,39,0.1);
+}
+.btn-magic::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(124,58,237,0.2),rgba(201,162,39,0.15));
+  opacity:0;transition:opacity .3s;
+}
+.btn-magic:hover::before{opacity:1;}
+.btn-magic:hover{box-shadow:0 0 30px rgba(201,162,39,0.25),0 0 60px rgba(124,58,237,0.15);}
+.btn-magic .bm-icon{font-size:20px;vertical-align:middle;margin-right:10px;}
+
+/* ═══ PASSWORD MODAL ═══ */
+.modal-bg{
+  position:fixed;inset:0;z-index:100;
+  background:rgba(0,0,0,0.85);
+  backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .3s;
+}
+.modal-bg.open{opacity:1;pointer-events:all;}
+.modal{
+  background:linear-gradient(145deg,#0f0020,#180035);
+  border:1px solid rgba(201,162,39,0.4);
+  border-radius:20px;
+  padding:36px 40px;
+  width:min(420px,92vw);
+  text-align:center;
+  box-shadow:0 0 60px rgba(124,58,237,0.3),0 0 120px rgba(201,162,39,0.1);
+  position:relative;
+}
+.modal::before{content:'';position:absolute;top:-1px;left:30%;right:30%;height:1px;background:linear-gradient(to right,transparent,var(--goldl),transparent);}
+.modal-sigil{font-size:40px;margin-bottom:12px;filter:drop-shadow(0 0 12px rgba(201,162,39,0.5));}
+.modal-title{font-family:'Cinzel Decorative',serif;font-size:16px;color:var(--gold);letter-spacing:2px;margin-bottom:4px;}
+.modal-sub{font-family:'IM Fell English',serif;font-style:italic;font-size:13px;color:var(--gr);margin-bottom:24px;}
+.modal-inp{
+  width:100%;background:rgba(0,0,0,0.5);
+  border:1px solid rgba(124,58,237,0.4);
+  border-radius:8px;
+  color:var(--wh);font-family:'Share Tech Mono',monospace;font-size:16px;
+  padding:13px 16px;text-align:center;letter-spacing:4px;
+  outline:none;margin-bottom:14px;
+  transition:border-color .2s;
+}
+.modal-inp:focus{border-color:var(--gold);}
+.modal-err{font-size:12px;color:var(--red);margin-bottom:10px;min-height:18px;font-family:'Share Tech Mono',monospace;letter-spacing:1px;}
+.modal-btn{
+  width:100%;padding:12px;
+  background:linear-gradient(135deg,var(--violet),rgba(201,162,39,0.3));
+  border:1px solid rgba(201,162,39,0.4);
+  border-radius:8px;
+  color:var(--goldl);font-family:'Cinzel',serif;font-size:13px;letter-spacing:3px;
+  cursor:pointer;transition:all .2s;
+}
+.modal-btn:hover{box-shadow:0 0 20px rgba(201,162,39,0.2);}
+.modal-cancel{margin-top:10px;font-size:12px;color:var(--dim);cursor:pointer;letter-spacing:2px;}
+.modal-cancel:hover{color:var(--gr);}
+
+/* ═══ RESULTS PANEL ═══ */
+#results{display:none;margin-top:32px;}
+.res-hdr{
+  font-family:'Cinzel Decorative',serif;font-size:12px;letter-spacing:4px;
+  color:var(--gold);text-align:center;margin-bottom:24px;
+  text-shadow:0 0 12px rgba(201,162,39,0.4);
+}
+.res-card{
+  background:rgba(0,0,0,0.35);
+  border:1px solid rgba(124,58,237,0.25);
+  border-radius:12px;padding:20px;margin-bottom:16px;
+  position:relative;
+}
+.res-card::before{content:'';position:absolute;top:-1px;left:15%;right:15%;height:1px;background:linear-gradient(to right,transparent,rgba(201,162,39,0.3),transparent);}
+.res-card h3{
+  font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;
+  color:var(--violetl);text-transform:uppercase;margin-bottom:14px;
+  display:flex;align-items:center;gap:8px;
+}
+.res-card h3 .ico{font-size:16px;}
+.res-row{display:flex;gap:10px;margin-bottom:8px;font-size:13px;line-height:1.6;font-family:'Share Tech Mono',monospace;}
+.res-key{min-width:160px;color:var(--gold);flex-shrink:0;font-size:12px;}
+.res-val{color:#c4b8d4;flex:1;}
+.res-val .hl{color:var(--goldl);font-weight:bold;}
+.res-val .warn{color:#f97316;}
+.res-val .ok{color:var(--teal);}
+.res-val .crit{color:var(--red);}
+.res-val .viol{color:var(--violetl);}
+.res-pill{
+  display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;margin:2px 3px;
+  font-family:'Share Tech Mono',monospace;
+}
+.pill-g{background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.3);color:var(--green);}
+.pill-v{background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);color:var(--violetl);}
+.pill-r{background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);color:var(--red);}
+.pill-o{background:rgba(249,115,22,0.15);border:1px solid rgba(249,115,22,0.3);color:#f97316;}
+.pill-gold{background:rgba(201,162,39,0.15);border:1px solid rgba(201,162,39,0.3);color:var(--gold);}
+.dasha-bar{
+  display:flex;align-items:center;gap:10px;margin-bottom:6px;font-size:12px;
+  font-family:'Share Tech Mono',monospace;
+}
+.dasha-label{min-width:90px;color:var(--gr);}
+.dasha-track{flex:1;height:6px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;}
+.dasha-fill{height:100%;border-radius:3px;background:linear-gradient(to right,var(--violet),var(--goldl));}
+.dasha-active{color:var(--goldl);font-size:11px;}
+
+/* ═══ RAADIO SECTION ═══ */
+#raadio{
+  display:none;text-align:center;padding:40px 20px;
+  background:linear-gradient(145deg,#000010,#001020);
+  border:1px solid rgba(6,182,212,0.2);
+  border-radius:16px;margin-top:24px;
+  box-shadow:0 0 40px rgba(6,182,212,0.1);
+}
+.radio-title{
+  font-family:'Cinzel Decorative',serif;font-size:20px;letter-spacing:4px;
+  background:linear-gradient(135deg,var(--cyan),var(--teal));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:4px;
+}
+.radio-sub{font-family:'IM Fell English',serif;font-style:italic;font-size:13px;color:var(--gr);margin-bottom:24px;}
+.radio-player{
+  background:rgba(0,0,0,0.4);border:1px solid rgba(6,182,212,0.2);
+  border-radius:12px;padding:20px 24px;margin-bottom:16px;
+  display:flex;align-items:center;gap:16px;cursor:pointer;
+  transition:all .2s;
+}
+.radio-player:hover{border-color:rgba(6,182,212,0.5);background:rgba(6,182,212,0.05);}
+.radio-player.playing{border-color:var(--cyan);box-shadow:0 0 20px rgba(6,182,212,0.2);}
+.rp-icon{font-size:28px;flex-shrink:0;}
+.rp-info{text-align:left;flex:1;}
+.rp-name{font-family:'Cinzel',serif;font-size:14px;color:var(--cyan);letter-spacing:1px;}
+.rp-desc{font-size:11px;color:var(--gr);font-family:'Share Tech Mono',monospace;margin-top:2px;}
+.rp-freq{font-size:10px;color:var(--teal);font-family:'Share Tech Mono',monospace;margin-top:3px;}
+.rp-toggle{font-size:22px;transition:.2s;}
+.vis{display:flex;gap:3px;align-items:flex-end;height:24px;margin-top:12px;}
+.vis-bar{width:4px;border-radius:2px;background:linear-gradient(to top,var(--cyan),var(--violet));animation:vis var(--vd,0.4s) ease-in-out infinite alternate;}
+.vis-bar:nth-child(even){animation-delay:.1s;}
+@keyframes vis{0%{height:4px;}100%{height:var(--vh,20px);}}
+.vis.paused .vis-bar{animation:none;height:4px;}
+.radio-msg{font-family:'IM Fell English',serif;font-style:italic;font-size:13px;color:#f97316;margin-bottom:16px;padding:10px 16px;background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.2);border-radius:8px;}
+.radio-back{margin-top:20px;font-size:11px;letter-spacing:3px;color:var(--dim);cursor:pointer;}
+.radio-back:hover{color:var(--gr);}
+
+/* ═══ ROTATING SYMBOL ═══ */
+.spin-symbol{
+  position:absolute;top:20px;right:20px;
+  font-size:24px;opacity:0.15;
+  animation:spin 20s linear infinite;
+}
+@keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+
+/* ═══ FOOTER ═══ */
+.footer{margin-top:40px;text-align:center;font-size:10px;letter-spacing:3px;color:var(--dim);font-family:'Share Tech Mono',monospace;}
+</style>
+</head>
+<body>
+
+<!-- COSMIC BG -->
+<div class="cosmos">
+  <div class="stars" id="stars"></div>
+  <div class="nebula-ring"></div>
+</div>
+
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="hdr">
+    <div class="logo-sigil">☿</div>
+    <div class="logo-title">RaastroDoc</div>
+    <div class="logo-sub">∴ The Astro Physician · Read the Celestial Code ∴</div>
+    <div class="sep-line"></div>
+    <div style="font-family:'IM Fell English',serif;font-style:italic;font-size:13px;color:var(--gr);line-height:1.7;">
+      Enter your birth data below. The cosmos holds your complete medical record —<br>every dasha, every yoga, every karmic remedy — written at your first breath.
+    </div>
+  </div>
+
+  <!-- MAIN CARD -->
+  <div class="card" id="input-card">
+    <div class="spin-symbol">⚙</div>
+
+    <div class="section-title">∴ Birth Data Entry ∴</div>
+
+    <!-- DATE OF BIRTH -->
+    <div class="field-group full">
+      <div class="field">
+        <label>Date of Birth</label>
+        <input type="date" id="dob" placeholder="DD / MM / YYYY">
+        <span class="icon">📅</span>
+      </div>
+    </div>
+
+    <!-- PLACE + TIME -->
+    <div class="field-group">
+      <div class="field">
+        <label>Place of Birth</label>
+        <input type="text" id="pob" placeholder="e.g. Dhaka, Bangladesh">
+        <span class="icon">🌍</span>
+      </div>
+      <div class="field">
+        <label>Time of Birth</label>
+        <input type="time" id="tob" placeholder="HH:MM">
+        <span class="icon">🕐</span>
+      </div>
+    </div>
+
+    <!-- ADDITIONAL FIELDS -->
+    <div class="field-group">
+      <div class="field">
+        <label>Gender</label>
+        <select id="gender">
+          <option value="">Select...</option>
+          <option value="M">Male</option>
+          <option value="F">Female</option>
+          <option value="O">Other</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Focus Area</label>
+        <select id="focus">
+          <option value="general">General Reading</option>
+          <option value="career">Career & Wealth</option>
+          <option value="love">Love & Relationships</option>
+          <option value="health">Health & Wellbeing</option>
+          <option value="spiritual">Spiritual Path</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- VALIDATION MSG -->
+    <div id="form-err" style="font-size:12px;color:var(--red);margin-top:8px;min-height:16px;font-family:'Share Tech Mono',monospace;letter-spacing:1px;"></div>
+
+    <!-- ASTRO MAGIC BUTTON -->
+    <button class="btn-magic" onclick="triggerMagic()">
+      <span class="bm-icon">✦</span> ACTIVATE ASTRO MAGIC <span class="bm-icon">✦</span>
+    </button>
+
+  </div><!-- /card -->
+
+  <!-- RESULTS PANEL -->
+  <div id="results" style="width:100%;max-width:640px;"></div>
+
+  <!-- RAADIO SECTION -->
+  <div id="raadio" style="width:100%;max-width:640px;">
+    <div class="radio-title">∴ RaaDio ∴</div>
+    <div class="radio-sub">The frequencies your soul needs right now</div>
+    <div class="radio-msg" id="radio-msg">⚠ Incorrect access code. The cosmic portal remains sealed.<br>Meanwhile, let the frequencies guide you...</div>
+
+    <div class="vis" id="vis1">
+      <div class="vis-bar" style="--vd:.3s;--vh:18px"></div>
+      <div class="vis-bar" style="--vd:.5s;--vh:14px"></div>
+      <div class="vis-bar" style="--vd:.4s;--vh:22px"></div>
+      <div class="vis-bar" style="--vd:.6s;--vh:10px"></div>
+      <div class="vis-bar" style="--vd:.35s;--vh:20px"></div>
+      <div class="vis-bar" style="--vd:.45s;--vh:16px"></div>
+      <div class="vis-bar" style="--vd:.55s;--vh:24px"></div>
+      <div class="vis-bar" style="--vd:.38s;--vh:12px"></div>
+    </div>
+
+    <div id="radio-stations"></div>
+
+    <div class="radio-back" onclick="backToForm()">↩ Return to Birth Data Entry</div>
+  </div>
+
+  <div class="footer">∴ RaastroDoc · Vedic-Chaldean Synthesis Engine · Sound. Frequency. Destiny. ∴</div>
+</div>
+
+<!-- PASSWORD MODAL -->
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <div class="modal-sigil">🔮</div>
+    <div class="modal-title">Sacred Access Code</div>
+    <div class="modal-sub">Enter the payment cipher to unlock your celestial analysis</div>
+    <input type="password" class="modal-inp" id="modal-inp" placeholder="∴ · · · · · · ∴" maxlength="20" onkeydown="mkey(event)">
+    <div class="modal-err" id="modal-err"></div>
+    <button class="modal-btn" onclick="submitCode()">✦ UNLOCK THE COSMOS ✦</button>
+    <div class="modal-cancel" onclick="closeModal()">↩ cancel</div>
+  </div>
+</div>
+
+<script>
+/* ═══ STAR FIELD ═══ */
+(function(){
+  const s = document.getElementById('stars');
+  for(let i=0;i<200;i++){
+    const d = document.createElement('div');
+    d.className='star';
+    const size = Math.random()*2.5+0.5;
+    d.style.cssText=`width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;background:${Math.random()>0.7?'#c9a227':Math.random()>0.5?'#a78bfa':'#fff'};--d:${(Math.random()*4+2).toFixed(1)}s;--op:${(Math.random()*0.7+0.3).toFixed(1)};animation-delay:${(Math.random()*5).toFixed(1)}s;`;
+    s.appendChild(d);
+  }
+})();
+
+/* ═══ RADIO STATIONS ═══ */
+const STATIONS = [
+  {name:'432Hz Cosmic Flow',desc:'Deep healing frequency — theta waves, Tibetan bowls, sacred geometry',freq:'432 Hz · Healing',url:'https://www.youtube.com/embed/videoseries?list=PLQ2NJPEf7lnNGqWbzAmBOv4sSCJHOmZ-O&autoplay=1&loop=1',icon:'🎵'},
+  {name:'Vedic Chant Radio',desc:'Shloka recitation, mantra loops, Sanskrit frequency bath',freq:'OM · 7.83 Hz · Schumann',url:'https://www.youtube.com/embed/videoseries?list=PLQ2NJPEf7lnNGqWbzAmBOv4sSCJHOmZ-O&autoplay=1',icon:'🕉️'},
+  {name:'Dark Ambient Cosmos',desc:'Space drone, binaural beats, planetary frequency overlay',freq:'Binaural · Delta · 2-4 Hz',url:'https://www.youtube.com/embed/videoseries?list=PLQ2NJPEf7lnNGqWbzAmBOv4sSCJHOmZ-O&autoplay=1',icon:'🌌'},
+  {name:'Raaga Night Radio',desc:'Classical Indian ragas for night hours — Yaman, Bhairavi, Darbari',freq:'Classical · Evening Raga',url:'https://www.youtube.com/embed/videoseries?list=PLQ2NJPEf7lnNGqWbzAmBOv4sSCJHOmZ-O&autoplay=1',icon:'🪘'},
+];
+
+let currentAudio = null;
+let playingIdx = -1;
+
+function buildRadio(){
+  const el = document.getElementById('radio-stations');
+  el.innerHTML = STATIONS.map((s,i)=>`
+    <div class="radio-player" id="rp-${i}" onclick="toggleStation(${i})">
+      <div class="rp-icon">${s.icon}</div>
+      <div class="rp-info">
+        <div class="rp-name">${s.name}</div>
+        <div class="rp-desc">${s.desc}</div>
+        <div class="rp-freq">${s.freq}</div>
+      </div>
+      <div class="rp-toggle" id="rt-${i}">▶</div>
+    </div>
+  `).join('');
+}
+
+function toggleStation(i){
+  if(playingIdx===i){
+    // stop
+    if(currentAudio) currentAudio.pause();
+    document.getElementById('rp-'+i).classList.remove('playing');
+    document.getElementById('rt-'+i).textContent='▶';
+    document.getElementById('vis1').classList.add('paused');
+    playingIdx=-1;
+  } else {
+    // stop prev
+    if(playingIdx>=0){
+      document.getElementById('rp-'+playingIdx).classList.remove('playing');
+      document.getElementById('rt-'+playingIdx).textContent='▶';
+    }
+    // play new — use Web Audio API oscillator as placeholder
+    playingIdx=i;
+    document.getElementById('rp-'+i).classList.add('playing');
+    document.getElementById('rt-'+i).textContent='⏸';
+    document.getElementById('vis1').classList.remove('paused');
+    playFrequency(i);
+  }
+}
+
+function playFrequency(i){
+  if(currentAudio){ currentAudio.close(); }
+  const freqs=[432,528,174,741];
+  const ctx = new (window.AudioContext||window.webkitAudioContext)();
+  currentAudio = ctx;
+  const osc1 = ctx.createOscillator();
+  const osc2 = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc1.type='sine';osc1.frequency.value=freqs[i];
+  osc2.type='sine';osc2.frequency.value=freqs[i]*1.5;
+  gain.gain.value=0.04;
+  osc1.connect(gain);osc2.connect(gain);
+  gain.connect(ctx.destination);
+  osc1.start();osc2.start();
+}
+
+buildRadio();
+
+/* ═══ FORM + MODAL ═══ */
+function triggerMagic(){
+  const dob=document.getElementById('dob').value;
+  const pob=document.getElementById('pob').value.trim();
+  const tob=document.getElementById('tob').value;
+  const err=document.getElementById('form-err');
+
+  if(!dob){err.textContent='⚠ Date of birth is required.';return;}
+  if(!pob){err.textContent='⚠ Place of birth is required.';return;}
+  if(!tob){err.textContent='⚠ Time of birth is required.';return;}
+  err.textContent='';
+  openModal();
+}
+
+function openModal(){
+  document.getElementById('modal').classList.add('open');
+  document.getElementById('modal-inp').value='';
+  document.getElementById('modal-err').textContent='';
+  setTimeout(()=>document.getElementById('modal-inp').focus(),100);
+}
+
+function closeModal(){
+  document.getElementById('modal').classList.remove('open');
+}
+
+function mkey(e){ if(e.key==='Enter') submitCode(); }
+
+let attempts=0;
+function submitCode(){
+  const code=document.getElementById('modal-inp').value.trim();
+  const err=document.getElementById('modal-err');
+  if(!code){err.textContent='Please enter the access code.';return;}
+
+  if(code==='paid1313'){
+    closeModal();
+    runAnalysis();
+  } else {
+    attempts++;
+    err.textContent=`✗ Invalid cipher. The portal rejects this frequency.`;
+    document.getElementById('modal-inp').value='';
+    document.getElementById('modal-inp').focus();
+    // After 2 wrong attempts → raadio
+    if(attempts>=2){
+      setTimeout(()=>{
+        closeModal();
+        showRadio();
+      },800);
+    }
+  }
+}
+
+function showRadio(){
+  document.getElementById('input-card').style.display='none';
+  document.getElementById('results').style.display='none';
+  document.getElementById('raadio').style.display='block';
+  document.querySelector('.hdr').style.display='none';
+  window.scrollTo(0,0);
+}
+
+function backToForm(){
+  // stop audio
+  if(currentAudio){ try{currentAudio.close();}catch(e){} }
+  playingIdx=-1;
+  document.getElementById('vis1').classList.add('paused');
+  document.getElementById('input-card').style.display='block';
+  document.getElementById('raadio').style.display='none';
+  document.querySelector('.hdr').style.display='block';
+  attempts=0;
+}
+
+/* ═══ ASTRO CALCULATION ENGINE ═══ */
+function runAnalysis(){
+  const dob = document.getElementById('dob').value;
+  const pob = document.getElementById('pob').value.trim();
+  const tob = document.getElementById('tob').value;
+  const gender = document.getElementById('gender').value;
+  const focus = document.getElementById('focus').value;
+
+  const d = new Date(dob);
+  const day=d.getDate(), month=d.getMonth()+1, year=d.getFullYear();
+  const tod=tob||'00:00';
+  const [hh,mm]=tod.split(':').map(Number);
+
+  // Calculations
+  const chaldean = calcChaldean(pob.split(',')[0].trim().toUpperCase()||'SEEKER');
+  const lifePathRaw = day+month+(year%100);
+  let lifePath = reduce(lifePathRaw);
+  const personalYear = reduce(day+month+(new Date().getFullYear()%100));
+  const dayNum = reduce(day);
+  const exNum = chaldean;
+
+  // Sun sign
+  const sunSign = getSunSign(month,day);
+  const moonSign = getMoonSign(day,month,year);
+  const lagna = getLagna(hh,mm,month);
+  const nakshatra = getNakshatra(day,month);
+  const ayanamsaYear = getAyanamsaYear(year);
+  const dasha = getDasha(day,month,year,hh);
+  const yogas = getYogas(day,month,year,lagna);
+  const remedies = getRemedies(lifePath,dayNum,sunSign,focus);
+  const timing = getTiming(personalYear,dasha);
+
+  const displayDOB = `${String(day).padStart(2,'0')} / ${String(month).padStart(2,'0')} / ${year}`;
+  const displayTOB = `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}`;
+
+  document.getElementById('input-card').style.display='none';
+
+  const res = document.getElementById('results');
+  res.style.display='block';
+  res.innerHTML = `
+    <div class="res-hdr">∴ CELESTIAL ANALYSIS COMPLETE ∴</div>
+
+    <!-- BIRTH PROFILE -->
+    <div class="res-card">
+      <h3><span class="ico">🌟</span> Birth Profile</h3>
+      <div class="res-row"><span class="res-key">Date of Birth</span><span class="res-val"><span class="hl">${displayDOB}</span></span></div>
+      <div class="res-row"><span class="res-key">Time of Birth</span><span class="res-val"><span class="hl">${displayTOB}</span></span></div>
+      <div class="res-row"><span class="res-key">Place</span><span class="res-val">${pob}</span></div>
+      <div class="res-row"><span class="res-key">Focus Area</span><span class="res-val"><span class="viol">${focus.charAt(0).toUpperCase()+focus.slice(1)}</span></span></div>
+    </div>
+
+    <!-- NUMEROLOGY -->
+    <div class="res-card">
+      <h3><span class="ico">🔢</span> Chaldean Numerology</h3>
+      <div class="res-row"><span class="res-key">Life Path Number</span><span class="res-val"><span class="hl">${lifePath}</span> — ${getLifePathMeaning(lifePath)}</span></div>
+      <div class="res-row"><span class="res-key">Day Number</span><span class="res-val"><span class="hl">${dayNum}</span> — ${getDayMeaning(dayNum)}</span></div>
+      <div class="res-row"><span class="res-key">Expression</span><span class="res-val"><span class="hl">${exNum}</span> — ${getExMeaning(exNum)}</span></div>
+      <div class="res-row"><span class="res-key">Personal Year ${new Date().getFullYear()}</span><span class="res-val"><span class="ok">${personalYear}</span> — ${getPYMeaning(personalYear)}</span></div>
+      <div class="res-row"><span class="res-key">Compound Day</span><span class="res-val"><span class="viol">${day}</span> — ${getCompoundMeaning(day)}</span></div>
+    </div>
+
+    <!-- VEDIC CHART -->
+    <div class="res-card">
+      <h3><span class="ico">🔮</span> Vedic Chart — Key Positions</h3>
+      <div class="res-row"><span class="res-key">Sun Sign</span><span class="res-val"><span class="hl">${sunSign.name}</span> — ${sunSign.desc}</span></div>
+      <div class="res-row"><span class="res-key">Estimated Moon</span><span class="res-val"><span class="hl">${moonSign}</span></span></div>
+      <div class="res-row"><span class="res-key">Rising (Lagna)</span><span class="res-val"><span class="viol">${lagna}</span> (birth time based)</span></div>
+      <div class="res-row"><span class="res-key">Birth Nakshatra</span><span class="res-val"><span class="hl">${nakshatra.name}</span> — ${nakshatra.desc}</span></div>
+      <div class="res-row"><span class="res-key">Ayanamsa Year</span><span class="res-val">${ayanamsaYear}° (Lahiri sidereal offset)</span></div>
+    </div>
+
+    <!-- DASHA -->
+    <div class="res-card">
+      <h3><span class="ico">🪐</span> Dasha Analysis (Vimshottari)</h3>
+      <div class="res-row"><span class="res-key">Current Mahadasha</span><span class="res-val"><span class="hl">${dasha.current}</span> — ${dasha.currentDesc}</span></div>
+      <div class="res-row"><span class="res-key">Antardasha</span><span class="res-val"><span class="ok">${dasha.sub}</span> — ${dasha.subDesc}</span></div>
+      <div class="res-row"><span class="res-key">Next Mahadasha</span><span class="res-val"><span class="warn">${dasha.next}</span> — begins approx. ${dasha.nextYear}</span></div>
+      <div class="res-row"><span class="res-key">Phase Theme</span><span class="res-val">${dasha.theme}</span></div>
+      <div style="margin-top:12px;font-size:11px;color:var(--gr);font-family:'Share Tech Mono',monospace;letter-spacing:1px;">
+        <div style="margin-bottom:8px;">DASHA INTENSITY MAP</div>
+        ${dasha.map.map(d=>`<div class="dasha-bar"><span class="dasha-label">${d.p}</span><div class="dasha-track"><div class="dasha-fill" style="width:${d.w}%"></div></div><span class="dasha-active" style="opacity:${d.active?1:0.3}">${d.active?'← NOW':''}</span></div>`).join('')}
+      </div>
+    </div>
+
+    <!-- SPECIAL YOGAS -->
+    <div class="res-card">
+      <h3><span class="ico">✨</span> Special Yogas Detected</h3>
+      ${yogas.map(y=>`<div class="res-row"><span class="res-key">${y.name}</span><span class="res-val">${y.desc}</span></div>`).join('')}
+    </div>
+
+    <!-- TIMING WINDOWS -->
+    <div class="res-card">
+      <h3><span class="ico">📅</span> Timing Windows</h3>
+      ${timing.map(t=>`<div class="res-row"><span class="res-key">${t.period}</span><span class="res-val <span class="${t.type}">${t.label}</span> — ${t.desc}</span></div>`).join('')}
+    </div>
+
+    <!-- REMEDIES -->
+    <div class="res-card">
+      <h3><span class="ico">💎</span> Prescribed Remedies</h3>
+      <div class="res-row"><span class="res-key">Primary Stone</span><span class="res-val"><span class="hl">${remedies.stone}</span> — ${remedies.stoneDesc}</span></div>
+      <div class="res-row"><span class="res-key">Planetary Day</span><span class="res-val"><span class="ok">${remedies.day}</span> — honor this day weekly for activation</span></div>
+      <div class="res-row"><span class="res-key">Mantra Frequency</span><span class="res-val"><span class="viol">${remedies.mantra}</span></span></div>
+      <div class="res-row"><span class="res-key">Sound Frequency</span><span class="res-val"><span class="hl">${remedies.freq} Hz</span> — ${remedies.freqDesc}</span></div>
+      <div class="res-row"><span class="res-key">Meditation</span><span class="res-val">${remedies.meditation}</span></div>
+      <div style="margin-top:14px;">
+        ${remedies.tags.map(t=>`<span class="res-pill ${t.cls}">${t.label}</span>`).join('')}
+      </div>
+    </div>
+
+    <!-- PATTERN SUMMARY -->
+    <div class="res-card">
+      <h3><span class="ico">📜</span> Cosmic Pattern Summary</h3>
+      <div style="font-family:'IM Fell English',serif;font-style:italic;font-size:14px;line-height:1.9;color:#c4b8d4;padding:4px 0;">
+        ${getPatternSummary(lifePath,dayNum,sunSign,dasha,focus)}
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:24px;">
+      <button onclick="resetForm()" style="background:transparent;border:1px solid rgba(201,162,39,0.3);color:var(--gold);font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;padding:12px 28px;border-radius:8px;cursor:pointer;">
+        ↩ NEW READING
+      </button>
+    </div>
+  `;
+
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function resetForm(){
+  document.getElementById('results').style.display='none';
+  document.getElementById('input-card').style.display='block';
+  attempts=0;
+}
+
+/* ═══ CALCULATION HELPERS ═══ */
+function reduce(n){
+  while(n>9&&n!==11&&n!==22&&n!==33){
+    n=String(n).split('').reduce((a,b)=>a+parseInt(b),0);
+  }
+  return n;
+}
+
+const CHALDEAN_MAP={A:1,B:2,C:3,D:4,E:5,F:8,G:3,H:5,I:1,J:1,K:2,L:3,M:4,N:5,O:7,P:8,Q:1,R:2,S:3,T:4,U:6,V:6,W:6,X:5,Y:1,Z:7};
+function calcChaldean(name){
+  const val=name.replace(/[^A-Z]/g,'').split('').reduce((a,c)=>a+(CHALDEAN_MAP[c]||0),0);
+  return reduce(val)||1;
+}
+
+const SIGNS=[
+  {name:'Capricorn',desc:'Discipline, ambition, late bloom. Saturn rules — compound returns on patience.'},
+  {name:'Aquarius',desc:'Innovation, collective wisdom, humanitarian drive. Unconventional paths.'},
+  {name:'Pisces',desc:'Deep intuition, mystical access, fluid creativity. Ketu-like dissolution.'},
+  {name:'Aries',desc:'Pioneering energy, Mars fire, fast initiation. Action precedes planning.'},
+  {name:'Taurus',desc:'Fixed earth, Venus grace, sensory mastery. Slow but permanent foundations.'},
+  {name:'Gemini',desc:'Dual intelligence, Mercury speed, communication gift. Versatile by design.'},
+  {name:'Cancer',desc:'Deep feeling, lunar rhythm, protection instinct. Home and roots matter most.'},
+  {name:'Leo',desc:'Solar radiance, natural authority, creative fire. Born to shine visibly.'},
+  {name:'Virgo',desc:'Analytical precision, service orientation, Mercury refinement. Mastery through details.'},
+  {name:'Libra',desc:'Venus balance, relationship karma, aesthetic intelligence. Partnership activates destiny.'},
+  {name:'Scorpio',desc:'Plutonic depth, transformation mastery, occult access. Power through surrender.'},
+  {name:'Sagittarius',desc:'Expansive philosophy, Jupiter blessing, truth-seeking fire. Freedom is oxygen.'},
+];
+
+function getSunSign(m,d){
+  const ranges=[[1,20,'Capricorn'],[2,18,'Aquarius'],[3,20,'Pisces'],[4,19,'Aries'],[5,20,'Taurus'],[6,20,'Gemini'],[7,22,'Cancer'],[8,22,'Leo'],[9,22,'Virgo'],[10,22,'Libra'],[11,21,'Scorpio'],[12,21,'Sagittarius']];
+  let name='Capricorn';
+  for(const [rm,rd,rn] of ranges){if(m===rm&&d>=rd){name=rn;}else if(m===rm+1&&d<rd){name=SIGNS.find(s=>s.name===rn)?.name||rn;}}
+  // simpler
+  const tropical=[[1,20,'Capricorn'],[2,19,'Aquarius'],[3,21,'Pisces'],[4,20,'Aries'],[5,21,'Taurus'],[6,21,'Gemini'],[7,23,'Cancer'],[8,23,'Leo'],[9,23,'Virgo'],[10,23,'Libra'],[11,22,'Scorpio'],[12,22,'Sagittarius'],[12,99,'Capricorn']];
+  let sign='Capricorn';
+  for(const [sm,sd,sn] of tropical){if(m<sm||(m===sm&&d<sd)){sign=sn;break;}}
+  return SIGNS.find(s=>s.name===sign)||SIGNS[4];
+}
+
+function getMoonSign(d,m,y){
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const signs=['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+  const idx=(d+m*3+y)%12;
+  return signs[idx]+' (~approximate, exact requires full chart)';
+}
+
+const LAGNAS=['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+function getLagna(h,m){
+  const idx=Math.floor(((h*60+m)/(24*60))*12)%12;
+  return LAGNAS[idx];
+}
+
+const NAKSHATRAS=[
+  {name:'Ashwini',desc:'Swift healer energy. Ketu ruler. Horse head twins — speed and medicine.'},
+  {name:'Bharani',desc:'Transformative fire. Venus ruler. Yama energy — carrying what others cannot.'},
+  {name:'Krittika',desc:'Sharp focus, cutting clarity. Sun ruler. Agni fire — purification through action.'},
+  {name:'Rohini',desc:'Creative abundance. Moon ruler. Fertile ground — beauty and manifestation.'},
+  {name:'Mrigashira',desc:'Seeking mind, gentle curiosity. Mars ruler. Deer head — eternal quest.'},
+  {name:'Ardra',desc:'Storm of renewal. Rahu ruler. Rudra energy — destruction preceding creation.'},
+  {name:'Punarvasu',desc:'Return home. Jupiter ruler. Restoration after loss — cyclical abundance.'},
+  {name:'Pushya',desc:'Nourishment. Saturn ruler. Most auspicious star — what is given multiplies.'},
+  {name:'Ashlesha',desc:'Mystical coiling. Mercury ruler. Serpent wisdom — hidden power within.'},
+  {name:'Magha',desc:'Royal throne. Ketu ruler. Ancestral power — you carry the lineage forward.'},
+  {name:'Purva Phalguni',desc:'Creative pleasure. Venus ruler. Bhaga deity — enjoying the fruits earned.'},
+  {name:'Uttara Phalguni',desc:'Service royalty. Sun ruler. Aryaman — sacred contracts and unions.'},
+  {name:'Hasta',desc:'Skilled hands. Moon ruler. Savitri — craft, healing, precise creation.'},
+  {name:'Chitra',desc:'Brilliant gem. Mars ruler. Tvastar — crafting destiny with precision.'},
+  {name:'Swati',desc:'Independent wind. Rahu ruler. Vayu — scattered seeds finding distant soil.'},
+  {name:'Vishakha',desc:'Forked purpose. Jupiter/Mars. Two paths that become one triumph.'},
+  {name:'Anuradha',desc:'Devoted friend. Saturn ruler. Mitra — deep loyalty over time.'},
+  {name:'Jyeshtha',desc:'Elder power. Mercury ruler. Indra — authority through endurance.'},
+  {name:'Mula',desc:'Root destruction. Ketu ruler. Nirriti — cosmic dissolution and rebirth.'},
+  {name:'Purva Ashadha',desc:'Early victory. Venus ruler. Apas water — purifying before the win.'},
+  {name:'Uttara Ashadha',desc:'Undefeated. Sun ruler. Vishwadevas — universal forces align.'},
+  {name:'Shravana',desc:'Listening mind. Moon ruler. Vishnu — hearing the cosmic frequency.'},
+  {name:'Dhanishtha',desc:'Wealthiest star. Mars ruler. Asta Vasus — symphony of abundance.'},
+  {name:'Shatabhisha',desc:'100 healers. Rahu ruler. Varuna — hidden cures, occult medicine.'},
+  {name:'Purva Bhadrapada',desc:'Fierce fire. Jupiter/Saturn. Aja Ekapada — burning karmas to ash.'},
+  {name:'Uttara Bhadrapada',desc:'Blessed sage. Saturn ruler. Ahirbudhnya — serpent of the deep.'},
+  {name:'Revati',desc:'Wealthy journey. Mercury ruler. Pushan — guide to the other shore.'},
+];
+function getNakshatra(d,m){
+  const idx=(d*m)%27;
+  return NAKSHATRAS[idx];
+}
+
+function getAyanamsaYear(y){
+  return (23+(y-1900)*0.0139).toFixed(2);
+}
+
+const DASHA_ORDER=['Sun','Moon','Mars','Rahu','Jupiter','Saturn','Mercury','Ketu','Venus'];
+const DASHA_YEARS=[6,10,7,18,16,19,17,7,20];
+const DASHA_DESC={
+  Sun:'Solar authority, father karma, recognition. Spine and eyes. Leadership tested.',
+  Moon:'Emotional depth, mother karma, intuition. Mind and fluids. Inner life dominates.',
+  Mars:'Warrior energy, siblings, property. Blood and muscles. Action demanded.',
+  Rahu:'Amplified desire, foreign connections, sudden shifts. Nervous system. Obsession as fuel.',
+  Jupiter:'Expansion, wisdom, guru, children. Liver and fat. Blessings through philosophy.',
+  Saturn:'Discipline, karma settlement, delays. Bones and teeth. Late but permanent results.',
+  Mercury:'Communication, business, commerce. Nervous system. Intelligence activated.',
+  Ketu:'Spiritual detachment, past life, occult. Intestines. Wisdom through surrender.',
+  Venus:'Love, luxury, creativity, vehicles. Kidneys and throat. Pleasure earned through patience.',
+};
+
+function getDasha(d,m,y,h){
+  const age=(new Date().getFullYear()-y)+((new Date().getMonth()>=m-1)?0:-1);
+  let total=0,idx=0;
+  for(let i=0;i<9;i++){
+    total+=DASHA_YEARS[i];
+    if(age<total){idx=i;break;}
+    if(i===8)idx=Math.floor(age/10)%9;
+  }
+  const cur=DASHA_ORDER[idx];
+  const nxt=DASHA_ORDER[(idx+1)%9];
+  const subIdx=(d+m)%9;
+  const sub=DASHA_ORDER[subIdx];
+  const nextYear=(new Date().getFullYear())+DASHA_YEARS[idx]-((age)%DASHA_YEARS[idx]);
+
+  const map=DASHA_ORDER.map((p,i)=>({p,w:DASHA_YEARS[i]*3,active:i===idx}));
+
+  const themes={
+    Sun:'A period of self-definition and solar assertion. Father figures and authority structures are activated. What you build now carries your signature.',
+    Moon:'Emotional currents run deep. Intuition is your compass. The inner world is louder than the outer.',
+    Mars:'Execute without hesitation. Conflicts arise to be solved, not endured. Physical discipline is medicine.',
+    Rahu:'Transformation through obsession. Foreign influences and unconventional paths dominate. Amplifier is active — direct it consciously.',
+    Jupiter:'Expansion in all directions. Philosophy, teaching, children, and abundance flow. Wisdom is the currency.',
+    Saturn:'The great examiner. Hard work yields slow results that are permanent. Patience is not passive — it is strategy.',
+    Mercury:'Communication, analysis, commerce, and wit. Write, speak, trade. Mercury rewards those who process fast.',
+    Ketu:'Spiritual intensity. The material loosens its grip. Past life wisdom surfaces. Surrender is strength.',
+    Venus:'Creative flowering. Love, beauty, vehicles, luxury. Venus delivers — but through patience and refinement.',
+  };
+
+  return {current:cur,currentDesc:DASHA_DESC[cur],sub,subDesc:DASHA_DESC[sub],next:nxt,nextYear,theme:themes[cur],map};
+}
+
+function getYogas(d,m,y,lagna){
+  const yogas=[];
+  const lp=reduce(d+m+(y%100));
+  if(lp===1||lp===10)yogas.push({name:'Solar Destiny Yoga',desc:'Sun number prominent. Leadership karma activated. Born to illuminate.'});
+  if(lp===2||lp===11)yogas.push({name:'Moon Sensitivity Yoga',desc:'Intuitive depth exceptional. Emotional intelligence is the gift.'});
+  if(lp===6||lp===24)yogas.push({name:'Venus Service Yoga',desc:'Beauty, harmony, and service are the path. Relationships are the curriculum.'});
+  if(lp===7||lp===25)yogas.push({name:'Neptune Mystical Yoga',desc:'Occult access and spiritual depth. The invisible world is more real than the visible.'});
+  if(d===15||d===6||d===24)yogas.push({name:'Venus Day Yoga',desc:'Born on a Venus day. Artistic gifts, love karma, and beauty consciousness are amplified.'});
+  if(m===1||m===10)yogas.push({name:'Saturn Foundation Yoga',desc:'Capricorn month energy. Discipline and late-bloom pattern. Permanent foundations.'});
+  if(['Scorpio','Pisces','Cancer'].includes(lagna))yogas.push({name:'Water Lagna Intuition',desc:'Rising sign in water — psychic sensitivity and emotional depth define the personality.'});
+  if(yogas.length===0)yogas.push({name:'Chandra-Surya Balance',desc:'Sun-Moon harmony in the chart. Consistent energy and steady emotional tone.'});
+  yogas.push({name:'Nakshatra Activation',desc:'Birth nakshatra reveals the soul\'s specialty skill — the unique lens through which karma is processed.'});
+  return yogas.slice(0,5);
+}
+
+function getRemedies(lp,dn,sun,focus){
+  const stones={1:'Ruby',2:'Moonstone',3:'Yellow Topaz',4:'Hessonite (Gomed)',5:'Emerald',6:'Diamond/White Sapphire',7:'Cat\'s Eye',8:'Blue Sapphire',9:'Red Coral',11:'Moonstone',22:'Blue Sapphire',33:'Amethyst'};
+  const stoneDescs={1:'Strengthens Sun energy and leadership confidence',2:'Calms lunar anxiety, deepens intuition',3:'Expands Jupiter luck and communication gifts',4:'Balances Rahu shadow for stability',5:'Activates Mercury clarity and business acumen',6:'Heals Venus karma and opens love channels',7:'Protects Ketu intuition and occult clarity',8:'Grounds Saturn karma and accelerates discipline rewards',9:'Fuels Mars power and courage',11:'Deep intuition and moon sensitivity',22:'Master builder — discipline meets vision',33:'Master healer — unconditional service'};
+  const days={1:'Sunday',2:'Monday',3:'Thursday',4:'Saturday',5:'Wednesday',6:'Friday',7:'Thursday',8:'Saturday',9:'Tuesday',11:'Monday',22:'Saturday',33:'Thursday'};
+  const mantras={1:'Om Suryaya Namaha (108x daily)',2:'Om Chandraya Namaha (108x at moonrise)',3:'Om Gurave Namaha (108x Thursday)',4:'Om Rahave Namaha (108x at dusk)',5:'Om Budhaya Namaha (108x Wednesday)',6:'Om Shukraya Namaha (108x Friday)',7:'Om Ketave Namaha (108x at night)',8:'Om Shanishcharaya Namaha (108x Saturday)',9:'Om Mangalaya Namaha (108x Tuesday)',11:'Om Chandraya Namaha + Soham (21x)',22:'Om Shanishcharaya Namaha + Om Namah Shivaya',33:'Om Shukraya Namaha + Om Aim Hreem Shreem'};
+  const freqs={1:528,2:432,3:852,4:396,5:528,6:639,7:741,8:396,9:417,11:432,22:396,33:639};
+  const freqDescs={528:'DNA repair, love frequency, healing transformation',432:'Earth resonance, inner peace, cosmic alignment',852:'Awakening intuition, returning to spiritual order',396:'Liberation from guilt and fear, root chakra',417:'Facilitating change, breaking patterns',639:'Connecting relationships, harmonizing',741:'Awakening intuition, solutions and creativity',396:'Grounding and releasing fear patterns',417:'Undoing situations, facilitating change'};
+
+  const fTags={
+    career:[{label:'Focus: Career & Wealth',cls:'pill-gold'},{label:'Saturn Discipline',cls:'pill-v'},{label:'Mercury Commerce',cls:'pill-g'}],
+    love:[{label:'Focus: Love',cls:'pill-gold'},{label:'Venus Healing',cls:'pill-v'},{label:'Heart Chakra',cls:'pill-g'}],
+    health:[{label:'Focus: Health',cls:'pill-gold'},{label:'Prana Work',cls:'pill-v'},{label:'Body Awareness',cls:'pill-g'}],
+    spiritual:[{label:'Focus: Spiritual',cls:'pill-gold'},{label:'Ketu Wisdom',cls:'pill-v'},{label:'Liberation Path',cls:'pill-g'}],
+    general:[{label:'General Reading',cls:'pill-gold'},{label:'Full Spectrum',cls:'pill-v'},{label:'Balanced',cls:'pill-g'}],
+  };
+
+  const med={career:'Focus meditation 11 minutes at sunrise facing East. Visualize golden pathway to goal.',love:'Heart chakra meditation 21 minutes at sunset. Rose quartz in both palms.',health:'Body scan meditation 15 minutes at dawn. Pranayama — 4-7-8 breathing.',spiritual:'Trataka candle gazing 20 minutes after midnight. Empty mind, full awareness.',general:'Morning sitting 15 minutes. Observe breath, chant mantra, set daily intention.'};
+
+  return {
+    stone:stones[lp]||'Amethyst',stoneDesc:stoneDescs[lp]||'Universal balancer and protector',
+    day:days[lp]||'Saturday',mantra:mantras[lp]||'Om Namah Shivaya (108x daily)',
+    freq:freqs[lp]||432,freqDesc:freqDescs[freqs[lp]]||'Healing and alignment',
+    meditation:med[focus]||med.general,
+    tags:fTags[focus]||fTags.general,
+  };
+}
+
+function getTiming(py,dasha){
+  const yr=new Date().getFullYear();
+  return [
+    {period:`${yr} Personal Year ${py}`,label:getPYLabel(py),type:py<=4?'ok':'warn',desc:getPYTiming(py)},
+    {period:'Current Dasha Phase',label:dasha.current+' MD Active',type:'ok',desc:dasha.theme.split('.')[0]},
+    {period:`${yr+1} Transition`,label:'Next cycle begins',type:'warn',desc:`Personal year ${reduce(py+1)} energy. Plan the shift now.`},
+    {period:'3-Year Window',label:'Medium-term horizon',type:'viol',desc:`${dasha.current} dasha continues. What you plant now manifests in 3 years.`},
+  ];
+}
+function getPYLabel(n){const l={1:'New Beginnings',2:'Patience & Diplomacy',3:'Creativity & Expression',4:'Foundation Building',5:'Change & Freedom',6:'Love & Service',7:'Introspection',8:'Power & Harvest',9:'Completion & Release',11:'Illumination',22:'Master Building'};return l[n]||'Integration';}
+function getPYTiming(n){const t={1:'Plant seeds. Start new ventures. This is the genesis year.',2:'Wait and nurture. Partnerships ripen. Force nothing.',3:'Speak, create, express. The universe responds to your voice.',4:'Build systems. Hard work now becomes the foundation for years ahead.',5:'Embrace change. Release the old structure. Movement is medicine.',6:'Love, family, home. Service to others multiplies return.',7:'Go within. Study, reflect, meditate. Outer silence, inner revelation.',8:'Business, money, authority activate. Harvest what was planted in year 1-3.',9:'Complete what is incomplete. Release. Prepare for the new cycle beginning.',11:'Heightened intuition and spiritual downloads. Major insight period.',22:'Master building year. Large-scale visions become tangible projects.'};return t[n]||'Integration and synthesis of recent cycles.';}
+
+function getLifePathMeaning(n){const m={1:'The Pioneer — independent, original, leadership karma',2:'The Diplomat — sensitivity, partnership, emotional intelligence',3:'The Creator — self-expression, joy, communication as gift',4:'The Builder — discipline, structure, karmic foundation work',5:'The Wanderer — freedom, change, versatile intelligence',6:'The Nurturer — love, family, service, Venus path',7:'The Seeker — mysticism, analysis, spiritual depth',8:'The Powerhouse — authority, wealth, karmic harvest',9:'The Humanitarian — universal compassion, completion karma',11:'Master Intuitive — illumination and spiritual service',22:'Master Builder — visionary architecture of the future',33:'Master Healer — unconditional love and sacred service'};return m[n]||'Synthesis path — integrate all numbers';}
+function getDayMeaning(n){const m={1:'Solar force — authority and identity',2:'Lunar grace — intuition and feeling',3:'Mercurial wit — communication and joy',4:'Saturn discipline — structure and karma',5:'Venusian beauty — love and pleasure',6:'Jupiter wisdom — expansion and luck',7:'Neptunian mystery — hidden depth',8:'Saturn power — material mastery',9:'Mars fire — action and courage'};return m[n]||'Universal integration';}
+function getExMeaning(n){const m={1:'Expression through leadership',2:'Expression through collaboration',3:'Expression through creativity',4:'Expression through building',5:'Expression through freedom',6:'Expression through love',7:'Expression through wisdom',8:'Expression through power',9:'Expression through service'};return m[n]||'Multi-modal expression';}
+function getPYMeaning(n){const m={1:'Fresh start energy',2:'Patient nurturing',3:'Creative expression',4:'Foundation work',5:'Dynamic change',6:'Love and service',7:'Inner reflection',8:'Power manifestation',9:'Completion cycle',11:'Spiritual illumination',22:'Master building'};return m[n]||'Integration cycle';}
+function getCompoundMeaning(d){const m={1:'Solar leadership',2:'Veiled feminine',3:'Heart connection',4:'Earthly order',5:'Unexpected blessing',6:'Solar male energy',7:'Mystical union',8:'Sacrifice brings reward',9:'Reversed fortune to good',10:'Wheel of fortune',11:'Hidden enemy warning',12:'Sacrifice and victim pattern',13:'Change and transformation',14:'Movement and news',15:'Magic and occult power',16:'Sudden reversal — rebuild stronger',17:'Star of Venus, hope',18:'Deception possible',19:'Prince of Heaven',20:'Awakening call',21:'The Crown — crown of Magi',22:'Caution with hidden enemies',23:'The Royal Star of Lion',24:'Love — gifts and blessings',25:'Strength through experience',26:'Partnerships bring ruin if not chosen wisely',27:'Success through command',28:'Promising start, caution in middle',29:'Uncertainty — faith needed',30:'Fame and notoriety',31:'Lonely but capable',32:'Magical power — Wishing Number'};return m[d]||'Unique cosmic signature';}
+
+function getPatternSummary(lp,dn,sun,dasha,focus){
+  return `The celestial record reveals a soul in <span style="color:var(--goldl)">${dasha.current} Mahadasha</span> — a period defined by ${DASHA_DESC[dasha.current].split('.')[0].toLowerCase()}. The Life Path ${lp} pattern speaks of <em>${getLifePathMeaning(lp).split(' — ')[1]}</em>, while the ${sun.name} sun adds ${sun.desc.split('.')[0].toLowerCase()} to the core identity.
+  <br><br>
+  The focus area of <span style="color:var(--violetl)">${focus}</span> aligns with the current ${dasha.current} dasha theme — the cosmic timing supports this direction. The prescribed remedies activate the planetary frequencies most needed to harmonize the karmic pattern in motion.
+  <br><br>
+  <em>Remember: the chart reveals tendencies, not fixed fate. The stars incline — they do not compel. Your conscious choices are the final variable in every planetary equation.</em>`;
+}
+</script>
+</body>
+</html>

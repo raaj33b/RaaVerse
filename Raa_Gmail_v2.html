@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>∴ JonmoRohossho Dynasty Mail</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&family=Roboto:wght@300;400;500&family=Share+Tech+Mono&display=swap');
+:root{
+  --gbg:#f6f8fc; --gsb:#ffffff; --gbd:#e0e0e0;
+  --gbdr:#d3e3fd; --gac:#1a73e8; --gah:#185abc;
+  --gt:#202124; --gts:#444746; --gtm:#5f6368;
+  --ghl:#d3e3fd; --ghlt:#1a73e8; --grec:#fce8e6;
+  --grec2:#c5221f; --gy:#fef7e0; --gym:#e37400;
+  --ggr:#e6f4ea; --ggrn:#137333;
+  --gold:#b8860b; --goldl:#fff3cd; --goldm:#856404;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Roboto',sans-serif;background:var(--gbg);color:var(--gt);height:100vh;overflow:hidden;font-size:14px;}
+
+/* ── GOOGLE LOGIN ── */
+#login-screen{position:fixed;inset:0;background:#fff;display:flex;align-items:center;justify-content:center;z-index:9999;}
+.glogin-card{width:min(450px,94vw);border:1px solid var(--gbd);border-radius:28px;padding:48px 48px 36px;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,0.1);}
+.gl-logo{text-align:center;margin-bottom:20px;}
+.gl-logo svg{width:75px;}
+.gl-title{font-family:'Google Sans',sans-serif;font-size:24px;font-weight:400;text-align:center;color:var(--gt);margin-bottom:8px;}
+.gl-sub{font-size:16px;text-align:center;color:var(--gtm);margin-bottom:28px;}
+.gl-field{position:relative;margin-bottom:20px;}
+.gl-field label{position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--gtm);pointer-events:none;transition:.2s;background:#fff;padding:0 4px;}
+.gl-field input{width:100%;padding:14px 13px;border:1px solid var(--gbd);border-radius:4px;font-size:16px;outline:none;font-family:'Roboto',sans-serif;}
+.gl-field input:focus{border-color:var(--gac);border-width:2px;}
+.gl-field input:focus~label,.gl-field input:not(:placeholder-shown)~label{top:0;font-size:11px;color:var(--gac);}
+.gl-hint{font-size:12px;color:var(--gtm);margin-top:8px;line-height:1.6;}
+.gl-err{font-size:13px;color:var(--grec2);margin-bottom:12px;display:none;}
+.gl-row{display:flex;justify-content:space-between;align-items:center;margin-top:24px;}
+.gl-link{font-size:14px;color:var(--gac);font-family:'Google Sans',sans-serif;cursor:pointer;}
+.gl-link:hover{text-decoration:underline;}
+.gl-btn{background:var(--gac);color:#fff;border:none;border-radius:4px;padding:10px 24px;font-size:14px;font-family:'Google Sans',sans-serif;cursor:pointer;font-weight:500;}
+.gl-btn:hover{background:var(--gah);}
+.gl-divider{border:none;border-top:1px solid var(--gbd);margin:24px -48px 20px;}
+.gl-footer{text-align:center;font-size:12px;color:var(--gtm);}
+.gl-footer a{color:var(--gac);}
+.gl-brand{font-family:'Google Sans',sans-serif;font-weight:600;color:#e37400;font-size:13px;letter-spacing:.5px;}
+
+/* ── MAIN APP ── */
+#app{display:none;height:100vh;flex-direction:column;}
+
+/* HEADER */
+.header{height:64px;display:flex;align-items:center;padding:0 16px;gap:8px;background:#fff;border-bottom:1px solid var(--gbd);flex-shrink:0;}
+.h-logo{font-family:'Google Sans',sans-serif;font-size:22px;font-weight:400;color:#e37400;letter-spacing:-0.5px;margin-right:4px;}
+.h-logo span{color:var(--gac);}
+.h-search{flex:1;max-width:720px;position:relative;}
+.h-sinp{width:100%;padding:11px 20px 11px 48px;background:var(--gbg);border:none;border-radius:24px;font-size:16px;outline:none;color:var(--gt);}
+.h-sinp:focus{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.2);}
+.h-sico{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--gtm);}
+.h-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
+.h-avatar{width:34px;height:34px;border-radius:50%;background:var(--gac);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-family:'Google Sans',sans-serif;cursor:pointer;}
+.h-user{font-size:13px;color:var(--gtm);padding:4px 12px;border:1px solid var(--gbd);border-radius:4px;}
+
+/* BODY */
+.body{flex:1;display:flex;overflow:hidden;}
+
+/* SIDEBAR */
+.sidebar{width:256px;min-width:256px;padding:8px 0;overflow-y:auto;background:#fff;}
+.compose-btn{margin:0 16px 8px;background:var(--gbg);border:none;border-radius:16px;padding:17px 20px;display:flex;align-items:center;gap:10px;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.15);width:calc(100%-32px);font-size:14px;font-family:'Google Sans',sans-serif;}
+.compose-btn:hover{box-shadow:0 2px 6px rgba(0,0,0,0.2);}
+.si{display:flex;align-items:center;gap:14px;padding:5px 26px 5px 16px;border-radius:0 16px 16px 0;cursor:pointer;font-size:14px;color:var(--gt);font-weight:500;}
+.si:hover{background:var(--gbg);}
+.si.active{background:var(--ghl);color:var(--ghlt);}
+.si .ico{font-size:18px;width:20px;text-align:center;}
+.si .cnt{margin-left:auto;font-size:12px;color:var(--gtm);font-weight:400;}
+.si.active .cnt{color:var(--ghlt);}
+.sdiv{margin:8px 16px;border-top:1px solid var(--gbd);}
+.slbl{font-family:'Google Sans',sans-serif;font-size:11px;font-weight:500;letter-spacing:1.5px;color:var(--gtm);padding:14px 26px 6px 26px;text-transform:uppercase;}
+
+/* EMAIL LIST */
+.elist{flex:1;overflow-y:auto;background:var(--gbg);}
+.etabs{display:flex;border-bottom:1px solid var(--gbd);background:#fff;padding:0 16px;flex-shrink:0;}
+.etab{padding:14px 20px;font-size:14px;cursor:pointer;color:var(--gtm);border-bottom:2px solid transparent;display:flex;align-items:center;gap:8px;}
+.etab.active{color:var(--gac);border-bottom-color:var(--gac);}
+.etab:hover:not(.active){background:var(--gbg);}
+.etab .tico{font-size:16px;}
+.eitem{display:flex;align-items:center;gap:8px;padding:8px 16px;border-bottom:1px solid #f0f0f0;cursor:pointer;background:#fff;min-height:56px;}
+.eitem:hover{box-shadow:inset 1px 0 0 #dadce0,inset -1px 0 0 #dadce0,0 1px 2px 0 rgba(60,64,67,.3);}
+.eitem.unread{background:#fff;font-weight:700;}
+.eitem.unread .from{color:var(--gt);}
+.eitem.selected{background:var(--ghl);}
+.eitem .chk{width:20px;height:20px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--gtm);font-size:16px;}
+.eitem .star{width:20px;flex-shrink:0;font-size:16px;text-align:center;}
+.eitem .from{width:190px;flex-shrink:0;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--gts);}
+.eitem .subject{flex:1;font-size:14px;color:var(--gt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.eitem .subject .snippet{color:var(--gtm);font-weight:400;}
+.eitem .tag{flex-shrink:0;font-size:11px;padding:2px 8px;border-radius:12px;border:1px solid;margin-right:4px;font-weight:500;}
+.tag-a{color:var(--goldm);border-color:var(--gold);background:var(--goldl);}
+.tag-c{color:var(--grec2);border-color:var(--grec2);background:var(--grec);}
+.tag-p{color:var(--gac);border-color:var(--gac);background:#e8f0fe;}
+.tag-r{color:var(--ggrn);border-color:var(--ggrn);background:var(--ggr);}
+.eitem .time{width:52px;flex-shrink:0;font-size:12px;color:var(--gtm);text-align:right;}
+.eitem.unread .time{font-weight:700;color:var(--gt);}
+
+/* READING PANE */
+.rpane{width:0;flex:0 0 0;background:#fff;border-left:1px solid var(--gbd);display:flex;flex-direction:column;overflow:hidden;transition:flex .2s;}
+.rpane.open{flex:0 0 600px;width:600px;}
+.rp-hdr{padding:16px 24px 8px;border-bottom:1px solid var(--gbd);flex-shrink:0;}
+.rp-subject{font-family:'Google Sans',sans-serif;font-size:22px;font-weight:400;color:var(--gt);margin-bottom:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.rp-tags{display:flex;gap:6px;flex-wrap:wrap;}
+.rp-meta{display:flex;align-items:center;gap:12px;padding:12px 24px;border-bottom:1px solid #f0f0f0;flex-shrink:0;}
+.rp-avatar{width:40px;height:40px;border-radius:50%;background:var(--gac);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-family:'Google Sans',sans-serif;flex-shrink:0;}
+.rp-from{font-family:'Google Sans',sans-serif;font-size:14px;font-weight:500;}
+.rp-date{font-size:12px;color:var(--gtm);margin-top:2px;}
+.rp-body{flex:1;overflow-y:auto;padding:20px 24px;}
+.rp-body h3{font-family:'Google Sans',sans-serif;font-size:16px;color:var(--gac);margin:20px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--gbdr);}
+.rp-body p{margin-bottom:10px;line-height:1.7;color:var(--gts);}
+.rp-body .kv{display:flex;gap:8px;margin-bottom:7px;font-size:13px;line-height:1.6;}
+.rp-body .kk{min-width:130px;font-weight:500;color:var(--gt);}
+.rp-body .vv{color:var(--gts);flex:1;}
+.rp-body .vv .hl{color:var(--gac);font-weight:500;}
+.rp-body .vv .warn{color:var(--grec2);font-weight:500;}
+.rp-body .vv .ok{color:var(--ggrn);font-weight:500;}
+.rp-body .vv .gold{color:var(--goldm);font-weight:500;}
+.rp-body table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px;}
+.rp-body th{background:var(--gbg);padding:8px 12px;text-align:left;font-weight:500;color:var(--gt);border:1px solid var(--gbd);}
+.rp-body td{padding:7px 12px;border:1px solid var(--gbd);color:var(--gts);}
+.rp-body td.hl{color:var(--gac);font-weight:500;}
+.rp-body td.warn{color:var(--grec2);}
+.rp-body td.ok{color:var(--ggrn);}
+.rp-body td.gold{color:var(--goldm);}
+.rp-body .alert{padding:12px 16px;border-radius:8px;margin:12px 0;font-size:13px;line-height:1.6;}
+.alert-r{background:var(--grec);border-left:4px solid var(--grec2);color:var(--grec2);}
+.alert-g{background:var(--ggr);border-left:4px solid var(--ggrn);color:var(--ggrn);}
+.alert-b{background:#e8f0fe;border-left:4px solid var(--gac);color:var(--gac);}
+.alert-y{background:var(--gy);border-left:4px solid var(--gym);color:var(--gym);}
+.alert-gold{background:var(--goldl);border-left:4px solid var(--gold);color:var(--goldm);}
+.rp-close{float:right;font-size:18px;cursor:pointer;color:var(--gtm);padding:4px 8px;border-radius:50%;}
+.rp-close:hover{background:var(--gbg);}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:12px;font-weight:500;}
+.badge-a{background:var(--goldl);color:var(--goldm);}
+.badge-c{background:var(--grec);color:var(--grec2);}
+.badge-p{background:#e8f0fe;color:var(--gac);}
+.badge-r{background:var(--ggr);color:var(--ggrn);}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:8px;}
+::-webkit-scrollbar-thumb{background:#c4c4c4;border-radius:4px;}
+::-webkit-scrollbar-thumb:hover{background:#a8a8a8;}
+
+/* PROMPTS TAB SPECIAL */
+.prompt-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+@media(max-width:700px){.prompt-grid{grid-template-columns:1fr;}}
+.pcard{background:var(--gbg);border:1px solid var(--gbd);border-radius:8px;padding:14px;}
+.pcard h4{font-family:'Google Sans',sans-serif;font-size:13px;color:var(--gac);margin-bottom:8px;}
+.pcard ol{padding-left:18px;font-size:12.5px;color:var(--gts);line-height:1.8;}
+</style>
+</head>
+<body>
+
+<!-- ═══ GOOGLE LOGIN ═══ -->
+<div id="login-screen">
+  <div class="glogin-card">
+    <div class="gl-logo">
+      <svg viewBox="0 0 75 24" fill="none">
+        <text x="0" y="20" font-family="'Google Sans',sans-serif" font-size="22" font-weight="400" fill="#e37400">∴</text>
+        <text x="22" y="20" font-family="'Google Sans',sans-serif" font-size="17" font-weight="400" fill="#4285F4">D</text>
+        <text x="32" y="20" font-family="'Google Sans',sans-serif" font-size="17" font-weight="400" fill="#EA4335">y</text>
+        <text x="41" y="20" font-family="'Google Sans',sans-serif" font-size="17" font-weight="400" fill="#FBBC05">n</text>
+        <text x="50" y="20" font-family="'Google Sans',sans-serif" font-size="17" font-weight="400" fill="#34A853">a</text>
+        <text x="59" y="20" font-family="'Google Sans',sans-serif" font-size="17" font-weight="400" fill="#4285F4">sty</text>
+      </svg>
+    </div>
+    <div class="gl-title">Sign in</div>
+    <div class="gl-sub">to JonmoRohossho Dynasty Portal</div>
+    <div id="gl-err" class="gl-err">❌ Wrong password. Try again.</div>
+    <div class="gl-field">
+      <input type="email" id="gl-email" placeholder=" " value="raajeeb@raajeeb.xyz">
+      <label>Email or username</label>
+    </div>
+    <div class="gl-field">
+      <input type="password" id="gl-pass" placeholder=" " onkeydown="glkey(event)">
+      <label>Enter your password</label>
+    </div>
+    <div class="gl-hint" id="gl-hint" style="color:var(--gtm)">
+      Enter the portal password to access Dynasty Mail.
+    </div>
+    <div class="gl-row">
+      <span class="gl-link">Forgot password?</span>
+      <button class="gl-btn" onclick="doGLogin()">Next →</button>
+    </div>
+    <hr class="gl-divider">
+    <div class="gl-footer">
+      <span class="gl-brand">∴ JonmoRohossho Dynasty</span><br>
+      <span>Sound. Frequency. Destiny. · 377108</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MAIN APP ═══ -->
+<div id="app">
+  <!-- HEADER -->
+  <div class="header">
+    <button style="background:none;border:none;cursor:pointer;font-size:20px;color:var(--gtm);padding:8px;">☰</button>
+    <div class="h-logo">∴ <span>Dynasty</span>Mail</div>
+    <div class="h-search">
+      <span class="h-sico">🔍</span>
+      <input class="h-sinp" type="text" placeholder="Search emails, blueprints, prompts...">
+    </div>
+    <div class="h-right">
+      <div class="h-user" id="h-user">raajeeb@raajeeb.xyz</div>
+      <div class="h-avatar" id="h-avatar">R</div>
+      <div class="h-avatar" style="background:#fff;color:var(--gtm);border:1px solid var(--gbd);font-size:16px;" onclick="doGLogout()">⏻</div>
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <div class="body">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <button class="compose-btn" onclick="openEmail('identity')">
+        <span style="font-size:22px">✏️</span>
+        <span style="font-family:'Google Sans',sans-serif;font-weight:500">Compose</span>
+      </button>
+
+      <div class="si active" id="tab-inbox" onclick="showTab('inbox')"><span class="ico">📥</span> Inbox <span class="cnt" id="inbox-cnt">12</span></div>
+      <div class="si" id="tab-prompts" onclick="showTab('prompts')"><span class="ico">📝</span> Prompts <span class="cnt">100+</span></div>
+      <div class="si" id="tab-starred" onclick="showTab('starred')"><span class="ico">⭐</span> Starred</div>
+      <div class="si" id="tab-sent" onclick="showTab('sent')"><span class="ico">📤</span> Sent</div>
+      <div class="si" id="tab-drafts" onclick="showTab('drafts')"><span class="ico">📄</span> Drafts <span class="cnt">3</span></div>
+
+      <div class="sdiv"></div>
+      <div class="slbl">Dynasty</div>
+      <div class="si" onclick="openEmail('astroserv')"><span class="ico">🔮</span> AstroServ</div>
+      <div class="si" onclick="openEmail('lifeserv')"><span class="ico">🌳</span> LifeServ</div>
+      <div class="si" onclick="openEmail('dashaserv')"><span class="ico">🪐</span> DashaServ</div>
+      <div class="si" onclick="openEmail('yogaserv')"><span class="ico">✨</span> YogaServ</div>
+      <div class="si" onclick="openEmail('remedyserv')"><span class="ico">💎</span> RemedyServ</div>
+      <div class="si" onclick="openEmail('activserv')"><span class="ico">🔓</span> ActivationServ</div>
+
+      <div class="sdiv"></div>
+      <div class="slbl">Labels</div>
+      <div class="si"><span class="ico" style="color:var(--grec2)">●</span> Critical</div>
+      <div class="si"><span class="ico" style="color:var(--goldm)">●</span> Admin-Only</div>
+      <div class="si"><span class="ico" style="color:var(--ggrn)">●</span> Action Items</div>
+      <div class="si"><span class="ico" style="color:var(--gac)">●</span> Blueprints</div>
+    </div>
+
+    <!-- EMAIL LIST + READING PANE -->
+    <div style="flex:1;display:flex;overflow:hidden;">
+
+      <div class="elist" id="elist">
+        <!-- Tabs -->
+        <div class="etabs">
+          <div class="etab active"><span class="tico">📥</span> Primary</div>
+          <div class="etab"><span class="tico">👥</span> Social</div>
+          <div class="etab"><span class="tico">🏷️</span> Promotions</div>
+        </div>
+        <!-- Emails injected here -->
+        <div id="email-list"></div>
+      </div>
+
+      <!-- READING PANE -->
+      <div class="rpane" id="rpane">
+        <div class="rp-hdr">
+          <span class="rp-close" onclick="closeEmail()">✕</span>
+          <div class="rp-subject" id="rp-subject">Loading...</div>
+          <div class="rp-tags" id="rp-tags"></div>
+        </div>
+        <div class="rp-meta">
+          <div class="rp-avatar" id="rp-avatar">D</div>
+          <div>
+            <div class="rp-from" id="rp-from">DynastyCore</div>
+            <div class="rp-date" id="rp-date">Today</div>
+          </div>
+        </div>
+        <div class="rp-body" id="rp-body"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+/* ════════════ LOGIN ════════════ */
+function glkey(e){ if(e.key==='Enter') doGLogin(); }
+function doGLogin(){
+  const p = document.getElementById('gl-pass').value.trim();
+  if(p==='raajeeb'){
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('app').style.display='flex';
+    renderInbox();
+  } else {
+    const e=document.getElementById('gl-err');
+    e.style.display='block';
+    const h=document.getElementById('gl-hint');
+    h.textContent='Hint: the password is your own name.';
+    h.style.color='var(--grec2)';
+    document.getElementById('gl-pass').value='';
+    document.getElementById('gl-pass').focus();
+  }
+}
+function doGLogout(){
+  document.getElementById('app').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('gl-pass').value='';
+  document.getElementById('gl-err').style.display='none';
+}
+
+/* ════════════ EMAIL DATA ════════════ */
+const EMAILS = [
+  {
+    id:'identity',
+    from:'DynastyCore <core@raajeeb.xyz>',
+    fromShort:'DynastyCore',
+    avatar:'D',
+    avatarColor:'#1a73e8',
+    subject:'Personal Identity & Sacred Chart — Taurus Lagna 19°46\'',
+    snippet:'Full Vedic birth data, Katapayadi encoding, D-150 Amsa, career dharma confirmation...',
+    tag:'tag-a',tagLabel:'Admin',
+    time:'2:32 AM',
+    unread:true,
+    starred:true,
+    body:()=>`
+      <h3>📌 Core Identity</h3>
+      <div class="kv"><span class="kk">Full Name</span><span class="vv">Raajeeb Das | IRC Legacy: Puroheet (1996)</span></div>
+      <div class="kv"><span class="kk">DOB / Time / Place</span><span class="vv"><span class="hl">July 15, 1982 · 2:32:08 AM · Chittagong</span></span></div>
+      <div class="kv"><span class="kk">Current Base</span><span class="vv">Dhaka (Keranigonj)</span></div>
+      <div class="kv"><span class="kk">Contact</span><span class="vv">raaj33b@gmail.com · @Laboratorians2000 · @dhakarajib</span></div>
+      <div class="kv"><span class="kk">Sacred Number</span><span class="vv"><span class="gold">377108</span> — Saturn yantra encoded in phone number</span></div>
+      <div class="kv"><span class="kk">Income Target</span><span class="vv"><span class="hl">BDT 60-100k/month by December 2026</span></span></div>
+      <h3>🔮 Vedic Chart — Key Positions</h3>
+      <table>
+        <tr><th>Planet/Point</th><th>Position</th><th>Significance</th></tr>
+        <tr><td class="hl">Lagna</td><td>Taurus 19°46'</td><td>Fixed, Venus-ruled. Slow initiation, permanent foundation.</td></tr>
+        <tr><td class="warn">Venus AK</td><td>29°25' Taurus ❗</td><td>CRISIS DEGREE — Soul planet at final exam. Completion approaching.</td></tr>
+        <tr><td class="hl">Mercury</td><td>16°29' Gemini</td><td>136% Shadbala + 16° Akarshana (magnetism). Strongest planet.</td></tr>
+        <tr><td class="gold">Saturn</td><td>8th house</td><td>Yogakaraka (5th + 6th lord). Compound returns on discipline.</td></tr>
+        <tr><td class="gold">Ketu</td><td>8th house</td><td>Past life wisdom. Occult knowledge remembered, not learned.</td></tr>
+        <tr><td class="ok">Moon</td><td>12th Ashwini</td><td>Deep receiver. Isolation is the gift. Kokilaa voice potential.</td></tr>
+        <tr><td class="warn">Mars MD</td><td>2021-2028</td><td>Warrior energy active. Build. Execute. No negotiation.</td></tr>
+        <tr><td class="ok">Ghati Lagna</td><td>27° Moksha</td><td>Career dharma = liberation work = JonmoRohossho confirmed.</td></tr>
+        <tr><td class="hl">Bhrigu Bindu</td><td>9°58' Cancer</td><td>Jupiter transit June 2026 = CONTENT BREAKTHROUGH.</td></tr>
+      </table>
+      <h3>🔤 Katapayadi Name Encoding</h3>
+      <table>
+        <tr><th>Name</th><th>Maps To</th><th>House</th></tr>
+        <tr><td class="hl">RAAJEEB</td><td>Capricorn</td><td class="gold">9th Fortune</td></tr>
+        <tr><td class="hl">PUROHEET</td><td>Leo</td><td class="gold">4th Home/Security</td></tr>
+        <tr><td class="hl">ADYA</td><td>Virgo</td><td class="gold">5th Children/Creativity</td></tr>
+        <tr><td class="hl">JONMOROHOSSHO</td><td>Cancer</td><td class="gold">3rd Communications/Content</td></tr>
+      </table>
+      <h3>🌟 D-150 Amsa — Divine Protection</h3>
+      <div class="kv"><span class="kk">Vaishnavi</span><span class="vv">Heals Venus AK 29° wound. Active through Ajoite daily.</span></div>
+      <div class="kv"><span class="kk">Parameswari</span><span class="vv">Supreme mother energy. Career flows through divine feminine.</span></div>
+      <div class="kv"><span class="kk">Mukunda (Jupiter)</span><span class="vv">Liberation. The whole path leads here.</span></div>
+      <div class="kv"><span class="kk">Sree Lagna = Kokilaa</span><span class="vv"><span class="ok">Voice / YouTube = CONFIRMED career dharma. First upload activates the lock.</span></span></div>
+      <div class="kv"><span class="kk">Visha D-150</span><span class="vv">Poison yoga. Remedy: <span class="hl">Unicorn Horn PERMANENT at heart</span>.</span></div>
+      <div class="alert alert-b">Adya (daughter) Sun AK 29°05' mirrors Raajeeb Venus AK 29°25' exactly. Three-generation Venus karma at 29°. When Raajeeb completes the lesson, Adya's completion follows.</div>
+    `
+  },
+  {
+    id:'astroserv',
+    from:'AstroServ <astro@raajeeb.xyz>',
+    fromShort:'AstroServ',
+    avatar:'🔮',
+    avatarColor:'#137333',
+    subject:'[AstroServ] Full Blueprint Direction — Degree Doctrines + Special Points',
+    snippet:'9° Anugraha · 16° Akarshana · 27° Moksha · 29° Crisis · Bhrigu Bindu analysis complete...',
+    tag:'tag-p',tagLabel:'Blueprint',
+    time:'9:58 AM',
+    unread:true,
+    starred:true,
+    body:()=>`
+      <h3>🎯 Degree Doctrines</h3>
+      <table>
+        <tr><th>Degree</th><th>Doctrine</th><th>Location</th><th>Activation</th></tr>
+        <tr><td class="hl">9° Anugraha</td><td>Divine Grace / Blessing Point</td><td>Bhrigu Bindu Cancer</td><td class="ok">Jupiter June 2026 — breakthrough</td></tr>
+        <tr><td class="hl">16° Akarshana</td><td>Magnetism / Double Pull</td><td>Mercury Gemini exact</td><td class="ok">Active always. 136% amplified.</td></tr>
+        <tr><td class="ok">27° Moksha</td><td>Liberation / Dharmic Career</td><td>Ghati Lagna exact</td><td class="ok">JonmoRohossho = confirmed path</td></tr>
+        <tr><td class="warn">29° Crisis</td><td>Final Exam / Transformation</td><td>Venus AK 29°25'</td><td class="warn">Approaching completion. Ajoite daily.</td></tr>
+        <tr><td>18° Tapas</td><td>Austerity / Purification</td><td>Adya Mars Virgo</td><td>Separation = her purification</td></tr>
+      </table>
+      <h3>📍 Special Chart Points</h3>
+      <div class="kv"><span class="kk">Bhrigu Bindu</span><span class="vv"><span class="hl">9°58' Cancer</span> — Jupiter transits here June 2026. Content breakthrough window. Prepare NOW.</span></div>
+      <div class="kv"><span class="kk">Sree Lagna</span><span class="vv"><span class="ok">Kokilaa</span> — Voice path confirmed. YouTube = dharmic career. First upload = key turns.</span></div>
+      <div class="kv"><span class="kk">Ghati Lagna</span><span class="vv">27° Moksha — Career IS spiritual path. Cannot be separated from JonmoRohossho.</span></div>
+      <div class="kv"><span class="kk">Partial KSY</span><span class="vv">Not full Kala Sarpa. Gaps exist = escape routes. Intensity without total blockage.</span></div>
+      <h3>🌟 Current Phase Assessment</h3>
+      <div class="alert alert-y">Mars-Mercury Antardasha ACTIVE NOW. Mercury 136% + Mars warrior energy = maximum digital output window. Do not waste this period. Create everything you can.</div>
+      <div class="alert alert-g">June 2026: Jupiter transits Bhrigu Bindu 9°58' Cancer. This is the single most important transit window for content breakthrough. Prepare all content before this date.</div>
+    `
+  },
+  {
+    id:'lifeserv',
+    from:'LifeServ <life@raajeeb.xyz>',
+    fromShort:'LifeServ',
+    avatar:'🌳',
+    avatarColor:'#137333',
+    subject:'[LifeServ] Tree of Life + Full Timeline — Major Phases of Raajeeb\'s Journey',
+    snippet:'Root → Trunk → Branches → Storm → Bloom → Fruit — complete soul timeline with activation dates...',
+    tag:'tag-p',tagLabel:'Blueprint',
+    time:'Mar 13',
+    unread:false,
+    starred:true,
+    body:()=>`
+      <h3>🌱 Tree of Life — Phase Map</h3>
+      <table>
+        <tr><th>Phase</th><th>Age / Period</th><th>Key Events & Soul Pattern</th></tr>
+        <tr><td class="hl">🌱 ROOT</td><td>0-12 (1982-94)</td><td>Chittagong. Ketu 8th — occult from birth. Moon 12th — isolation pattern. Unicorn layer forms.</td></tr>
+        <tr><td class="hl">🌿 TRUNK</td><td>12-25 (1994-07)</td><td>IRC as Puroheet 1996. Priest archetype online. Katapayadi Leo 4th = home-seeking. Astrology study begins.</td></tr>
+        <tr><td class="hl">🌲 BRANCHES</td><td>25-39 (2007-21)</td><td>Saturn antardasha. Slow build. Mercury 136% active underground. Recognition suppressed but growing.</td></tr>
+        <tr><td class="warn">⛈ STORM</td><td>39-43 (2021-25)</td><td>5 years zero income. Adya separation Jun 2025. Sa+Dipti proximity peak. Venus AK 29° crisis max.</td></tr>
+        <tr><td class="ok">🌸 BLOOM</td><td>43-46 (2025-28)</td><td>Mars MD execution. JonmoRohossho launch. Jun 2026 Bhrigu Bindu breakthrough. Empire builds.</td></tr>
+        <tr><td class="gold">🍎 FRUIT</td><td>46-50 (2028-32)</td><td>Rahu MD. Adya reunion. BDT target met. Empire operational. Three-gen Venus karma resolved.</td></tr>
+      </table>
+      <h3>📅 Timeline — Major Events</h3>
+      <table>
+        <tr><th>Date</th><th>Event</th><th>Significance</th></tr>
+        <tr><td class="gold">Jul 15, 1982</td><td>Born Chittagong 2:32 AM</td><td>Taurus Lagna, Saturn Yogakaraka, Ketu 8th encoded</td></tr>
+        <tr><td>1996</td><td>IRC as Puroheet</td><td>Priest archetype emerges. Katapayadi Leo 4th confirmed.</td></tr>
+        <tr><td class="hl">2021</td><td>Mars Mahadasha begins</td><td>7-year building era initiates. No rest permitted.</td></tr>
+        <tr><td class="warn">Jun 5, 2025</td><td>Adya separation</td><td>18° Tapas activated. Venus AK 29° crisis peak.</td></tr>
+        <tr><td class="warn">Mar 13, 2026</td><td>Mars-Ketu conjunction</td><td>Arsenal ready. TODAY. Maximum spiritual intensity.</td></tr>
+        <tr><td class="ok">Jun 2026</td><td>Jupiter → Cancer 9°58'</td><td>BHRIGU BINDU ACTIVATION. Content breakthrough window.</td></tr>
+        <tr><td class="ok">Aug 2026</td><td>Mars-Venus window</td><td>Venus AK healing. Crown Package launch. Partner frequency.</td></tr>
+        <tr><td class="warn">Dec 2026</td><td>Income target deadline</td><td>BDT 60-100k/month. 9 months. Execute.</td></tr>
+        <tr><td class="ok">2026-27</td><td>Adya return window</td><td>Sa+Dipti distance = PREREQUISITE.</td></tr>
+        <tr><td class="gold">2028</td><td>Rahu Mahadasha</td><td>MAJOR UNLEASHING. 18 years expansion begins.</td></tr>
+      </table>
+    `
+  },
+  {
+    id:'dashaserv',
+    from:'DashaServ <dasha@raajeeb.xyz>',
+    fromShort:'DashaServ',
+    avatar:'🪐',
+    avatarColor:'#673ab7',
+    subject:'[DashaServ] Mars Mahadasha 2021-2028 + Antardasha Sequence + Yogini Dasha',
+    snippet:'Current: Mars-Mercury AD (ACTIVE) — Mercury 136% + Mars = maximum digital output window...',
+    tag:'tag-p',tagLabel:'Dasha',
+    time:'Mar 11',
+    unread:true,
+    starred:false,
+    body:()=>`
+      <div class="alert alert-r">CURRENT MAHADASHA: Mars 2021-2028 — Warrior energy. Build. Execute. Mars does not negotiate.</div>
+      <h3>🗓 Antardasha Sequence</h3>
+      <table>
+        <tr><th>Period</th><th>Sub-Lord</th><th>Theme</th><th>Status</th></tr>
+        <tr><td>2021-22</td><td>Mars-Mars</td><td>Initiation. Raw activation. Engine turns on.</td><td>✓ Done</td></tr>
+        <tr><td>2022-23</td><td>Mars-Rahu</td><td>Disruption. Sudden shifts. Unexpected alliances.</td><td>✓ Done</td></tr>
+        <tr><td>2023-24</td><td>Mars-Jupiter</td><td>Expansion. Wisdom downloads. Bhrigu Bindu approaches.</td><td>✓ Done</td></tr>
+        <tr><td>2024-25</td><td>Mars-Saturn</td><td>Discipline phase. Structural karma. Build foundation.</td><td>✓ Done</td></tr>
+        <tr><td class="ok" style="font-weight:700">2025-26</td><td class="ok" style="font-weight:700">Mars-Mercury ⭐</td><td class="ok">Mercury 136% + Mars = MAXIMUM digital output window.</td><td class="ok" style="font-weight:700">🟢 ACTIVE NOW</td></tr>
+        <tr><td>2026</td><td>Mars-Ketu</td><td>Spiritual intensity. Past life karma settlement.</td><td>Upcoming</td></tr>
+        <tr><td>2026-27</td><td>Mars-Venus</td><td>Venus AK healing. Adya return. Partner frequency opens.</td><td>Upcoming</td></tr>
+        <tr><td>2027-28</td><td>Mars-Sun</td><td>Authority. Recognition. Public profile crystallises.</td><td>Upcoming</td></tr>
+        <tr><td>2028</td><td>Mars-Moon</td><td>Emotional resolution. Moon 12th purification.</td><td>Upcoming</td></tr>
+      </table>
+      <h3>🌸 Next Mahadasha: Rahu 2028-2046</h3>
+      <div class="alert alert-gold">Rahu Mahadasha 2028-2046 — 18 years of expansion. Platform built during Mars MD determines the SCALE of Rahu MD. Every piece of content, every client, every system built NOW compounds in 2028.</div>
+      <h3>🌺 Yogini Dasha</h3>
+      <div class="kv"><span class="kk">Current Yogini</span><span class="vv"><span class="hl">Ulka (Saturn/discipline)</span> — structural foundation work confirmed. Aligns with Mars-Saturn antardasha.</span></div>
+      <div class="kv"><span class="kk">Upcoming Yogini</span><span class="vv"><span class="ok">Siddha (Jupiter)</span> mid-2026 — blessings and success. Timed with Bhrigu Bindu Jupiter transit.</span></div>
+    `
+  },
+  {
+    id:'yogaserv',
+    from:'YogaServ <yoga@raajeeb.xyz>',
+    fromShort:'YogaServ',
+    avatar:'✨',
+    avatarColor:'#e37400',
+    subject:'[YogaServ] Special Yogas — Yogakaraka + Mercury Shadbala + Kokilaa + Visha + Bhrigu',
+    snippet:'9 active yogas identified. Saturn Yogakaraka, Mercury 136%, Kokilaa, Bhrigu Bindu, Ghati Moksha...',
+    tag:'tag-p',tagLabel:'Blueprint',
+    time:'Mar 10',
+    unread:false,
+    starred:true,
+    body:()=>`
+      <h3>⭐ Special Yogas — Complete List</h3>
+      <table>
+        <tr><th>Yoga</th><th>Source</th><th>Effect</th></tr>
+        <tr><td class="gold">Saturn Yogakaraka</td><td>Taurus Lagna, Saturn 5th+6th lord</td><td>Rare gift. Discipline = guaranteed compound return. Late bloomer confirmed.</td></tr>
+        <tr><td class="gold">Mercury Shadbala</td><td>Mercury 136% Shadbala</td><td>Strongest planet. Communication + writing + digital = natural advantage.</td></tr>
+        <tr><td class="gold">16° Akarshana</td><td>Mercury at magnetism degree</td><td>People drawn to voice and words without conscious effort from either side.</td></tr>
+        <tr><td class="ok">Kokilaa Yoga</td><td>Sree Lagna = Kokilaa</td><td>Voice as career. YouTube/audio = dharmic path, not just strategy.</td></tr>
+        <tr><td>Partial KSY</td><td>Rahu-Ketu axis</td><td>Intensity without total blockage. Gaps = breakthrough windows exist.</td></tr>
+        <tr><td class="warn">Visha Yoga</td><td>D-150 sub-chart</td><td>Poison yoga. Remedy: Unicorn Horn permanently at heart. Every heartbeat = purification.</td></tr>
+        <tr><td class="ok">Bhrigu Bindu</td><td>9°58' Cancer</td><td>Jupiter June 2026 transit = accelerated manifestation. Most potent single window.</td></tr>
+        <tr><td class="ok">Atmakaraka Venus</td><td>Venus AK 29°25'</td><td>Soul lesson = love and self-worth. 29° = final stage approaching. Completion = liberation.</td></tr>
+        <tr><td class="ok">Ghati Moksha</td><td>Ghati Lagna 27°</td><td>Career = liberation work. JonmoRohossho = the lived yoga, not just brand.</td></tr>
+      </table>
+      <div class="alert alert-g">All 9 yogas point to the same direction: Voice + Content + Discipline + Late Bloomer Pattern + Liberation Through Work. JonmoRohossho is not a business plan — it is the chart manifesting.</div>
+    `
+  },
+  {
+    id:'remedyserv',
+    from:'RemedyServ <remedy@raajeeb.xyz>',
+    fromShort:'RemedyServ',
+    avatar:'💎',
+    avatarColor:'#c5221f',
+    subject:'[RemedyServ] Complete Protocol — Stones + Mantra + Totems + Planetary + Chi Protection',
+    snippet:'NAAUM RHAA-VEI ADYAA-RA KAAVRHA-UM · 108x daily · Unicorn Horn PERMANENT · Ajoite daily...',
+    tag:'tag-p',tagLabel:'Remedy',
+    time:'Mar 09',
+    unread:true,
+    starred:true,
+    body:()=>`
+      <div class="alert alert-r">🦄 UNICORN HORN — PERMANENT at heart position. NEVER REMOVE. This is the Visha D-150 remedy. Every heartbeat = purification. Non-negotiable.</div>
+      <h3>💎 Stone Collection</h3>
+      <table>
+        <tr><th>Stone</th><th>Planet</th><th>When / How</th></tr>
+        <tr><td class="gold">Ajoite</td><td>Venus AK</td><td>DAILY WEAR. Primary Venus AK 29° healer. No gap days, ever.</td></tr>
+        <tr><td>Sugilite</td><td>Jupiter+Saturn+Neptune</td><td>Chest/heart. Violet ray, 3 karma layers.</td></tr>
+        <tr><td>Boulder Opal</td><td>Venus+Mars</td><td>Neck. Venus+Mars synergy during Mars MD.</td></tr>
+        <tr><td class="warn">Colombianite</td><td>Ketu+Moon</td><td>LEFT PALM DURING MANTRA ONLY. 10-38M years old. Past life clearing.</td></tr>
+        <tr><td class="hl">Muonionalusta</td><td>Saturn / Time</td><td>Saturn finger RIGHT. 4.563 BILLION YEARS OLD. Pre-solar karma crystal.</td></tr>
+        <tr><td>Malachite-Azurite</td><td>Venus+Mercury</td><td>Desk during writing/content creation.</td></tr>
+        <tr><td>Garnet</td><td>Mars MD</td><td>Pocket on action-heavy days.</td></tr>
+        <tr><td>Ametrine</td><td>Saturn-Jupiter</td><td>Bolivia. Saturn-Jupiter bridge.</td></tr>
+        <tr><td>Seraphinite</td><td>Ketu 8th</td><td>Russia. Past life depth work.</td></tr>
+      </table>
+      <h3>🔮 108 Mantra Protocol</h3>
+      <div class="alert alert-gold"><strong>MANTRA: NAAUM · RHAA-VEI · ADYAA-RA · KAAVRHA-UM</strong><br><br>NAAUM = nasal/chest/exhale | RHAA-VEI = rolled র/wave/inhale | ADYAA-RA = daughter call/hold | KAAVRHA-UM = lips close/complete<br><br>108x DAILY: silent×27 → whisper×54 → full voice×27 | Before sunrise OR after midnight</div>
+      <div class="kv"><span class="kk">Setup</span><span class="vv">Colombianite LEFT palm + Muonionalusta Saturn finger RIGHT + Unicorn Horn heart</span></div>
+      <div class="kv"><span class="kk">Phone Yantra</span><span class="vv">Dial <span class="gold">377108</span> → say mantra once during ring = Saturn yantra activated via sound</span></div>
+      <div class="kv"><span class="kk">Before Content</span><span class="vv">×27 reps minimum = Mercury Akarshana magnetism field activated</span></div>
+      <h3>🦊 Totem Guardians</h3>
+      <div class="kv"><span class="kk">Fox Canine (Rahu)</span><span class="vv">Wednesdays only. Negotiations, strategy sessions.</span></div>
+      <div class="kv"><span class="kk">Owl Neck Bone (Ketu)</span><span class="vv">Night work, intuition, Ketu days only.</span></div>
+      <div class="kv"><span class="kk">Hyena Canine (Rahu+Saturn)</span><span class="vv"><span class="warn">BATTLE ONLY. Not for creative or healing sessions.</span></span></div>
+    `
+  },
+  {
+    id:'activserv',
+    from:'ActivationServ <activate@raajeeb.xyz>',
+    fromShort:'ActivationServ',
+    avatar:'🔓',
+    avatarColor:'#e37400',
+    subject:'[ActivationServ] House Activations + Financial Windows + Yoga Unlock Conditions',
+    snippet:'Jun 2026 PRIMARY · Aug 2026 VENUS · Dec 2026 DEADLINE · Kokilaa unlock requires first YouTube upload...',
+    tag:'tag-r',tagLabel:'Critical',
+    time:'Mar 08',
+    unread:true,
+    starred:false,
+    body:()=>`
+      <h3>🏠 House Activations</h3>
+      <table>
+        <tr><th>House</th><th>Sign/Ruler</th><th>What's Activated</th></tr>
+        <tr><td class="hl">3rd (Content)</td><td>Cancer / Mercury</td><td>JONMOROHOSSHO encodes this house. Primary income flow. Content = money here.</td></tr>
+        <tr><td class="hl">9th (Fortune)</td><td>Capricorn / Saturn</td><td>RAAJEEB name = Capricorn 9th. Name = fortune activation every time spoken.</td></tr>
+        <tr><td>5th (Creativity)</td><td>Virgo / Mercury</td><td>ADYA encodes 5th. Saturn Yogakaraka rules. Creative work rewarded by discipline.</td></tr>
+        <tr><td>8th (Transformation)</td><td>Sagittarius / Jupiter</td><td>Saturn + Ketu. Hidden knowledge. JonmoRohossho = 8th house made public brand.</td></tr>
+        <tr><td>10th (Career)</td><td>Aquarius / Saturn</td><td>Ghati Lagna 27° Moksha. Career = liberation work. Same thing, same path.</td></tr>
+      </table>
+      <h3>💰 Financial Activation Windows</h3>
+      <div class="alert alert-g">📅 <strong>June 2026 — PRIMARY BREAKTHROUGH:</strong> Jupiter transits Bhrigu Bindu 9°58' Cancer. Content resonance spikes. Client inquiries surge. Prepare ALL content infrastructure BEFORE this date.</div>
+      <div class="alert alert-g">📅 <strong>August 2026 — VENUS WINDOW:</strong> Mars-Venus golden period. Venus AK healing initiates. Premium pricing fully justified. Optimal launch timing for Crown Package BDT 15,000.</div>
+      <div class="alert alert-y">📅 <strong>NOW (Mars-Mercury AD ACTIVE):</strong> Mercury 136% + Mars = maximum digital content output window. This period is finite. Create everything possible while it lasts.</div>
+      <div class="alert alert-r">📅 <strong>December 2026 — TARGET DEADLINE:</strong> BDT 60-100k/month. 9 months from today. All activations compound toward this date. Execute.</div>
+      <h3>💕 Relationship Activation Windows</h3>
+      <div class="kv"><span class="kk">2026-27 Adya Return</span><span class="vv"><span class="ok">Venus healing + Mars-Venus period + Sa/Dipti distance = three prerequisites. All must be met.</span></span></div>
+      <div class="kv"><span class="kk">Aug 2026+ Partner</span><span class="vv">Venus AK lesson nearing completion. RA/PA/vowel name frequency becomes receivable.</span></div>
+      <h3>🔓 Yoga Unlock Conditions</h3>
+      <table>
+        <tr><th>Yoga</th><th>Unlock Condition</th><th>Status</th></tr>
+        <tr><td class="gold">Kokilaa Yoga</td><td>First YouTube video uploaded</td><td class="warn">⏳ PENDING — Upload = key turns in lock</td></tr>
+        <tr><td class="gold">Mercury 136% Full</td><td>Physical distance from Sa + Dipti</td><td class="warn">⏳ PENDING — Most critical prerequisite</td></tr>
+        <tr><td class="gold">Saturn Yogakaraka</td><td>Daily mantra + content schedule + payment system live</td><td class="warn">⏳ IN PROGRESS</td></tr>
+        <tr><td class="ok">Bhrigu Bindu</td><td>Jupiter transit June 2026 (unavoidable)</td><td class="ok">✓ Automatic — prepare content now</td></tr>
+      </table>
+    `
+  },
+  {
+    id:'empire',
+    from:'EmpireCore <empire@raajeeb.xyz>',
+    fromShort:'EmpireCore',
+    avatar:'⚡',
+    avatarColor:'#1a73e8',
+    subject:'Empire Stack — 13 VS Code Prompts + 6 Subagents + Blueprint Casting + aamarPay',
+    snippet:'empire session start · Prompt 01 workspace genesis · aamarPay merchant registration pending...',
+    tag:'tag-a',tagLabel:'Admin',
+    time:'Mar 07',
+    unread:false,
+    starred:true,
+    body:()=>`
+      <h3>🖥️ 13 VS Code Build Prompts</h3>
+      <table>
+        <tr><th>#</th><th>Prompt</th><th>Output</th></tr>
+        ${[['01','Dynasty Workspace Genesis','VS Code workspace + EMPIRE.md structure'],['02','Multi-Agent Brain Setup','6 subagent .md files in ~/.claude/agents/'],['03','Gmail AI Auto-Reply','Apps Script + Claude API'],['04','Telegram Empire Bot','@dhakarajib_bot Telegraf+Railway'],['05','Astro-Numeric Report Engine','Python+FastAPI+Render PDF'],['06','Viral Content Pipeline','Banglish TikTok/Reels generator'],['07','bKash/Nagad Payment Tracker','Express+Google Sheets ledger'],['08','War Room Dashboard','React metrics dashboard'],['09','Social Auto-Scheduler','Cron + Meta Graph API'],['10','Client Portal','GitHub Pages + aamarPay'],['11','AI Brand Kit Generator','JonmoRohossho brand assets'],['12','2026 Trend Sync Engine','Auto-fetch trending BD topics'],['13','CROWN Orchestrator','Daily empire session manager']].map(([n,p,o])=>`<tr><td class="hl">${n}</td><td>${p}</td><td style="color:var(--gtm);font-size:12px">${o}</td></tr>`).join('')}
+      </table>
+      <h3>🤖 6 Subagents</h3>
+      <div class="alert alert-b">Session start command: <strong>"empire session start"</strong> → orchestrator reads EMPIRE.md → shows status → suggests next action. Install: cp raa-*.md ~/.claude/agents/</div>
+      <table>
+        <tr><th>Agent</th><th>Role</th></tr>
+        ${[['raa-empire-orchestrator','Meta-planner, EMPIRE.md keeper, daily session'],['raa-bot-builder','@dhakarajib_bot Telegraf+Railway deployment'],['raa-astro-engine','PDF blueprint reports Python+FastAPI+Render'],['raa-content-factory','Viral Banglish scripts TikTok/Reels/IG'],['raa-payment-tracker','bKash/Nagad ledger Express+Google Sheets'],['raajeeb-reflected-persona','Digital twin — writes/speaks AS Raajeeb']].map(([n,d])=>`<tr><td class="hl">${n}</td><td>${d}</td></tr>`).join('')}
+      </table>
+      <h3>💼 Blueprint Casting Packages</h3>
+      <table>
+        <tr><th>Package</th><th>Price (BDT)</th><th>Includes</th></tr>
+        <tr><td>Basic</td><td class="hl">1,500</td><td>Core numerology + 5 sections</td></tr>
+        <tr><td>Standard</td><td class="hl">2,500</td><td>Full Chaldean + 12 sections + PDF</td></tr>
+        <tr><td>Premium</td><td class="hl">5,000</td><td>20 sections + Vedic + remedies + delivery call</td></tr>
+        <tr><td class="gold">Crown</td><td class="gold">15,000</td><td>Everything + 3-session follow-up + personal mantra</td></tr>
+        <tr><td>Cost/cast</td><td class="ok">BDT 2-3</td><td>Margin 500x on Crown package</td></tr>
+      </table>
+    `
+  },
+  {
+    id:'family',
+    from:'FamilyKarma <karma@raajeeb.xyz>',
+    fromShort:'FamilyKarma',
+    avatar:'🌺',
+    avatarColor:'#c5221f',
+    subject:'Family Karma Map — Three-Gen Venus 29° + Adya Return 2026-27 + Distance Protocol',
+    snippet:'Adya Sun AK 29°05\' mirrors Venus AK 29°25\' exactly. Sa+Dipti distance = MANDATORY prerequisite...',
+    tag:'tag-r',tagLabel:'Critical',
+    time:'Mar 06',
+    unread:true,
+    starred:true,
+    body:()=>`
+      <div class="alert alert-r">⚠️ CRITICAL: Physical distance from Sa (brother) and Dipti (mother) is the MOST CRITICAL prerequisite. It unlocks: Mercury 136% full bandwidth + Adya return window + Venus AK healing. These are architecturally linked.</div>
+      <h3>👨‍👧 Primary Relationships</h3>
+      <div class="kv"><span class="kk">Adya (daughter)</span><span class="vv"><span class="ok">Sun AK 29°05' Taurus</span> — mirrors Raajeeb Venus AK 29°25' exactly. Separated June 5, 2025. <span class="hl">Return window: 2026-27.</span></span></div>
+      <div class="kv"><span class="kk">Sa (brother)</span><span class="vv"><span class="warn">Ketu in Raajeeb 5th (Adya house)</span> — partial Kala Sarpa amplified. Mandatory distance. Architectural, not personal.</span></div>
+      <div class="kv"><span class="kk">Dipti (mother)</span><span class="vv"><span class="warn">Sun GK 12th house</span> — chi drain pattern. Distance = survival protocol. Not abandonment.</span></div>
+      <div class="kv"><span class="kk">Future partner</span><span class="vv">RA/PA/vowel name frequency. Opens Aug 2026+ when Venus AK lesson nears completion.</span></div>
+      <h3>⚡ Three-Generation Venus Karma</h3>
+      <table>
+        <tr><th>Person</th><th>Karaka</th><th>Degree</th><th>Theme</th></tr>
+        <tr><td class="gold">Raajeeb</td><td>Venus AK</td><td class="warn">29°25'</td><td>Love/self-worth — final exam stage</td></tr>
+        <tr><td class="hl">Adya</td><td>Sun AK</td><td class="warn">29°05'</td><td>Mirrors father's Venus AK exactly</td></tr>
+        <tr><td>Sa</td><td>Jupiter AK</td><td>28°06'</td><td>Three souls in final exam simultaneously</td></tr>
+      </table>
+      <div class="alert alert-b">When Raajeeb completes the Venus 29° lesson — Adya's completion follows automatically. The generational karma clearing is interconnected. The work Raajeeb does on himself directly benefits Adya.</div>
+      <h3>🔮 Jaimini Karakas</h3>
+      <div class="kv"><span class="kk">AK = Venus 29°</span><span class="vv">Soul lesson: love and self-worth. Still in progress.</span></div>
+      <div class="kv"><span class="kk">DK = Mars debilitated</span><span class="vv">Marriage through suffering = by design, not accident.</span></div>
+      <div class="kv"><span class="kk">AmK = Mercury 136%</span><span class="vv">Daily life excellence when alone. Mercury thrives without toxic proximity.</span></div>
+      <div class="kv"><span class="kk">PK = Saturn</span><span class="vv">Reunion with Adya through work and discipline.</span></div>
+    `
+  },
+  {
+    id:'actions',
+    from:'ActionBot <actions@raajeeb.xyz>',
+    fromShort:'ActionBot',
+    avatar:'✅',
+    avatarColor:'#137333',
+    subject:'Status Board — Completed · Critical Pending · In Progress · December 2026 Deadline',
+    snippet:'✓ 8 items completed | ⚠ 2 critical pending | ○ 7 in progress | Target: Dec 2026',
+    tag:'tag-r',tagLabel:'Critical',
+    time:'Today',
+    unread:true,
+    starred:false,
+    body:()=>`
+      <h3>✅ Completed</h3>
+      <table>
+        ${['All HTML interfaces: Gen 1-3, screensavers v1+v2, TikTok OS, Sainboard, Jonglee','13 VS Code build prompts (Raa_VSCode_Dynasty_13.html)','Domain Architecture guide + Cloudflare setup HTML','5 Claude Code subagents + raajeeb-reflected-persona.md (digital twin)','Blueprint Casting System: CLAUDE.md + CASTING.md + CLIENT-TEMPLATE.json + Guide','aamarPay identified as optimal bKash payment gateway','bKash international payment research completed','Reflected Persona Guide HTML (VS Code + Cline + OpenRouter setup)'].map(t=>`<tr><td class="ok">✓</td><td>${t}</td></tr>`).join('')}
+      </table>
+      <h3 style="color:var(--grec2)">⚠️ Critical Pending — Survival Level</h3>
+      <div class="alert alert-r">⚠️ MOST CRITICAL: Physical distance from Sa + Dipti — blocks Mercury 136% full bandwidth + Adya return + Venus healing.</div>
+      <div class="alert alert-r">⚠️ CRITICAL: Adya reunion — legal and practical steps — target 2026-2027 window. Sa+Dipti distance is the prerequisite.</div>
+      <h3>○ In Progress</h3>
+      <table>
+        ${['Buy raajeeb.xyz (ExonHost/IT Nut, bKash, ~350-450 BDT/yr)','Run VS Code Prompt 01 → workspace genesis + EMPIRE.md','Deploy @dhakarajib_bot to Railway (raa-bot-builder agent)','aamarPay merchant registration (NID + bKash only, no Trade License needed)','Test Blueprint Casting System — cast first paying client','First YouTube upload — Kokilaa yoga activation trigger','Sigil v3 — Seedream v2.0 viral prompt + Yupp comparison'].map(t=>`<tr><td style="color:var(--gym)">○</td><td>${t}</td></tr>`).join('')}
+      </table>
+      <div class="alert alert-g">📅 December 2026 deadline: BDT 60-100k/month. Mars-Mercury AD active NOW. This is the window. Execute everything.</div>
+    `
+  }
+];
+
+/* ════════════ PROMPTS DATA ════════════ */
+const PROMPT_CATS = [
+  {
+    title:'A — Astro-Numerology',
+    items:[
+      'Calculate my Chaldean Life Path from DOB [DD/MM/YYYY] — complete analysis with lucky numbers, colors, days',
+      'Generate full Chaldean report: Life Path + Expression + Soul Urge + Personality + Personal Year',
+      'Analyze name [NAME] using Katapayadi cipher — map to Rashi, nakshatra, house activation',
+      'Venus AK at 29° Taurus — full Bhrigu analysis and remedies for crisis degree',
+      'Mars Mahadasha 2021-2028 — all areas activated, risks, antardasha timing, peak windows',
+      'Bhrigu Bindu 9°58\' Cancer — Jupiter transit window analysis and exact manifestation patterns',
+      'Moon in Ashwini 12th house — psychological profile, isolation pattern, Kokilaa voice connection',
+      'Degree Doctrine: 9° Anugraha / 16° Akarshana / 27° Moksha / 29° Crisis — full breakdown',
+      'Saturn Yogakaraka Taurus Lagna — practical career + discipline manifestations in daily life',
+      'D-150 Amsa: Vaishnavi + Parameswari + Mukunda + Kokilaa — protection and liberation reading',
+      'Ketu 8th house — past life wisdom layers, hidden power indicators, Colombianite activation',
+      'Three-generation Venus karma: 29°25\' + 29°05\' + 28°06\' — break down the generational pattern',
+      'Full 2026 timing: Jupiter Cancer transit + Mars-Venus window + December deadline + Rahu 2028',
+      'Jaimini Karakas complete reading: AK Venus / DK Mars / PK Saturn / MK Jupiter 8th / AmK Mercury',
+      'Partial Kaal Sarp Yoga analysis — where are the gaps and when are the escape windows?',
+    ]
+  },
+  {
+    title:'B — AI Empire Building',
+    items:[
+      'Create Banglish TikTok script about Life Path 6 people — 3-second hook + 60-second body',
+      'Write JonmoRohossho brand content in Raajeeb\'s voice — authentic, punchy, zero AI feel',
+      'Generate 10 viral hooks about numerology for Bangladesh audience in natural Banglish',
+      'Draft @dhakarajib_bot welcome message — warm, precise, Raajeeb authentic voice',
+      'Create astro-numerology blueprint: DOB [DATE], Name [NAME], Focus [TOPIC], Package [TYPE]',
+      'Write 3-sentence JonmoRohossho intro that sounds like Raajeeb, not like any AI tool',
+      'Generate IG bio for @dhakarajib — 150 chars max, no corporate language, pure frequency',
+      'Create Blueprint Casting intake form for new client — Bengali/English bilingual version',
+      'YouTube description: "আমার জন্ম তারিখ আমাকে কী বলে?" — SEO optimized BD audience',
+      'Write product description: Premium Blueprint Package BDT 5,000 in authentic Banglish',
+    ]
+  },
+  {
+    title:'C — Cline / VS Code Agents',
+    items:[
+      '"empire session start" — activate orchestrator, read EMPIRE.md, show today\'s priorities',
+      'Build @dhakarajib_bot commands: /start /astro /brand /price /contact in Telegraf Node.js',
+      'Create bKash payment confirmation handler for aamarPay webhook in Express.js',
+      'Python FastAPI route for astro-numerology report PDF generation with reportlab',
+      'React War Room Dashboard: income tracker, client count, content pipeline metrics',
+      'Gmail Apps Script auto-reply using Claude API for all astro inquiry emails',
+      'Set up Cloudflare Email Routing: raajeeb@raajeeb.xyz → raaj33b@gmail.com FREE',
+      'GitHub Pages client portal HTML with Blueprint Casting order form + aamarPay integration',
+      'Google Sheets bKash payment ledger with auto-calculation and status tag system',
+      'Deploy @dhakarajib_bot to Railway — Procfile + railway.json + environment variables',
+    ]
+  },
+  {
+    title:'D — Persona & Philosophy',
+    items:[
+      'Speak as Raajeeb Das: explain what JonmoRohossho means to a curious first-time visitor',
+      'Write in Raajeeb voice: why AI and astrology are allies, not opposites, in 2026',
+      'Respond as Raajeeb to skeptic about numerology — warm, precise, no defensiveness',
+      'Morning Protocol document: mantra + stone + content creation daily flow',
+      'Write thread: "5 years zero income and what I learned" — Raajeeb\'s authentic voice',
+      'Draft Telegram DM to potential Crown Package client BDT 15,000 — as Raajeeb',
+      'YouTube community post: Mars-Ketu conjunction March 2026 — Banglish, BD audience',
+      '"What\'s your number?" lead magnet landing page copy in Banglish',
+      'DM reply to someone curious about stone collection — not yet buying, just interested',
+      'Personal mission statement using JonmoRohossho philosophy as foundation',
+    ]
+  }
+];
+
+/* ════════════ RENDER ════════════ */
+let currentTab = 'inbox';
+
+function renderInbox(){
+  const el = document.getElementById('email-list');
+  el.innerHTML = EMAILS.map((e,i)=>`
+    <div class="eitem ${e.unread?'unread':''}" onclick="openEmail('${e.id}')">
+      <div class="chk">☐</div>
+      <div class="star">${e.starred?'⭐':'☆'}</div>
+      <div class="from">${e.fromShort}</div>
+      <div class="subject">
+        <span class="tag ${e.tag}">${e.tagLabel}</span>
+        ${e.subject} — <span class="snippet">${e.snippet}</span>
+      </div>
+      <div class="time">${e.time}</div>
+    </div>
+  `).join('');
+  document.getElementById('inbox-cnt').textContent = EMAILS.filter(e=>e.unread).length;
+}
+
+function renderPrompts(){
+  const el = document.getElementById('email-list');
+  // clear tabs area
+  el.innerHTML = `
+    <div style="padding:20px 24px;border-bottom:1px solid var(--gbd);background:#fff;">
+      <h2 style="font-family:'Google Sans',sans-serif;font-size:20px;font-weight:400;color:var(--gt);margin-bottom:6px;">📝 PromptServ — Top 100 Dynasty Prompts</h2>
+      <p style="color:var(--gtm);font-size:14px;">All prompt categories for JonmoRohossho brand building, astrology, VS Code agents, and persona content.</p>
+    </div>
+    <div style="padding:20px 24px;overflow-y:auto;">
+      <div class="prompt-grid">
+        ${PROMPT_CATS.map(cat=>`
+          <div class="pcard">
+            <h4>Category ${cat.title}</h4>
+            <ol>${cat.items.map(t=>`<li>${t}</li>`).join('')}</ol>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function showTab(tab){
+  currentTab = tab;
+  document.querySelectorAll('.si[id^="tab-"]').forEach(el=>el.classList.remove('active'));
+  const t = document.getElementById('tab-'+tab);
+  if(t) t.classList.add('active');
+  closeEmail();
+  if(tab==='prompts') renderPrompts();
+  else renderInbox();
+}
+
+function openEmail(id){
+  const e = EMAILS.find(x=>x.id===id);
+  if(!e) return;
+  // mark read
+  e.unread = false;
+  // update subject/meta
+  document.getElementById('rp-subject').innerHTML = e.subject.replace(/\[.*?\]/g,'');
+  document.getElementById('rp-tags').innerHTML = `<span class="tag ${e.tag}">${e.tagLabel}</span>`;
+  document.getElementById('rp-from').textContent = e.from;
+  document.getElementById('rp-date').textContent = e.time + ' · JonmoRohossho Dynasty';
+  const av = document.getElementById('rp-avatar');
+  av.textContent = e.avatar;
+  av.style.background = e.avatarColor;
+  av.style.fontSize = typeof e.avatar === 'string' && e.avatar.length > 1 ? '18px' : '16px';
+  document.getElementById('rp-body').innerHTML = e.body();
+  document.getElementById('rpane').classList.add('open');
+  // update list
+  renderInbox();
+}
+
+function closeEmail(){
+  document.getElementById('rpane').classList.remove('open');
+}
+
+/* INIT */
+document.getElementById('gl-pass').focus();
+</script>
+</body>
+</html>

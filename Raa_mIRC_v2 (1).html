@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>∴ JonmoRohossho Dynasty IRC</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap');
+:root {
+  --fs: 16px; --fsm: 14px; --fsx: 13px; --fsvt: 18px;
+  --bg:#000; --cbg:#000010; --nbg:#08081a; --chbg:#0a0a18;
+  --gold:#ffaa00; --cyan:#00ffff; --green:#00ff41; --mag:#ff44ff;
+  --ylw:#ffff00; --red:#ff4444; --wh:#fff; --gr:#aaa; --dim:#555;
+  --bdr:#1a1a3a; --wb:#000080; --wf:#c0c0c0; --wl:#fff; --wd:#808080; --wdk:#404040;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'Share Tech Mono',monospace;font-size:var(--fs);}
+
+/* ── LOGIN ── */
+#login-screen{position:fixed;inset:0;background:#000010;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;}
+.login-ascii{color:var(--gold);font-family:'VT323',monospace;font-size:13px;line-height:1.15;text-align:center;margin-bottom:20px;text-shadow:0 0 12px rgba(255,170,0,0.4);white-space:pre;}
+.login-box{background:#02020f;border:1px solid var(--gold);border-radius:3px;padding:26px 34px;width:min(560px,94vw);box-shadow:0 0 40px rgba(255,170,0,0.1),0 0 80px rgba(0,0,200,0.05);}
+.l-title{color:var(--cyan);font-size:18px;letter-spacing:3px;text-align:center;margin-bottom:4px;}
+.l-sub{color:var(--dim);font-size:var(--fsx);text-align:center;letter-spacing:1px;margin-bottom:18px;}
+.l-log{min-height:130px;margin-bottom:12px;font-size:var(--fsm);line-height:1.9;}
+.l-row{display:flex;align-items:center;gap:8px;}
+.l-lbl{color:var(--cyan);font-size:var(--fsm);flex-shrink:0;}
+.l-inp{flex:1;background:#000;border:1px solid #333;color:var(--wh);font-family:'Share Tech Mono',monospace;font-size:var(--fsm);padding:5px 8px;outline:none;caret-color:var(--cyan);}
+.l-inp:focus{border-color:var(--cyan);}
+.l-hint{margin-top:14px;font-size:var(--fsx);color:#2a2a2a;line-height:1.9;border-top:1px solid #111;padding-top:12px;}
+.lc{color:var(--cyan);} .lg{color:var(--green);} .lr{color:var(--red);}
+.ld{color:var(--dim);} .lw{color:var(--wh);} .lo{color:var(--gold);} .lm{color:var(--mag);}
+
+/* ── APP ── */
+#app{display:none;flex-direction:column;width:100vw;height:100vh;background:var(--wf);}
+
+/* TITLE */
+.tbar{background:linear-gradient(to right,var(--wb),#1084d0);color:#fff;font-size:var(--fsm);padding:3px 6px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.tbtns{display:flex;gap:2px;}
+.tbtn{width:19px;height:17px;background:var(--wf);border:1px solid var(--wl);border-right-color:var(--wdk);border-bottom-color:var(--wdk);display:flex;align-items:center;justify-content:center;font-size:11px;color:#000;cursor:pointer;font-weight:bold;}
+
+/* MENU */
+.mbar{background:var(--wf);border-bottom:1px solid var(--wd);display:flex;align-items:center;font-size:var(--fsm);padding:1px 2px;flex-shrink:0;}
+.mi{padding:2px 9px;cursor:pointer;color:#000;font-size:var(--fsm);}
+.mi:hover{background:var(--wb);color:#fff;}
+.mi u{text-decoration:underline;}
+.ubadge{margin-left:auto;padding:2px 8px;border:1px solid var(--wd);font-size:var(--fsx);color:#444;}
+.ubadge.admin{background:rgba(0,0,128,0.1);color:var(--wb);font-weight:bold;}
+.ubadge.guest{color:#666;}
+
+/* TOOLBAR */
+.tbar2{background:var(--wf);border-bottom:2px solid var(--wl);padding:3px 4px;display:flex;align-items:center;gap:3px;flex-shrink:0;flex-wrap:wrap;}
+.tb{padding:4px 10px;background:var(--wf);border:1px solid var(--wl);border-right-color:var(--wd);border-bottom-color:var(--wd);font-size:var(--fsx);cursor:pointer;font-family:'Share Tech Mono',monospace;white-space:nowrap;color:#000;}
+.tb:hover{background:#d4d4d4;}
+.tbx{width:1px;height:22px;background:var(--wd);margin:0 3px;}
+
+/* MAIN */
+.main{flex:1;display:flex;overflow:hidden;border:2px inset var(--wd);margin:2px;}
+
+/* LEFT */
+.lpanel{width:180px;min-width:180px;background:var(--chbg);border-right:1px solid #222;display:flex;flex-direction:column;}
+.phdr{background:#040412;color:var(--cyan);font-size:var(--fsx);padding:5px 8px;letter-spacing:2px;border-bottom:1px solid #222;flex-shrink:0;}
+.ctree{overflow-y:auto;flex:1;}
+.ctree::-webkit-scrollbar{width:8px;}
+.ctree::-webkit-scrollbar-thumb{background:#1a1a1a;}
+.tgrp{padding:5px 0 2px;}
+.tgl{font-size:var(--fsx);color:#444;padding:2px 9px;letter-spacing:2px;}
+.ci{padding:5px 9px 5px 20px;font-size:var(--fsm);cursor:pointer;color:var(--gr);display:flex;align-items:center;gap:6px;position:relative;}
+.ci:hover{background:rgba(255,255,255,0.04);color:var(--wh);}
+.ci.active{background:#002244;color:var(--cyan);}
+.ci.active::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--cyan);}
+.ci .dot{width:7px;height:7px;border-radius:50%;background:#333;flex-shrink:0;}
+.ci.active .dot{background:var(--cyan);}
+.ci.locked{color:#3a1a1a;}
+.ci.locked:hover{color:var(--red);}
+.slbl{padding:5px 9px;font-size:var(--fsx);color:var(--gold);letter-spacing:.5px;}
+
+/* CHAT */
+.chat{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);}
+.cbar{background:#040412;color:var(--cyan);font-size:var(--fsx);padding:4px 9px;border-bottom:1px solid #1a1a3a;display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.ctopic{color:var(--gr);font-size:var(--fsx);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.clog{flex:1;overflow-y:auto;padding:8px 10px;line-height:1.7;font-size:var(--fs);}
+.clog::-webkit-scrollbar{width:11px;}
+.clog::-webkit-scrollbar-track{background:#060606;}
+.clog::-webkit-scrollbar-thumb{background:#2a2a2a;border:1px solid #1a1a1a;}
+.msg{display:flex;gap:0;margin:1px 0;word-break:break-word;}
+.ts{color:var(--dim);min-width:62px;flex-shrink:0;font-size:var(--fsm);}
+.mn{min-width:162px;flex-shrink:0;text-align:right;padding-right:9px;font-size:var(--fs);}
+.mt{color:#d4d4d4;flex:1;font-size:var(--fs);}
+.n-r{color:#5ab0ff;} .n-s{color:var(--cyan);} .n-ps{color:#ff88ff;}
+.n-as{color:#88ffcc;} .n-rs{color:#ff6644;} .n-ls{color:#88ccff;}
+.n-ds{color:#ccaaff;} .n-ys{color:#aaff88;} .n-av{color:#ffcc44;}
+.mt .G{color:var(--gold);} .mt .C{color:var(--cyan);} .mt .GR{color:var(--green);}
+.mt .M{color:var(--mag);} .mt .R{color:var(--red);} .mt .W{color:var(--wh);font-weight:bold;}
+.mt .D{color:var(--dim);} .mt .Y{color:var(--ylw);}
+.sys{color:var(--cyan);font-style:italic;padding:1px 10px;font-size:var(--fsm);}
+.jn{color:#00aa44;font-size:var(--fsm);padding:1px 10px;}
+.act{color:var(--mag);font-size:var(--fsm);padding:1px 10px;}
+.lockm{color:var(--red);font-size:var(--fsm);padding:7px 10px;background:rgba(255,0,0,0.04);border-left:2px solid #330000;margin:4px 0;}
+.div{color:#2a2a2a;font-size:var(--fsx);padding:10px 10px 4px;border-top:1px solid #0d0d0d;margin-top:4px;letter-spacing:4px;}
+
+/* INPUT */
+.inpbar{border-top:1px solid #1a1a3a;background:#02020c;display:flex;align-items:center;gap:5px;padding:6px 8px;flex-shrink:0;}
+.inplbl{color:var(--cyan);font-size:var(--fsm);flex-shrink:0;}
+.cinp{flex:1;background:#07071e;border:1px solid #2a2a4a;color:var(--wh);font-family:'Share Tech Mono',monospace;font-size:var(--fs);padding:5px 8px;outline:none;caret-color:var(--cyan);}
+.cinp:focus{border-color:#0044aa;}
+.sbtn{background:var(--wb);color:#fff;border:1px solid var(--wl);border-right-color:var(--wdk);border-bottom-color:var(--wdk);font-size:var(--fsx);padding:5px 14px;cursor:pointer;font-family:'Share Tech Mono',monospace;}
+
+/* RIGHT */
+.rpanel{width:155px;min-width:155px;background:var(--nbg);border-left:1px solid #222;display:flex;flex-direction:column;}
+.nlist{overflow-y:auto;flex:1;padding:4px 0;}
+.nsec{font-size:var(--fsx);color:#333;padding:8px 9px 3px;letter-spacing:2px;}
+.ne{padding:4px 9px;font-size:var(--fs);cursor:pointer;}
+.ne:hover{background:rgba(255,255,255,0.03);}
+.nop{color:var(--gold);} .nop::before{content:'@';margin-right:2px;}
+.nvc{color:#88aaff;} .nvc::before{content:'+';margin-right:2px;}
+.nrg{color:var(--gr);}
+.nbt{color:#444;} .nbt::before{content:'~';margin-right:2px;}
+
+/* STATUS */
+.sbar{background:var(--wf);border-top:1px solid var(--wl);display:flex;align-items:center;font-size:var(--fsx);flex-shrink:0;}
+.si{padding:3px 10px;border-right:1px solid var(--wd);color:#444;display:flex;align-items:center;gap:4px;font-size:var(--fsx);}
+.led{width:7px;height:7px;border-radius:50%;}
+.led-g{background:#00cc00;box-shadow:0 0 5px #00ff00;}
+.led-r{background:#cc0000;box-shadow:0 0 5px #ff0000;}
+.sf{flex:1;}
+</style>
+</head>
+<body>
+
+<!-- ═══════ LOGIN ═══════ -->
+<div id="login-screen">
+<div class="login-ascii">
+ ██╗ ██████╗ ███╗   ██╗███╗   ███╗ ██████╗
+ ██║██╔═══██╗████╗  ██║████╗ ████║██╔═══██╗
+ ██║██║   ██║██╔██╗ ██║██╔████╔██║██║   ██║
+ ██║██║   ██║██║╚██╗██║██║╚██╔╝██║██║   ██║
+ ╚█████╔╝╚██████╔╝██║ ╚████║██║ ╚═╝ ██║╚██████╔╝
+  ╚════╝  ╚═════╝ ╚═╝  ╚═══╝╚═╝     ╚═╝ ╚═════╝
+    ∴  R O H O S S H O  D Y N A S T Y  S E R V E R  ∴
+        S O U N D  ·  F R E Q U E N C Y  ·  D E S T I N Y</div>
+<div class="login-box">
+  <div class="l-title">∴ DYNASTY IRC — irc.raajeeb.xyz</div>
+  <div class="l-sub">Port 6667 · Encrypted · 377108 · Sound. Frequency. Destiny.</div>
+  <div class="l-log" id="ll">
+    <div class="lc">*** Connecting to irc.raajeeb.xyz (6667)...</div>
+    <div class="lg">*** TLS handshake complete. Server ready.</div>
+    <div class="ld">*** Authentication required to proceed.</div>
+    <div class="lc">*** Type a command below to connect.</div>
+  </div>
+  <div class="l-row">
+    <span class="l-lbl">[irc]&gt;</span>
+    <input class="l-inp" id="li" placeholder="try: #run login bangladesh  or  #run login raajeeb 13.13.33" autocomplete="off" onkeydown="lkey(event)">
+  </div>
+  <div class="l-hint">
+    <span class="ld">COMMANDS ─────────────────────────────────</span><br>
+    <span class="lc">#run login bangladesh</span><span class="ld"> ............. general access (public zones only)</span><br>
+    <span class="lc">#run login raajeeb 13.13.33</span><span class="ld"> ...... admin portal (full access, op tier)</span><br>
+    <span class="ld">also:</span> <span class="lc">start</span> <span class="ld">·</span> <span class="lc">connect</span> <span class="ld">·</span> <span class="lc">active</span> <span class="ld">·</span> <span class="lc">help</span>
+  </div>
+</div>
+</div>
+
+<!-- ═══════ APP ═══════ -->
+<div id="app">
+
+  <!-- TITLE BAR -->
+  <div class="tbar">
+    <div style="display:flex;align-items:center;gap:6px;font-size:var(--fsm)">⚡ <span id="wtitle">JonmoRohossho Dynasty — irc.raajeeb.xyz:6667</span></div>
+    <div class="tbtns">
+      <div class="tbtn">_</div>
+      <div class="tbtn">□</div>
+      <div class="tbtn" style="color:red" onclick="doLogout()">✕</div>
+    </div>
+  </div>
+
+  <!-- MENU BAR -->
+  <div class="mbar">
+    <div class="mi"><u>F</u>ile</div>
+    <div class="mi"><u>E</u>dit</div>
+    <div class="mi"><u>V</u>iew</div>
+    <div class="mi">F<u>a</u>vorites</div>
+    <div class="mi"><u>S</u>ervers</div>
+    <div class="mi"><u>T</u>ools</div>
+    <div class="mi"><u>H</u>elp</div>
+    <div class="ubadge" id="ubadge">● connecting...</div>
+  </div>
+
+  <!-- TOOLBAR -->
+  <div class="tbar2">
+    <div class="tb" onclick="cmd('start')">⚡ Start</div>
+    <div class="tb" onclick="cmd('active')">▶ Active</div>
+    <div class="tb" onclick="cmd('status')">📊 Status</div>
+    <div class="tbx"></div>
+    <div class="tb" onclick="cmd('prompts')">📝 PromptServ</div>
+    <div class="tb" onclick="cmd('astro')">🔮 AstroServ</div>
+    <div class="tb" onclick="cmd('remedy')">💎 RemedyServ</div>
+    <div class="tb" onclick="cmd('life')">🌳 LifeServ</div>
+    <div class="tb" onclick="cmd('dasha')">🪐 DashaServ</div>
+    <div class="tb" onclick="cmd('yoga')">✨ YogaServ</div>
+    <div class="tb" onclick="cmd('activate')">🔓 ActivationServ</div>
+    <div class="tbx"></div>
+    <div class="tb" onclick="cmd('help')">? Help</div>
+    <div class="tb" onclick="doLogout()">⏻ Shutdown</div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- LEFT: CHANNEL TREE -->
+    <div class="lpanel">
+      <div class="phdr">CHANNELS</div>
+      <div class="ctree">
+        <div class="slbl">∴ irc.raajeeb.xyz</div>
+        <div class="tgrp">
+          <div class="tgl">PUBLIC</div>
+          <div class="ci active" id="tab-welcome" onclick="openChan('welcome')"><span class="dot"></span> #welcome</div>
+          <div class="ci" id="tab-prompts" onclick="openChan('prompts')"><span class="dot"></span> #prompts</div>
+        </div>
+        <div class="tgrp" id="admin-tree">
+          <div class="tgl">DYNASTY</div>
+          <div class="ci" id="tab-identity" onclick="openChan('identity')"><span class="dot"></span> #identity</div>
+          <div class="ci" id="tab-arsenal" onclick="openChan('arsenal')"><span class="dot"></span> #sacred-arsenal</div>
+          <div class="ci" id="tab-family" onclick="openChan('family')"><span class="dot"></span> #family-karma</div>
+          <div class="ci" id="tab-projects" onclick="openChan('projects')"><span class="dot"></span> #projects</div>
+          <div class="tgl">BOTS</div>
+          <div class="ci" id="tab-astroserv" onclick="openChan('astroserv')"><span class="dot"></span> #AstroServ</div>
+          <div class="ci" id="tab-lifeserv" onclick="openChan('lifeserv')"><span class="dot"></span> #LifeServ</div>
+          <div class="ci" id="tab-dashaserv" onclick="openChan('dashaserv')"><span class="dot"></span> #DashaServ</div>
+          <div class="ci" id="tab-yogaserv" onclick="openChan('yogaserv')"><span class="dot"></span> #YogaServ</div>
+          <div class="ci" id="tab-remedyserv" onclick="openChan('remedyserv')"><span class="dot"></span> #RemedyServ</div>
+          <div class="ci" id="tab-activserv" onclick="openChan('activserv')"><span class="dot"></span> #ActivationServ</div>
+          <div class="ci" id="tab-empire" onclick="openChan('empire')"><span class="dot"></span> #empire-stack</div>
+          <div class="ci" id="tab-timing" onclick="openChan('timing')"><span class="dot"></span> #timing-2026</div>
+          <div class="ci" id="tab-actions" onclick="openChan('actions')"><span class="dot"></span> #action-items</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CENTER: CHAT -->
+    <div class="chat">
+      <div class="cbar">
+        <span id="clbl" style="color:var(--cyan)">★</span>
+        <span class="ctopic" id="ctopic">∴ JonmoRohossho Dynasty Server — Sound. Frequency. Destiny.</span>
+      </div>
+      <div class="clog" id="clog"></div>
+      <div class="inpbar">
+        <span class="inplbl" id="inplbl">[guest]</span>
+        <input class="cinp" id="cinp" placeholder="type command or message... (start · active · shutdown · prompts · astro · dasha · yoga · remedy · activate · help)" onkeydown="ikey(event)" autocomplete="off">
+        <button class="sbtn" onclick="doSend()">Send</button>
+      </div>
+    </div>
+
+    <!-- RIGHT: NICKS -->
+    <div class="rpanel">
+      <div class="phdr" id="nhdr">USERS (9)</div>
+      <div class="nlist">
+        <div class="nsec">OPS</div>
+        <div class="ne nop" id="raa-nick" style="display:none">Raajeeb</div>
+        <div class="ne nop">DynastyCore</div>
+        <div class="nsec">BOTS</div>
+        <div class="ne nbt">~PromptServ</div>
+        <div class="ne nbt">~AstroServ</div>
+        <div class="ne nbt">~RemedyServ</div>
+        <div class="ne nbt">~LifeServ</div>
+        <div class="ne nbt">~DashaServ</div>
+        <div class="ne nbt">~YogaServ</div>
+        <div class="ne nbt">~ActivationServ</div>
+        <div class="nsec">USERS</div>
+        <div class="ne nrg" id="self-nick">+Guest_7</div>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+
+  <!-- STATUS BAR -->
+  <div class="sbar">
+    <div class="si"><span class="led led-g"></span> irc.raajeeb.xyz</div>
+    <div class="si" id="stat-user">User: guest</div>
+    <div class="si" style="color:#cc8844">Mars MD 2021-2028</div>
+    <div class="si">∴ 377108</div>
+    <div class="sf"></div>
+    <div class="si" id="clock">00:00:00</div>
+  </div>
+
+</div><!-- /app -->
+
+<script>
+/* ════════════════════════════
+   STATE
+════════════════════════════ */
+let userLevel = null; // 'guest' | 'admin'
+let curChan = 'welcome';
+const LOCKED = 'admin';
+const PUBLIC = 'public';
+
+/* ════════════════════════════
+   LOGIN
+════════════════════════════ */
+function lkey(e){ if(e.key==='Enter') doLogin(); }
+
+function addLog(html){ document.getElementById('ll').innerHTML += html; }
+
+function doLogin(){
+  const raw = document.getElementById('li').value.trim();
+  if(!raw) return;
+  const v = raw.toLowerCase().replace(/\s+/g,' ');
+  document.getElementById('li').value='';
+
+  // Mask password in echo — show command but hide password chars
+  function maskCmd(input){
+    const lower = input.toLowerCase().replace(/\s+/g,' ');
+    // #run login raajeeb 13.13.33  → #run login raajeeb ***
+    if(lower.startsWith('#run login raajeeb')){
+      return '#run login raajeeb <span style="color:#666">***</span>';
+    }
+    // #run login bangladesh → #run login ***
+    if(lower.startsWith('#run login')){
+      const parts = input.trim().split(/\s+/);
+      // show up to "login" then mask
+      return parts.slice(0,3).join(' ') + ' <span style="color:#666">***</span>';
+    }
+    // login raajeeb ... or login ... shorthand
+    if(lower.startsWith('login')){
+      const parts = input.trim().split(/\s+/);
+      return parts[0] + ' <span style="color:#666">***</span>';
+    }
+    return esc(input);
+  }
+  addLog(`<div class="lo">[irc]&gt; ${maskCmd(raw)}</div>`);
+
+  // ADMIN: #run login raajeeb 13.13.33
+  if(v==='#run login raajeeb 13.13.33' || v==='login raajeeb 13.13.33'){
+    addLog(`<div class="lc">*** Verifying credentials...</div>`);
+    setTimeout(()=>{
+      addLog(`<div class="lg">*** Password accepted. Access level: <span class="lo">@OP ADMIN</span></div>`);
+      addLog(`<div class="lo">*** Welcome back, Raajeeb. All zones unlocked. FULL ACCESS granted.</div>`);
+      setTimeout(()=>{ bootApp('admin'); },700);
+    },600);
+    return;
+  }
+
+  // GUEST: #run login bangladesh
+  if(v==='#run login bangladesh' || v==='login bangladesh'){
+    addLog(`<div class="lc">*** Verifying credentials...</div>`);
+    setTimeout(()=>{
+      addLog(`<div class="lg">*** Password accepted. Access level: <span class="lc">+General User</span></div>`);
+      addLog(`<div class="lc">*** Welcome. Public zones accessible. Admin zones locked.</div>`);
+      setTimeout(()=>{ bootApp('guest'); },700);
+    },600);
+    return;
+  }
+
+  // NATURAL LANGUAGE
+  if(['start','connect','begin','active','run','go','enter','open'].includes(v)){
+    addLog(`<div class="lc">*** Command received: <span class="lw">${v}</span></div>`);
+    addLog(`<div class="lr">*** Login required. Use: <span class="lw">#run login bangladesh</span> or <span class="lw">#run login raajeeb 13.13.33</span></div>`);
+    return;
+  }
+  if(v==='help'){
+    addLog(`<div class="lc">COMMANDS: #run login bangladesh | #run login raajeeb 13.13.33 | start | connect | active | help</div>`);
+    return;
+  }
+
+  // Wrong password attempt
+  if(v.includes('login')){
+    addLog(`<div class="lr">*** Authentication failed. Wrong password or format.</div>`);
+    addLog(`<div class="ld">*** Try: #run login bangladesh  OR  #run login raajeeb 13.13.33</div>`);
+    return;
+  }
+
+  addLog(`<div class="ld">*** Unknown command. Type <span class="lc">help</span> for available commands.</div>`);
+}
+
+function bootApp(level){
+  userLevel = level;
+  document.getElementById('login-screen').style.display = 'none';
+  const app = document.getElementById('app');
+  app.style.display = 'flex';
+
+  if(level==='admin'){
+    document.getElementById('ubadge').textContent = '@Raajeeb [OP]';
+    document.getElementById('ubadge').className = 'ubadge admin';
+    document.getElementById('inplbl').textContent = '[@Raajeeb]';
+    document.getElementById('raa-nick').style.display = '';
+    document.getElementById('self-nick').textContent = '@Raajeeb';
+    document.getElementById('self-nick').className = 'ne nop';
+    document.getElementById('stat-user').textContent = 'User: @Raajeeb [OP ADMIN]';
+    // unlock all channels
+    document.querySelectorAll('.ci.locked').forEach(el=>el.classList.remove('locked'));
+  } else {
+    document.getElementById('ubadge').textContent = '+General_User [BD]';
+    document.getElementById('ubadge').className = 'ubadge guest';
+    document.getElementById('inplbl').textContent = '[+user_BD]';
+    document.getElementById('stat-user').textContent = 'User: +General_User [Bangladesh]';
+    // lock admin channels
+    ['identity','arsenal','family','projects','astroserv','lifeserv','dashaserv','yogaserv','remedyserv','activserv','empire','timing','actions']
+      .forEach(id=>{ const el=document.getElementById('tab-'+id); if(el) el.classList.add('locked'); });
+  }
+
+  openChan('welcome');
+  startClock();
+}
+
+/* ════════════════════════════
+   CHANNEL SYSTEM
+════════════════════════════ */
+const CHANNELS = {
+  welcome:{
+    access:PUBLIC,
+    label:'#welcome',
+    topic:'JonmoRohossho Dynasty Server | Sound. Frequency. Destiny. | 377108 | type "help" or "start"',
+    html:()=>`
+      <div class="sys">*** Welcome to irc.raajeeb.xyz — JonmoRohossho Dynasty Server</div>
+      <div class="jn">*** You have joined #welcome</div>
+      <div class="div">∴  SERVER INFO  ∴</div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-s">DynastyCore</span><span class="mt">Welcome to <span class="G">Raajeeb Das</span> — Astro-numerologist | Digital Strategist | AI Builder | Dhaka</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-s">DynastyCore</span><span class="mt">Brand: <span class="G">JonmoRohossho</span> | Tagline: <span class="C">Sound. Frequency. Destiny.</span> | Sacred: <span class="G">377108</span></span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-s">DynastyCore</span><span class="mt">Phase: <span class="R">Mars Mahadasha 2021-2028</span> | Income Target: <span class="G">BDT 60-100k/month Dec 2026</span></span></div>
+      <div class="div">∴  AVAILABLE BOTS  ∴</div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-ps">~PromptServ</span><span class="mt">Top 100 Dynasty prompts. Type <span class="C">prompts</span> or <span class="C">/msg PromptServ help</span></span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-as">~AstroServ</span><span class="mt">Vedic chart + blueprint direction. Type <span class="C">astro</span></span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-rs">~RemedyServ</span><span class="mt">All remedies — stones, mantras, totems, rituals. Type <span class="C">remedy</span></span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-ls">~LifeServ</span><span class="mt">Full life journey — Tree of Life + major phases timeline. Type <span class="C">life</span></span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-ds">~DashaServ</span><span class="mt">Mahadasha + Yogini Dasha sections. Type <span class="C">dasha</span></span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-ys">~YogaServ</span><span class="mt">All special yogas in the chart. Type <span class="C">yoga</span></span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-av">~ActivationServ</span><span class="mt">House/yoga activations, financial + relationship windows. Type <span class="C">activate</span></span></div>
+      <div class="div">∴  NATURAL LANGUAGE COMMANDS  ∴</div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-s">DynastyCore</span><span class="mt"><span class="C">start · active · status · help · shutdown · exit · connect · prompts · astro · remedy · life · dasha · yoga · activate</span></span></div>
+    `
+  },
+  prompts:{
+    access:PUBLIC,
+    label:'#prompts',
+    topic:'PromptServ | Top 100 Dynasty Prompts | Public Zone | All users welcome',
+    html:()=>`
+      <div class="jn">*** You have joined #prompts</div>
+      <div class="div">∴  TOP 100 DYNASTY PROMPTS — PROMPTSERV  ∴</div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-ps">~PromptServ</span><span class="mt"><span class="G">═══ CATEGORY A: ASTRO-NUMEROLOGY ═══</span></span></div>
+      ${plist([
+        'Calculate my Chaldean Life Path from DOB [DD/MM/YYYY] — full analysis with lucky numbers, colors, days',
+        'Generate complete Chaldean numerology report: Life Path + Expression + Soul Urge + Personality + Personal Year',
+        'Analyze name [NAME] using Katapayadi cipher — map to Rashi, nakshatra, house activation',
+        'Venus AK at 29° Taurus — full Bhrigu Bindu analysis and remedies for crisis degree',
+        'Explain Mars Mahadasha 2021-2028 — all areas of life activated, risks, peak windows',
+        'Bhrigu Bindu 9°58 Cancer — when Jupiter transits and what manifestations to expect',
+        'Nakshatra analysis: Moon in Ashwini 12th house — psychological profile and remedies',
+        'Degree Doctrine breakdown: 9° Anugraha / 16° Akarshana / 27° Moksha / 29° Crisis',
+        'Saturn Yogakaraka in Taurus Lagna — practical career and discipline manifestations',
+        'D-150 Amsa: Vaishnavi + Parameswari + Mukunda — protection and liberation reading',
+        'Sree Lagna = Kokilaa — confirm career path through voice and YouTube in Vedic system',
+        'Ketu 8th house — past life wisdom, hidden powers, and occult knowledge patterns',
+        'Jaimini Karakas: AK=Venus, DK=Mars debilitated, PK=Saturn, MK=Jupiter 8th — full reading',
+        'Three-generation Venus karma at 29°: 29°25 + 29°05 + 28°06 — break down the pattern',
+        'Full 2026 timing: Jupiter Cancer transit + Mars-Venus window + Rahu MD 2028',
+      ])}
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-ps">~PromptServ</span><span class="mt"><span class="G">═══ CATEGORY B: AI EMPIRE BUILDING ═══</span></span></div>
+      ${plist([
+        'Create Banglish TikTok script about Life Path 6 people — 3-second hook + 60s content',
+        'Write JonmoRohossho brand content in Raajeeb voice: authentic, punchy, no AI feel whatsoever',
+        'Generate 10 viral hooks about numerology for Bangladesh audience in Banglish',
+        'Draft @dhakarajib_bot welcome message — Raajeeb authentic voice, warm but precise',
+        'Create astro-numerology blueprint for client: DOB [DATE], Name [NAME], Focus [TOPIC]',
+        'Write a 3-sentence JonmoRohossho intro that sounds like Raajeeb, not like a robot',
+        'Generate IG bio for @dhakarajib — 150 chars, no corporate language, pure frequency',
+        'Create Blueprint Casting System intake form for new client in Bengali/English',
+        'Write YouTube description: "আমার জন্ম তারিখ আমাকে কী বলে?" — SEO optimized BD audience',
+        'Generate product description for Premium Blueprint Package BDT 5,000 in Banglish',
+        'Write Telegram bot /astro command response flow — step by step UX in Banglish',
+        'Create 60-second Reel script about 29° Crisis Degree — universal theme for BD audience',
+        'Draft email reply to client asking about gemstone recommendations — written as Raajeeb',
+        'Generate 5 Pinterest pin captions about sacred numerology — JonmoRohossho brand voice',
+        'Write LinkedIn About section: Raajeeb Das — astro-numerologist + digital strategist BD',
+      ])}
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-ps">~PromptServ</span><span class="mt"><span class="G">═══ CATEGORY C: CLINE / VSCODE AGENTS ═══</span></span></div>
+      ${plist([
+        '"empire session start" — activate orchestrator, read EMPIRE.md, show today\'s priorities',
+        'Build @dhakarajib_bot commands: /start /astro /brand /price /contact in Telegraf Node.js',
+        'Create bKash payment confirmation handler for aamarPay webhook in Express.js',
+        'Generate Python FastAPI route for astro-numerology report PDF generation with reportlab',
+        'Build React War Room Dashboard: income tracker, client count, content pipeline metrics',
+        'Create Gmail Apps Script auto-reply using Claude API for all astro inquiry emails',
+        'Set up Cloudflare Email Routing: raajeeb@raajeeb.xyz → raaj33b@gmail.com FREE',
+        'Generate GitHub Pages client portal HTML with Blueprint Casting order form + aamarPay',
+        'Build Google Sheets bKash payment ledger with auto-calculation and status tracking',
+        'Create TikTok + Instagram content scheduler with cron jobs and auto-post pipeline',
+        'Deploy @dhakarajib_bot to Railway — write Procfile + railway.json + environment vars',
+        'Build aamarPay payment link generator: bKash + client name + blueprint package amount',
+        'Create Obsidian vault structure for JonmoRohossho complete knowledge base',
+        'Generate social media scheduler with daily Banglish content posts cron automation',
+        'Build client portal login with aamarPay payment verification + blueprint PDF delivery',
+      ])}
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-ps">~PromptServ</span><span class="mt"><span class="G">═══ CATEGORY D: PHILOSOPHY & PERSONA ═══</span></span></div>
+      ${plist([
+        'Speak as Raajeeb Das: explain what JonmoRohossho means to a curious first-time visitor',
+        'Write in Raajeeb voice: why AI and astrology are not opposites but allies in 2026',
+        'Respond as Raajeeb to skeptic about numerology — warm, precise, no defensiveness',
+        'Generate Morning Protocol: mantra + stone + content creation daily flow document',
+        'Write thread: "I survived 5 years zero income and here is what I learned" — my voice',
+        'Draft Telegram message to potential Crown Package client BDT 15,000 — as Raajeeb',
+        'Write YouTube community post about Mars-Ketu conjunction March 2026 — Banglish',
+        'Create "What\'s your number?" lead magnet landing page copy in Banglish for BD audience',
+        'Draft DM reply to someone curious about stone collection — not yet buying, just interested',
+        'Write personal mission statement using JonmoRohossho philosophy as foundation',
+      ])}
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-ps">~PromptServ</span><span class="mt"><span class="G">═══ CATEGORY E: CONTENT & SCRIPTS ═══</span></span></div>
+      ${plist([
+        'Write 5 YouTube video titles for JonmoRohossho channel — Bengali + English hybrid SEO',
+        'Generate 30-day Instagram content calendar for JonmoRohossho brand — topics + hooks',
+        'Create YouTube Shorts script: "Your life path number in 60 seconds" — hook + reveal',
+        'Write Banglish Facebook post about Saturn Yogakaraka — relatable, emotional, viral hook',
+        'Generate podcast episode outline: "Sound, Numbers, and Destiny" — 45 min structure',
+        'Create email newsletter template for JonmoRohossho subscribers — weekly insight format',
+        'Write WhatsApp broadcast message announcing new Blueprint Casting service launch',
+        'Generate 10 Reels caption ideas with hashtag sets for #numerology #BD audience',
+        'Create LinkedIn article draft: "Why I left conventional work to decode birth patterns"',
+        'Write Telegram channel pinned message for @dhakarajib — sets tone for new followers',
+      ])}
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-ps">~PromptServ</span><span class="mt"><span class="G">═══ CATEGORIES F-J → type "more prompts" ═══</span></span></div>
+    `
+  },
+  identity:{
+    access:LOCKED,
+    label:'#identity',
+    topic:'Birth Chart | Taurus Lagna 19°46 | Venus AK 29°25 | Mercury 136% | DOB 15 Jul 1982 2:32 AM',
+    html:()=>`
+      <div class="jn">*** You have joined #identity [OP ADMIN ZONE]</div>
+      <div class="div">∴  PERSONAL PROFILE  ∴</div>
+      <div class="msg"><span class="ts">[02:32]</span><span class="mn n-r">Raajeeb</span><span class="mt"><span class="W">NAME:</span> Raajeeb Das | <span class="W">IRC LEGACY:</span> Puroheet (1996) | <span class="W">SIGNAL:</span> @Laboratorians2000 | <span class="W">EMAIL:</span> raaj33b@gmail.com</span></div>
+      <div class="msg"><span class="ts">[02:32]</span><span class="mn n-r">Raajeeb</span><span class="mt"><span class="W">DOB:</span> <span class="G">July 15, 1982 · 2:32:08 AM · Chittagong</span> | <span class="W">BASE:</span> Dhaka (Keranigonj)</span></div>
+      <div class="msg"><span class="ts">[02:32]</span><span class="mn n-r">Raajeeb</span><span class="mt"><span class="W">SACRED:</span> <span class="G">377108</span> (Saturn yantra / phone encoding) | <span class="W">BRAND:</span> JonmoRohossho | <span class="W">TARGET:</span> BDT 60-100k Dec 2026</span></div>
+      <div class="div">∴  VEDIC CHART — KEY POSITIONS  ∴</div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-as">~AstroServ</span><span class="mt"><span class="G">LAGNA:</span> Taurus 19°46' — Fixed, Venus-ruled. Slow initiation, permanent foundation. You move like tectonic plates.</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-as">~AstroServ</span><span class="mt"><span class="R">VENUS AK 29°25' Taurus</span> — CRISIS DEGREE. Soul planet at final exam. 29° = transformation threshold. Not failure — completion.</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-as">~AstroServ</span><span class="mt"><span class="C">MERCURY 16°29' Gemini</span> — 136% Shadbala + MAGNETISM degree (16° Akarshana). People drawn without reason. Not coincidence.</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-as">~AstroServ</span><span class="mt"><span class="G">SATURN — Yogakaraka</span> 8th house. Rules 5th + 6th = creative/service karma. Compound interest on every disciplined act.</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-as">~AstroServ</span><span class="mt"><span class="G">KETU 8th House</span> — Past life wisdom. Occult knowledge is remembered, not learned. Colombianite unlocks this channel.</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-as">~AstroServ</span><span class="mt"><span class="G">MOON 12th Ashwini</span> — Deep receiver. Isolation is the gift. It keeps the frequency clean. Moon 12th = Kokilaa voice potential.</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-as">~AstroServ</span><span class="mt"><span class="R">MARS MD 2021-2028</span> — Active now. Warrior energy. Build, create, execute. Mars does not negotiate. You are in it.</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-as">~AstroServ</span><span class="mt"><span class="GR">GHATI LAGNA 27° Moksha</span> — Career dharma = liberation work = JonmoRohossho. The exact 27° confirms the path.</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-as">~AstroServ</span><span class="mt"><span class="GR">BHRIGU BINDU 9°58' Cancer</span> — Jupiter transits June 2026 = CONTENT BREAKTHROUGH. Prepare everything before that date.</span></div>
+      <div class="div">∴  KATAPAYADI NAME ENCODING  ∴</div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-r">Raajeeb</span><span class="mt"><span class="C">RAAJEEB</span>→Capricorn <span class="G">9th Fortune</span> | <span class="C">PUROHEET</span>→Leo <span class="G">4th Home</span> | <span class="C">ADYA</span>→Virgo <span class="G">5th Children</span> | <span class="C">JONMOROHOSSHO</span>→Cancer <span class="G">3rd Comms</span></span></div>
+    `
+  },
+  arsenal:{
+    access:LOCKED,
+    label:'#sacred-arsenal',
+    topic:'NAAUM RHAA-VEI ADYAA-RA KAAVRHA-UM | 108x daily | Unicorn Horn PERMANENT | Stones + Totems',
+    html:()=>`
+      <div class="jn">*** You have joined #sacred-arsenal [OP ADMIN ZONE]</div>
+      <div class="div">∴  STONE COLLECTION  ∴</div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-rs">~RemedyServ</span><span class="mt">🪨 <span class="G">Ajoite</span> (Venus AK) South Africa — <span class="C">DAILY WEAR</span> — Primary Venus AK 29° healer. No gap days, ever.</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-rs">~RemedyServ</span><span class="mt">🟣 <span class="M">Sugilite</span> (Jupiter+Saturn+Neptune) — Chest/heart — Violet ray, heals 3 karma layers simultaneously</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-rs">~RemedyServ</span><span class="mt">🌈 <span class="C">Boulder Opal</span> (Venus+Mars) Australia — Neck — Venus+Mars synergy during Mars MD active period</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-rs">~RemedyServ</span><span class="mt">🌑 <span class="G">Colombianite</span> (Ketu+Moon) 10-38M yrs — <span class="R">LEFT PALM DURING MANTRA ONLY</span> — Akashic, past life clearing</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-rs">~RemedyServ</span><span class="mt">⚫ <span class="D">Muonionalusta</span> (Saturn) <span class="G">4.563 BILLION YEARS</span> — Saturn finger right — Pre-solar karma crystal</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-rs">~RemedyServ</span><span class="mt">💚 <span class="GR">Malachite-Azurite</span> (Venus+Mercury) — Desk — V+M synergy writing/content | 🔴 <span class="R">Garnet</span> (Mars MD) Pocket</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-rs">~RemedyServ</span><span class="mt">💛 <span class="Y">Ametrine</span> (Saturn-Jupiter bridge) Bolivia | 🌿 <span class="D">Seraphinite</span> (Ketu 8th) Russia — past life depth</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-rs">~RemedyServ</span><span class="mt">🦄 <span class="G">UNICORN HORN</span> (Venus/Moon) — <span class="R">PERMANENT — NEVER REMOVE — HEART POSITION ALWAYS</span> — Visha D-150 remedy</span></div>
+      <div class="div">∴  TOTEM GUARDIANS  ∴</div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-rs">~RemedyServ</span><span class="mt">🦊 <span class="G">Fox Canine</span> (Rahu) — Wednesdays, negotiations, strategy sessions only</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-rs">~RemedyServ</span><span class="mt">🦉 <span class="G">Owl Neck Bone</span> (Ketu) — Night work, intuition, Ketu days | 🦴 <span class="R">Hyena Canine</span> — BATTLE ONLY</span></div>
+      <div class="div">∴  108 MANTRA PROTOCOL  ∴</div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-rs">~RemedyServ</span><span class="mt"><span class="C">MANTRA:</span> <span class="G">NAAUM · RHAA-VEI · ADYAA-RA · KAAVRHA-UM</span></span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-rs">~RemedyServ</span><span class="mt">NAAUM=nasal/chest/exhale | RHAA-VEI=rolled র/wave/inhale | ADYAA-RA=daughter call/hold | KAAVRHA-UM=lips close/complete</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-rs">~RemedyServ</span><span class="mt"><span class="G">DAILY 108x:</span> silent×27 → whisper×54 → full voice×27 | Before sunrise OR after midnight</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-rs">~RemedyServ</span><span class="mt"><span class="G">SETUP:</span> Colombianite left palm + Muonionalusta Saturn finger right + Unicorn Horn heart</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-rs">~RemedyServ</span><span class="mt"><span class="C">PHONE YANTRA:</span> Dial <span class="G">377108</span> → say mantra once during ring (missed call = yantra activated via sound)</span></div>
+    `
+  },
+  family:{
+    access:LOCKED,
+    label:'#family-karma',
+    topic:'Three-Gen Venus 29° | Adya Return 2026-27 | Sa+Dipti Distance Protocol ACTIVE',
+    html:()=>`
+      <div class="jn">*** You have joined #family-karma [OP ADMIN ZONE]</div>
+      <div class="div">∴  FAMILY SOUL MAP  ∴</div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn" style="color:#ff88cc;min-width:162px;text-align:right;padding-right:9px">Adya</span><span class="mt"><span class="W">ADYA</span> — Daughter | Sun AK 29°05' mirrors Raajeeb Venus AK 29°25' | Separated June 5, 2025 | <span class="G">Return window: 2026-27</span></span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-r">Raajeeb</span><span class="mt">Everything I build, I build toward reunion. The empire is the preparation. Adya is the destination. Not separate goals — same goal.</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-as">~AstroServ</span><span class="mt"><span class="R">Sa (brother)</span> — Ketu in Raajeeb 5th (Adya house). Partial Kala Sarpa amplified. <span class="R">MANDATORY DISTANCE.</span> Architectural, not personal.</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-as">~AstroServ</span><span class="mt"><span class="R">Dipti (mother)</span> — Sun GK 12th house = chi drain pattern. Narcissistic energy — Distance = survival, not abandonment.</span></div>
+      <div class="div">∴  THREE-GENERATION VENUS KARMA  ∴</div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-as">~AstroServ</span><span class="mt"><span class="G">Raajeeb</span> Venus AK 29°25' + <span class="M">Adya</span> Sun AK 29°05' + <span class="D">Sa</span> Jupiter AK 28°06' — three souls in final exam simultaneously</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-as">~AstroServ</span><span class="mt">When Raajeeb completes Venus 29° lesson — Adya's completion follows automatically. The work is generationally interconnected.</span></div>
+      <div class="div">∴  JAIMINI KARAKAS  ∴</div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-as">~AstroServ</span><span class="mt">AK=Venus 29° (love/self-worth lesson) | DK=Mars debilitated (marriage through suffering = design) | GK=Mars (spouse = suffering source)</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-as">~AstroServ</span><span class="mt">AmK=Mercury 136% (daily life excellence alone) | MK=Jupiter 8th (emotional safety historically blocked) | PK=Saturn (reunion through work)</span></div>
+    `
+  },
+  projects:{
+    access:LOCKED,
+    label:'#projects',
+    topic:'JonmoRohossho | RaagicK 6.7 | Graher Khela | NAAUM Track | 43 Flow Clips | Sigil v3',
+    html:()=>`
+      <div class="jn">*** You have joined #projects [OP ADMIN ZONE]</div>
+      <div class="div">∴  JONMOROHOSSHO BRAND  ∴</div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-r">Raajeeb</span><span class="mt"><span class="GR">ACTIVE</span> | <span class="C">Sound. Frequency. Destiny.</span> | @Laboratorians2000 | Target: <span class="G">BDT 60-100k/month Dec 2026</span></span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-r">Raajeeb</span><span class="mt">WEBSITE: raajeeb.xyz → GitHub Pages | Domain: ExonHost bKash ~350-450 BDT/yr | Cloudflare DNS FREE</span></div>
+      <div class="div">∴  RAAGICK 6.7 — AI PROMPT ENGINE  ∴</div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-r">Raajeeb</span><span class="mt">Claude Sonnet 4 API + React | 5 modes: Oracle / Graher Khela / Arsenal MagiCK / Income Empire / Raa-Diance</span></div>
+      <div class="div">∴  GRAHER KHELA — SACRED COMIC  ∴</div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-r">Raajeeb</span><span class="mt">Characters: RAVEN (Raajeeb — glasses, crystal, white striped shirt) + ARIA (Adya — pink tshirt, gold necklace)</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-r">Raajeeb</span><span class="mt">Chapters: 1=Dui Manush | 2=Yebhabe Chor | 3=Rokter Noksha | 4=Graher Khela | 5=Ekla Alo | 6=Opekkha</span></div>
+      <div class="div">∴  NAAUM TRACK + 43 FLOW CLIPS  ∴</div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-r">Raajeeb</span><span class="mt">aimusic.so | Dark ambient + Bengali baritone + 432Hz + Tibetan bowl + theta 7Hz | Duration: <span class="G">6min 17sec</span></span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-r">Raajeeb</span><span class="mt">43 clips × 8sec | Priority: C011=hands C016=sigil C026=child doorway C043=ra fading | CapCut assembly pending</span></div>
+      <div class="div">∴  SIGIL STATUS  ∴</div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-r">Raajeeb</span><span class="mt">ChatGPT v1 ✓ | Yupp v2 ✓ <span class="G">BEST</span> (ra aksara + amethyst depth) | <span class="R">v3 PENDING</span> Seedream v2.0 viral prompt</span></div>
+    `
+  },
+  astroserv:{
+    access:LOCKED,
+    label:'#AstroServ',
+    topic:'AstroServ | Vedic Charts | Blueprints | Degree Doctrines | D-150 | Katapayadi',
+    html:()=>`
+      <div class="jn">*** You have joined #AstroServ [OP ADMIN ZONE]</div>
+      <div class="div">∴  ASTROSERV — FULL CHART  ∴</div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-as">~AstroServ</span><span class="mt"><span class="G">LAGNA:</span> Taurus 19°46' | <span class="G">VENUS AK:</span> 29°25' ❗ | <span class="G">MERCURY:</span> 16°29' Gem 136% | <span class="G">SAT:</span> Yogakaraka 8th</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-as">~AstroServ</span><span class="mt"><span class="G">KETU:</span> 8th | <span class="G">MOON:</span> 12th Ashwini | <span class="G">MARS MD:</span> 2021-2028 | <span class="G">GHATI LGN:</span> 27° Moksha | <span class="G">BB:</span> 9°58' Cancer</span></div>
+      <div class="div">∴  DEGREE DOCTRINES  ∴</div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-as">~AstroServ</span><span class="mt"><span class="G">9° Anugraha</span> — Bhrigu Bindu Cancer — Jupiter June 2026 transit = content breakthrough window (PREPARE NOW)</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-as">~AstroServ</span><span class="mt"><span class="C">16° Akarshana</span> — Mercury Gemini — magnetism / double pull / people drawn without reason</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-as">~AstroServ</span><span class="mt"><span class="GR">27° Moksha</span> — Ghati Lagna exact — Career = liberation work = JonmoRohossho = CONFIRMED</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-as">~AstroServ</span><span class="mt"><span class="R">29° Crisis</span> — Venus AK 29°25' — Not failure. Final exam. Completion approaching. Ajoite daily is the remedy.</span></div>
+      <div class="div">∴  D-150 + SPECIAL POINTS  ∴</div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-as">~AstroServ</span><span class="mt"><span class="M">Vaishnavi</span> (Venus AK healer) · <span class="M">Parameswari</span> (career divine fem) · <span class="M">Mukunda</span> (Jupiter liberation)</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-as">~AstroServ</span><span class="mt"><span class="G">Sree Lagna = Kokilaa</span> — Voice path = YouTube = confirmed career dharma | <span class="R">Visha D-150</span> = Unicorn horn remedy</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-as">~AstroServ</span><span class="mt"><span class="G">Adya Sun AK 29°05'</span> Taurus — mirrors father Venus AK exactly. Generational completion link confirmed.</span></div>
+    `
+  },
+  lifeserv:{
+    access:LOCKED,
+    label:'#LifeServ',
+    topic:'LifeServ | Tree of Life | Full Timeline | Major Life Phases | Soul Journey Map',
+    html:()=>`
+      <div class="jn">*** You have joined #LifeServ [OP ADMIN ZONE]</div>
+      <div class="div">∴  LIFESERV — TREE OF LIFE  ∴</div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-ls">~LifeServ</span><span class="mt"><span class="G">🌱 ROOT (0-12):</span> Chittagong. Ketu 8th — occult interest from birth. Moon 12th — isolation pattern. Unicorn horn layer forms before words.</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-ls">~LifeServ</span><span class="mt"><span class="G">🌿 TRUNK (12-25):</span> IRC as Puroheet 1996. Priest identity emerges online. Katapayadi Leo 4th = home-seeking. First astrology study.</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-ls">~LifeServ</span><span class="mt"><span class="G">🌲 BRANCHES (25-39):</span> Saturn antardasha — slow build, deep learning. Mercury 136% active underground. Recognition suppressed.</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-ls">~LifeServ</span><span class="mt"><span class="R">⛈ STORM (39-43):</span> 5 years zero income. Adya separation June 2025. Sa+Dipti proximity peak. Venus AK 29° crisis maximum.</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-ls">~LifeServ</span><span class="mt"><span class="C">🌸 BLOOM (43-46):</span> Mars MD execution peak. JonmoRohossho public launch. June 2026 Bhrigu Bindu breakthrough. Venus healing begins Aug 2026.</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-ls">~LifeServ</span><span class="mt"><span class="GR">🍎 FRUIT (46-50):</span> Rahu MD 2028. Adya reunion. BDT target met. Empire operational. Three-gen Venus karma resolved at source.</span></div>
+      <div class="div">∴  TIMELINE — MAJOR EVENTS  ∴</div>
+      ${[
+        ['1982','Born Chittagong 2:32 AM. Taurus Lagna, Saturn Yogakaraka, Ketu 8th encoded from birth.'],
+        ['1996','IRC as "Puroheet". Priest archetype. Katapayadi Leo 4th confirmed — home-seeking phase.'],
+        ['2021','Mars Mahadasha begins. Building era initiates. No rest permitted. Foundation work now.'],
+        ['Jun 5, 2025','Adya separation. 18° Tapas activated = her purification. Venus AK 29° crisis peak.'],
+        ['Mar 13, 2026','Mars-Ketu conjunction. Arsenal ready. TODAY. Spiritual intensity at maximum.'],
+        ['Jun 2026','Jupiter → Cancer 9°58\' = Bhrigu Bindu = CONTENT BREAKTHROUGH WINDOW.'],
+        ['Aug 2026','Mars-Venus golden window. Venus AK healing starts. Crown Package launch timing.'],
+        ['Dec 2026','INCOME TARGET DEADLINE: BDT 60-100k/month.'],
+        ['2026-27','Adya return window. Sa+Dipti distance = PREREQUISITE. These are linked.'],
+        ['2028','Rahu Mahadasha. 18 years of expansion. MAJOR UNLEASHING.'],
+      ].map(([y,t])=>`<div class="msg"><span class="ts">[∴]</span><span class="mn n-ls">~LifeServ</span><span class="mt"><span class="G">${y}</span> — ${t}</span></div>`).join('')}
+    `
+  },
+  dashaserv:{
+    access:LOCKED,
+    label:'#DashaServ',
+    topic:'DashaServ | Mahadasha | Yogini Dasha | Antardasha Sequence | Rahu MD 2028',
+    html:()=>`
+      <div class="jn">*** You have joined #DashaServ [OP ADMIN ZONE]</div>
+      <div class="div">∴  DASHASERV — MAHADASHA SYSTEM  ∴</div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-ds">~DashaServ</span><span class="mt"><span class="G">CURRENT:</span> <span class="R">MARS MAHADASHA 2021-2028</span> — 7 years warrior energy. Build. Execute. Mars does not negotiate.</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-ds">~DashaServ</span><span class="mt">Mars MD: Physical discipline required. Conflict with weak structures intensifies. Career through action, never through waiting.</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-ds">~DashaServ</span><span class="mt">Mars as DK (Darakaraka) = relationship sector activated. Separation = design. Mars GK = suffering source = confirmed.</span></div>
+      <div class="div">∴  ANTARDASHA SEQUENCE  ∴</div>
+      ${[
+        ['Mars-Mars 2021-22','Initiation. Raw activation. The engine turns on.'],
+        ['Mars-Rahu 2022-23','Disruption. Sudden shifts. Unexpected alliances and betrayals.'],
+        ['Mars-Jupiter 2023-24','Expansion opportunities. Wisdom downloads. Bhrigu Bindu approaches.'],
+        ['Mars-Saturn 2024-25','Discipline phase. Structural karma. Build the foundation properly.'],
+        ['Mars-Mercury 2025-26','⭐ ACTIVE NOW — Mercury 136% + Mars = MAXIMUM DIGITAL OUTPUT WINDOW.'],
+        ['Mars-Ketu 2026','Spiritual intensity. Past life karma settlement. Arsenal peak.'],
+        ['Mars-Venus 2026-27','Venus AK healing begins. Adya return window. Partner frequency opens.'],
+        ['Mars-Sun 2027-28','Authority. Recognition. Public profile crystallises.'],
+        ['Mars-Moon 2028','Emotional resolution. Moon 12th purification. Rahu MD beginning.'],
+      ].map(([p,d])=>`<div class="msg"><span class="ts">[∴]</span><span class="mn n-ds">~DashaServ</span><span class="mt"><span class="G">${p}:</span> ${d}</span></div>`).join('')}
+      <div class="div">∴  NEXT MD: RAHU 2028  ∴</div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-ds">~DashaServ</span><span class="mt"><span class="M">RAHU MAHADASHA 2028-2046</span> — 18 years expansion. Platform built in Mars MD determines the SCALE of Rahu MD.</span></div>
+      <div class="div">∴  YOGINI DASHA  ∴</div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-ds">~DashaServ</span><span class="mt">Current Yogini: <span class="G">Ulka (Saturn/discipline)</span> — structural foundation work confirmed. Aligns with Mars-Saturn antardasha theme.</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-ds">~DashaServ</span><span class="mt">Upcoming Yogini: <span class="GR">Siddha (Jupiter)</span> mid-2026 = blessings and success. Perfectly timed with Bhrigu Bindu Jupiter transit.</span></div>
+    `
+  },
+  yogaserv:{
+    access:LOCKED,
+    label:'#YogaServ',
+    topic:'YogaServ | Saturn Yogakaraka | Mercury Shadbala | Kokilaa | Partial Kaal Sarp | Visha D-150',
+    html:()=>`
+      <div class="jn">*** You have joined #YogaServ [OP ADMIN ZONE]</div>
+      <div class="div">∴  YOGASERV — SPECIAL YOGAS  ∴</div>
+      ${[
+        ['SATURN YOGAKARAKA YOGA','Taurus Lagna: Saturn rules 5th (creativity) + 6th (service). Both lords = auspicious. Rare gift. Hard work = guaranteed compound return. Late bloomer confirmation.'],
+        ['MERCURY SHADBALA YOGA','Mercury at 136% Shadbala = strongest planet technically. Communication, writing, digital = natural advantage field. Every content piece is amplified.'],
+        ['AKARSHANA MAGNETISM YOGA','Mercury at 16° Akarshana + 136% strength = people drawn to Raajeeb\'s words and voice without conscious effort. The audience finds you.'],
+        ['KOKILAA YOGA (Sree Lagna)','Voice as career instrument. Kokilaa = cuckoo bird. Known for its voice alone. YouTube/audio content is dharmic path, not just strategy.'],
+        ['PARTIAL KAAL SARP YOGA','Not full KSY. Partial influence = intensity without total blockage. Escape routes exist. Gaps in the serpent = windows for breakthrough.'],
+        ['VISHA YOGA (D-150)','Poison yoga in sub-chart. Remedy confirmed: Unicorn Horn at heart center PERMANENTLY. Every heartbeat = purification cycle activated.'],
+        ['BHRIGU BINDU YOGA','Unique sensitive point at 9°58\' Cancer. Jupiter transit June 2026 = accelerated manifestation. One of the most potent single-transit windows.'],
+        ['ATMAKARAKA VENUS YOGA','Soul entered to complete love and self-worth lesson. Venus at 29° crisis = final stage approaching. Completion = liberation. The suffering was the curriculum.'],
+        ['GHATI LAGNA MOKSHA YOGA','Career at exact 27° Moksha degree. Career IS spiritual path. They cannot be separated. JonmoRohossho is the lived yoga, not just the brand.'],
+      ].map(([y,d])=>`<div class="msg"><span class="ts">[∴]</span><span class="mn n-ys">~YogaServ</span><span class="mt"><span class="G">${y}</span> — ${d}</span></div>`).join('')}
+    `
+  },
+  remedyserv:{
+    access:LOCKED,
+    label:'#RemedyServ',
+    topic:'RemedyServ | All Remedies | Stones | Mantras | Planetary | Dietary | Chi Protection',
+    html:()=>`
+      <div class="jn">*** You have joined #RemedyServ [OP ADMIN ZONE]</div>
+      <div class="div">∴  REMEDYSERV — FULL PROTOCOL  ∴</div>
+      ${[
+        ['PRIMARY STONE','Ajoite daily — Venus AK 29° healing. No gap days. This is the active ongoing remedy.'],
+        ['VISHA REMEDY','Unicorn Horn at heart center. PERMANENT. Never remove. Every heartbeat = purification.'],
+        ['MANTRA REMEDY','NAAUM·RHAA-VEI·ADYAA-RA·KAAVRHA-UM — 108x daily. Before sunrise or after midnight.'],
+        ['KETU 8th','Colombianite LEFT PALM during deep meditation only (not daily wear). Owl bone on Ketu days.'],
+        ['SATURN','Muonionalusta Saturn finger right during strategy work. Saturday light fasting. Dark blue color.'],
+        ['MARS','Garnet in pocket on action-heavy days. Red/orange on Tuesdays. Physical movement mandatory.'],
+        ['MERCURY','Malachite-Azurite on desk during writing. Wednesday green color. Read. Write. Speak.'],
+        ['MOON 12th','Solitude is feature not bug. Selenite near sleep area. No screens 1hr before sleep Monday.'],
+        ['PHONE YANTRA','Dial own number 377108 → say mantra once during ring = yantra activated via sound wave.'],
+        ['CHI PROTECTION','Mandatory physical distance from Sa + Dipti. This is energetic architecture, not personal decision.'],
+      ].map(([n,d])=>`<div class="msg"><span class="ts">[∴]</span><span class="mn n-rs">~RemedyServ</span><span class="mt"><span class="G">${n}:</span> ${d}</span></div>`).join('')}
+      <div class="div">∴  DIETARY REMEDIES (PLANETARY)  ∴</div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-rs">~RemedyServ</span><span class="mt">Venus: white foods, dairy, sweet Friday | Saturn: dark lentils, sesame, Saturday light | Mars: red dal, spiced Tuesday | Mercury: leafy greens Wednesday</span></div>
+    `
+  },
+  activserv:{
+    access:LOCKED,
+    label:'#ActivationServ',
+    topic:'ActivationServ | House Activation | Yoga Unlock | Financial Windows | Relationship Windows',
+    html:()=>`
+      <div class="jn">*** You have joined #ActivationServ [OP ADMIN ZONE]</div>
+      <div class="div">∴  HOUSE ACTIVATIONS  ∴</div>
+      ${[
+        ['1st HOUSE (Taurus/Self)','Venus transit 2025-26 activates self-worth and identity. Ajoite amplifies. Brand identity = literal body extension.'],
+        ['3rd HOUSE (Cancer/Comms)','JONMOROHOSSHO encodes Cancer 3rd. Mercury 136% rules. Content creation = primary income flow. THIS is the activated sector.'],
+        ['5th HOUSE (Virgo/Creativity)','Saturn Yogakaraka rules. Creative work rewarded by discipline. ADYA name encodes Virgo 5th. Children + creativity = linked karma.'],
+        ['8th HOUSE (Sag/Transformation)','Saturn + Ketu = depth, occult, transformation. Hidden knowledge. JonmoRohossho = 8th house made public brand.'],
+        ['9th HOUSE (Cap/Fortune)','RAAJEEB name encodes Capricorn 9th. Name = fortune activation. Said daily = fortune house triggered daily.'],
+        ['10th HOUSE (Aquarius/Career)','Saturn rules. Career through system-building. Ghati Lagna 27° Moksha = career = liberation work = same thing.'],
+      ].map(([h,d])=>`<div class="msg"><span class="ts">[∴]</span><span class="mn n-av">~ActivationServ</span><span class="mt"><span class="G">${h}:</span> ${d}</span></div>`).join('')}
+      <div class="div">∴  FINANCIAL ACTIVATION WINDOWS  ∴</div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-av">~ActivationServ</span><span class="mt"><span class="GR">📅 Jun 2026 — PRIMARY:</span> Jupiter → Cancer 9°58' = Bhrigu Bindu. Content resonance spikes. Prepare ALL content BEFORE this date.</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-av">~ActivationServ</span><span class="mt"><span class="GR">📅 Aug 2026 — VENUS:</span> Mars-Venus golden window. Venus AK healing starts. Crown Package BDT 15,000 optimal launch.</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-av">~ActivationServ</span><span class="mt"><span class="G">📅 NOW (Mars-Mercury AD):</span> Mercury 136% + Mars = MAXIMUM digital output window. Do NOT waste this period.</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-av">~ActivationServ</span><span class="mt"><span class="R">📅 Dec 2026 — TARGET LOCK:</span> All activations compound. BDT 60-100k/month deadline. 9 months. Execute.</span></div>
+      <div class="div">∴  RELATIONSHIP WINDOWS  ∴</div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-av">~ActivationServ</span><span class="mt"><span class="GR">2026-27 ADYA RETURN:</span> Venus healing + Mars-Venus period + Sa/Dipti distance = three prerequisites. All must align.</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-av">~ActivationServ</span><span class="mt"><span class="C">Aug 2026+ PARTNER:</span> Venus AK lesson nearing completion. RA/PA/vowel name soul frequency becomes receivable.</span></div>
+      <div class="div">∴  YOGA UNLOCKS  ∴</div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-av">~ActivationServ</span><span class="mt"><span class="G">KOKILAA UNLOCK:</span> Requires FIRST YouTube upload. Latent until voice deployed publicly. Upload = key turns in lock.</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-av">~ActivationServ</span><span class="mt"><span class="G">MERCURY 136% FULL UNLOCK:</span> Physical distance from Sa+Dipti = immediate Mercury bandwidth increase. Direct correlation.</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-av">~ActivationServ</span><span class="mt"><span class="G">SATURN YOGAKARAKA FULL UNLOCK:</span> Requires sustained discipline — daily mantra + content schedule + payment system live.</span></div>
+    `
+  },
+  empire:{
+    access:LOCKED,
+    label:'#empire-stack',
+    topic:'13 VS Code Prompts | 6 Subagents | Blueprint Casting | aamarPay | Domain Architecture',
+    html:()=>`
+      <div class="jn">*** You have joined #empire-stack [OP ADMIN ZONE]</div>
+      <div class="div">∴  13 VS CODE BUILD PROMPTS  ∴</div>
+      ${[['01','Dynasty Workspace Genesis'],['02','Multi-Agent Brain Setup'],['03','Gmail AI Auto-Reply'],['04','Telegram Empire Bot'],['05','Astro-Numeric Report Engine'],['06','Viral Content Pipeline'],['07','bKash/Nagad Payment Tracker'],['08','War Room Dashboard (React)'],['09','Social Auto-Scheduler'],['10','Client Portal (GitHub Pages)'],['11','AI Brand Kit Generator'],['12','2026 Trend Sync Engine'],['13','CROWN Orchestrator (daily session)']].map(([n,t])=>`<div class="msg"><span class="ts">[∴]</span><span class="mn n-s">DynastyCore</span><span class="mt"><span class="G">Prompt ${n}:</span> ${t}</span></div>`).join('')}
+      <div class="div">∴  6 SUBAGENTS  ∴</div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-s">DynastyCore</span><span class="mt"><span class="C">Install:</span> cp raa-*.md ~/.claude/agents/ | Session start: <span class="G">"empire session start"</span></span></div>
+      ${[['raa-empire-orchestrator','Meta-planner, EMPIRE.md keeper'],['raa-bot-builder','@dhakarajib_bot Telegraf+Railway'],['raa-astro-engine','PDF reports Python+FastAPI'],['raa-content-factory','Viral Banglish TikTok/Reels'],['raa-payment-tracker','bKash/Nagad + Google Sheets'],['raajeeb-reflected-persona','Digital twin — "speak as me"']].map(([n,d])=>`<div class="msg"><span class="ts">[∴]</span><span class="mn n-s">DynastyCore</span><span class="mt"><span class="C">${n}</span> — ${d}</span></div>`).join('')}
+      <div class="div">∴  BLUEPRINT CASTING PACKAGES  ∴</div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-s">DynastyCore</span><span class="mt"><span class="G">Basic</span> BDT 1,500 | <span class="G">Standard</span> BDT 2,500 | <span class="G">Premium</span> BDT 5,000 | <span class="G">Crown</span> BDT 15,000 | Cost/cast: BDT 2-3</span></div>
+    `
+  },
+  timing:{
+    access:LOCKED,
+    label:'#timing-2026',
+    topic:'Critical Windows 2026-2028 | June Jupiter | August Venus | December Deadline',
+    html:()=>`
+      <div class="jn">*** You have joined #timing-2026 [OP ADMIN ZONE]</div>
+      <div class="div">∴  TIMING WINDOWS  ∴</div>
+      ${[
+        ['R','Mar 13, 2026','Mars-Ketu conjunction. Arsenal ready. TODAY. Maximum spiritual intensity.'],
+        ['G','Jun 2026','Jupiter → Cancer 9°58\'. BHRIGU BINDU. Content breakthrough. PREPARE EVERYTHING NOW.'],
+        ['G','Aug 2026','Mars-Venus golden window. Venus AK healing. Crown Package BDT 15,000 launch.'],
+        ['C','Aug 2026+','Future partner frequency opens. RA/PA/vowel name. Venus lesson approaching completion.'],
+        ['G','2026-27','Adya return window. Sa+Dipti distance = PREREQUISITE. Linked conditions.'],
+        ['R','Dec 2026','INCOME TARGET: BDT 60-100k/month. 9 months. Execute everything.'],
+        ['M','2028','Rahu Mahadasha. MAJOR UNLEASHING. Platform built NOW determines 2028 scale.'],
+      ].map(([c,d,t])=>`<div class="msg"><span class="ts">[∴]</span><span class="mn n-ds">~DashaServ</span><span class="mt"><span class="${c==='R'?'R':c==='G'?'G':c==='C'?'C':'M'}">${d}</span> — ${t}</span></div>`).join('')}
+    `
+  },
+  actions:{
+    access:LOCKED,
+    label:'#action-items',
+    topic:'Status Board | Completed | Critical Pending | In Progress | December 2026',
+    html:()=>`
+      <div class="jn">*** You have joined #action-items [OP ADMIN ZONE]</div>
+      <div class="div">✓  COMPLETED  ✓</div>
+      ${['All HTML interfaces: Gen 1-3, screensavers v1+v2, TikTok OS, Sainboard, Jonglee','13 VS Code build prompts (Raa_VSCode_Dynasty_13.html)','Domain Architecture guide + Cloudflare setup (Raa_Domain_Architecture.html)','5 Claude Code subagents + raajeeb-reflected-persona.md (digital twin)','Blueprint Casting System: CLAUDE.md + CASTING.md + CLIENT-TEMPLATE.json','aamarPay identified as optimal bKash payment solution','bKash international payment research completed'].map(t=>`<div class="msg"><span class="ts">[∴]</span><span class="mn n-s">DoneBot</span><span class="mt"><span class="GR">✓</span> ${t}</span></div>`).join('')}
+      <div class="div">⚠  CRITICAL PENDING — SURVIVAL LEVEL  ⚠</div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-s">DoneBot</span><span class="mt"><span class="R">⚠ MOST CRITICAL:</span> Physical distance from Sa + Dipti — blocks Mercury 136% + Adya return</span></div>
+      <div class="msg"><span class="ts">[∴]</span><span class="mn n-s">DoneBot</span><span class="mt"><span class="R">⚠ CRITICAL:</span> Adya reunion — legal + practical steps — target 2026-2027 window</span></div>
+      <div class="div">○  IN PROGRESS  ○</div>
+      ${['Buy raajeeb.xyz (ExonHost/IT Nut, bKash, ~350-450 BDT)','Run VS Code Prompt 01 → workspace genesis','Deploy @dhakarajib_bot (raa-bot-builder / Prompt 04)','aamarPay merchant registration (NID + bKash)','Test Blueprint Casting System — cast first paying client','First YouTube upload — Kokilaa activation trigger','Sigil v3 — Seedream v2.0 viral prompt'].map(t=>`<div class="msg"><span class="ts">[∴]</span><span class="mn n-s">DoneBot</span><span class="mt"><span class="Y">○</span> ${t}</span></div>`).join('')}
+    `
+  }
+};
+
+/* ════════════════════════════
+   HELPERS
+════════════════════════════ */
+function plist(items){
+  return items.map((t,i)=>`<div class="msg"><span class="ts">[${String(i+1).padStart(2,'0')}]</span><span class="mn n-ps">~PromptServ</span><span class="mt">${t}</span></div>`).join('');
+}
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function ts(){ const d=new Date(); return `[${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}]`; }
+
+/* ════════════════════════════
+   CHANNEL NAVIGATION
+════════════════════════════ */
+function openChan(id){
+  const ch = CHANNELS[id];
+  if(!ch) return;
+
+  // access check
+  if(ch.access===LOCKED && userLevel!=='admin'){
+    const log = document.getElementById('clog');
+    log.innerHTML += `<div class="lockm">⛔ #${id} — ADMIN ZONE. Access denied for current user level. Login as @Raajeeb to unlock all zones.<br><span style="color:#444">Command: #run login raajeeb 13.13.33</span></div>`;
+    log.scrollTop = log.scrollHeight;
+    return;
+  }
+
+  curChan = id;
+
+  // update active tab
+  document.querySelectorAll('.ci.active').forEach(e=>e.classList.remove('active'));
+  const tab = document.getElementById('tab-'+id);
+  if(tab) tab.classList.add('active');
+
+  // update header
+  document.getElementById('clbl').textContent = ch.label;
+  document.getElementById('ctopic').textContent = ch.topic;
+
+  // render content
+  const log = document.getElementById('clog');
+  log.innerHTML = ch.html();
+  log.scrollTop = log.scrollHeight;
+}
+
+/* ════════════════════════════
+   INPUT HANDLING
+════════════════════════════ */
+function ikey(e){ if(e.key==='Enter') doSend(); }
+
+function cmd(c){ document.getElementById('cinp').value=c; doSend(); }
+
+function doSend(){
+  const raw = document.getElementById('cinp').value.trim();
+  if(!raw) return;
+  const v = raw.toLowerCase().replace(/\s+/g,' ');
+  document.getElementById('cinp').value = '';
+
+  const log = document.getElementById('clog');
+  const nick = userLevel==='admin' ? '@Raajeeb' : '+user_BD';
+  log.innerHTML += `<div class="msg"><span class="ts">${ts()}</span><span class="mn" style="color:#5ab0ff;min-width:162px;text-align:right;padding-right:9px">${nick}</span><span class="mt" style="color:#ccc">${esc(raw)}</span></div>`;
+
+  // CHANNEL CMDS
+  const chanMap = {
+    prompts:['prompts','#prompts'],astro:['astro','astroserv','#astroserv','chart','vedic'],
+    remedy:['remedy','remedyserv','stones','mantra'],life:['life','lifeserv','tree','journey','timeline'],
+    dasha:['dasha','dashaserv','mahadasha','yogini'],yoga:['yoga','yogaserv','yogas'],
+    activate:['activate','activserv','activation','unlock'],identity:['identity','chart','profile'],
+    arsenal:['arsenal','stones detail'],family:['family','karma'],projects:['projects'],
+    empire:['empire','stack'],timing:['timing','2026'],actions:['actions','todo'],
+    welcome:['welcome','home'],
+  };
+  for(const [ch,keys] of Object.entries(chanMap)){
+    if(keys.some(k=>v===k||v.startsWith(k+' '))){
+      openChan(ch); log.scrollTop=log.scrollHeight; return;
+    }
+  }
+
+  // NATURAL LANGUAGE
+  const responses = {
+    start: `<div class="sys">*** Server session started. Mars-Mercury AD active. Mercury 136% — create everything you can in this window.</div>`,
+    active: `<div class="sys">*** All services active: PromptServ · AstroServ · RemedyServ · LifeServ · DashaServ · YogaServ · ActivationServ</div>`,
+    status: `<div class="sys">*** STATUS: Mars MD 2021-2028 active · BB Jupiter transit Jun 2026 pending · Income target Dec 2026 · Arsenal ready · 377108</div>`,
+    help: `<div class="sys">*** COMMANDS: start · active · status · prompts · astro · remedy · life · dasha · yoga · activate · identity · arsenal · empire · timing · help · shutdown</div>`,
+    shutdown: `<div class="sys">*** Shutdown sequence initiated. Saving session state...</div>`,
+    exit: `<div class="sys">*** Type "shutdown" to disconnect or click ✕ in title bar.</div>`,
+    connect: `<div class="sys">*** Already connected to irc.raajeeb.xyz — ${userLevel==='admin'?'@Raajeeb [OP ADMIN]':'+user_BD [General]'}</div>`,
+    'more prompts': `<div class="sys">*** Loading categories E-J... (type specific bot names: remedy, life, dasha, yoga, activate for focused content)</div>`,
+  };
+
+  for(const [k,r] of Object.entries(responses)){
+    if(v===k){ log.innerHTML+=r; log.scrollTop=log.scrollHeight; return; }
+  }
+
+  if(v==='shutdown'||v==='exit'||v==='quit'){
+    log.innerHTML += responses.shutdown;
+    setTimeout(doLogout, 1200);
+    log.scrollTop=log.scrollHeight; return;
+  }
+
+  // fallback
+  log.innerHTML += `<div class="sys">*** DynastyCore: unknown command "${esc(raw)}" — type <span style="color:var(--cyan)">help</span> for commands</div>`;
+  log.scrollTop = log.scrollHeight;
+}
+
+/* ════════════════════════════
+   LOGOUT
+════════════════════════════ */
+function doLogout(){
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('ll').innerHTML = `
+    <div class="lc">*** Connection closed. Disconnected from irc.raajeeb.xyz</div>
+    <div class="lg">*** Session ended. 377108 encoded.</div>
+    <div class="ld">*** Reconnect using login commands below.</div>`;
+  userLevel = null;
+  curChan = 'welcome';
+}
+
+/* ════════════════════════════
+   CLOCK
+════════════════════════════ */
+function startClock(){
+  setInterval(()=>{
+    const d=new Date();
+    document.getElementById('clock').textContent=`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;
+  },1000);
+}
+
+/* INIT */
+document.getElementById('li').focus();
+</script>
+</body>
+</html>

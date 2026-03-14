@@ -1,0 +1,2578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>∴ JonmoRohossho OS — Sound. Frequency. Destiny.</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;500;600&display=swap');
+
+:root {
+  --gold:#c9a227;--goldl:#f0c040;--goldd:#7a5c10;
+  --violet:#7c3aed;--violetl:#a78bfa;--violetd:#3b0d8c;
+  --cyan:#06b6d4;--teal:#2dd4bf;
+  --red:#ef4444;--green:#22c55e;--orange:#f97316;
+  --void:#000008;--deep:#04000e;--nebula:#0a0018;
+  --card:rgba(8,0,18,0.97);--cardb:rgba(14,0,26,0.95);
+  --bdr:rgba(201,162,39,0.18);--bdra:rgba(201,162,39,0.45);
+  --glow:rgba(201,162,39,0.35);--glowv:rgba(124,58,237,0.3);
+  --wh:#e8e0ff;--gr:#9ca3af;--dim:#4b5563;
+  --topbar:28px;--taskbar:36px;
+  font-size:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:var(--wh);font-family:'JetBrains Mono',monospace;}
+
+/* ── SCROLLBARS ── */
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--goldd);border-radius:2px;}
+::-webkit-scrollbar-thumb:hover{background:var(--gold);}
+*{scrollbar-width:thin;scrollbar-color:var(--goldd) transparent;}
+
+/* ── CRT COSMIC OVERLAY ── */
+.crt{pointer-events:none;position:absolute;inset:0;z-index:1000;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.055) 2px,rgba(0,0,0,0.055) 4px);}
+
+/* ── PIXEL GRID ── */
+.pgrid{
+  background-image:linear-gradient(rgba(201,162,39,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(201,162,39,0.03) 1px,transparent 1px);
+  background-size:32px 32px;
+}
+
+/* ── SCAN LINE ── */
+.scan{pointer-events:none;position:absolute;left:0;right:0;height:2px;z-index:1001;
+  background:linear-gradient(transparent,rgba(201,162,39,0.12),transparent);
+  animation:scan 6s linear infinite;}
+@keyframes scan{0%{top:-2px;}100%{top:100%}}
+
+/* ── GLOW UTILS ── */
+.glow-g{text-shadow:0 0 8px var(--glow),0 0 16px rgba(201,162,39,0.15);}
+.glow-v{text-shadow:0 0 8px var(--glowv);}
+
+/* ── BLINK ── */
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+.blink{animation:blink 1s step-start infinite;}
+
+/* ── SHAKE ── */
+@keyframes shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-8px);}40%{transform:translateX(8px);}60%{transform:translateX(-5px);}80%{transform:translateX(5px);}}
+.shake{animation:shake 0.5s ease;}
+
+/* ── PULSE DOT ── */
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.35;}}
+.pdot{animation:pulse 2s ease-in-out infinite;}
+
+/* ── FADE-IN-UP ── */
+@keyframes fiu{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+.fiu{animation:fiu 0.5s ease forwards;}
+
+/* ── SPIN ── */
+@keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+.spin{animation:spin 12s linear infinite;}
+
+/* ══════════════════════════════════════════
+   BOOT SCREEN
+══════════════════════════════════════════ */
+#boot{
+  position:fixed;inset:0;background:#000010;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;
+  transition:opacity 0.6s ease;
+}
+#boot.fade{opacity:0;}
+#boot-log{font-size:10px;line-height:1.75;background:rgba(0,0,8,0.85);border:1px solid rgba(201,162,39,0.12);border-radius:4px;padding:12px 16px;min-height:220px;max-height:280px;overflow-y:auto;margin-bottom:12px;width:100%;max-width:600px;}
+.boot-logo{font-family:'Cinzel Decorative',serif;font-size:clamp(16px,3.5vw,28px);font-weight:700;letter-spacing:4px;text-align:center;margin-bottom:8px;
+  background:linear-gradient(135deg,var(--goldd),var(--goldl),var(--gold),var(--violetl));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 20px rgba(201,162,39,0.4));}
+.boot-sub{font-size:10px;color:var(--goldd);letter-spacing:3px;text-align:center;margin-bottom:20px;font-family:'Cinzel',serif;}
+.boot-prog-wrap{width:100%;max-width:600px;margin-bottom:8px;}
+.boot-prog-track{height:3px;background:rgba(201,162,39,0.1);border-radius:2px;overflow:hidden;border:1px solid rgba(201,162,39,0.08);}
+.boot-prog-fill{height:100%;background:linear-gradient(90deg,var(--goldd),var(--goldl),var(--violetl));border-radius:2px;box-shadow:0 0 10px rgba(201,162,39,0.6);transition:width 0.08s linear;}
+.boot-footer{width:100%;max-width:600px;display:flex;justify-content:space-between;font-size:9px;color:var(--goldd);margin-top:6px;padding:0 2px;}
+.bc{color:var(--gold);} .bg{color:var(--green);} .br{color:var(--red);}
+.bc2{color:var(--cyan);} .bv{color:var(--violetl);} .bd{color:var(--dim);}
+.bo{color:var(--orange);}
+
+/* ══════════════════════════════════════════
+   LOGIN SCREEN
+══════════════════════════════════════════ */
+#login{
+  position:fixed;inset:0;background:#000010;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:9998;
+  background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(20,0,50,0.6) 0%,#000010 100%);
+}
+.login-clock{text-align:center;margin-bottom:32px;}
+.lc-time{font-size:clamp(48px,10vw,80px);font-weight:700;letter-spacing:0.08em;color:var(--goldl);line-height:1;
+  text-shadow:0 0 40px rgba(201,162,39,0.7),0 0 80px rgba(201,162,39,0.2);}
+.lc-date{font-size:12px;color:var(--goldd);letter-spacing:0.2em;text-transform:uppercase;margin-top:10px;font-family:'Cinzel',serif;}
+.login-card{
+  width:min(360px,94vw);background:var(--card);border:1px solid var(--bdr);border-radius:6px;
+  box-shadow:0 0 40px rgba(124,58,237,0.15),0 0 80px rgba(201,162,39,0.06),inset 0 1px 0 rgba(201,162,39,0.1);
+  position:relative;overflow:hidden;
+}
+.login-card::before{content:'';position:absolute;top:-1px;left:20%;right:20%;height:1px;background:linear-gradient(to right,transparent,var(--goldl),transparent);}
+.lhdr{padding:18px 22px 14px;border-bottom:1px solid rgba(201,162,39,0.08);}
+.lhdr-top{display:flex;align-items:center;gap:8px;margin-bottom:4px;}
+.lhdr-sigil{font-size:20px;color:var(--gold);text-shadow:0 0 10px rgba(201,162,39,0.6);}
+.lhdr-name{font-family:'Cinzel Decorative',serif;font-size:13px;color:var(--gold);letter-spacing:3px;}
+.lhdr-ver{margin-left:auto;font-size:8px;color:var(--dim);border:1px solid rgba(201,162,39,0.1);padding:2px 6px;border-radius:3px;}
+.lhdr-sub{font-size:9px;color:var(--dim);letter-spacing:1px;}
+.lbody{padding:18px 22px 16px;}
+.lfield{margin-bottom:14px;}
+.lfield label{display:block;font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--goldd);margin-bottom:5px;}
+.lfield-user{display:flex;align-items:center;gap:8px;padding:9px 10px;border:1px solid rgba(201,162,39,0.1);border-radius:4px;background:rgba(201,162,39,0.03);font-size:10px;color:var(--goldd);}
+.lpw-wrap{display:flex;align-items:center;border:1px solid rgba(124,58,237,0.3);border-radius:4px;background:rgba(0,0,8,0.7);transition:border-color .2s;}
+.lpw-wrap:focus-within{border-color:var(--gold);}
+.lpw-wrap.err{border-color:rgba(239,68,68,0.5);}
+.lpw-wrap.ok{border-color:rgba(34,197,94,0.5);}
+#lpw{flex:1;background:transparent;color:var(--goldl);font-family:'JetBrains Mono',monospace;font-size:12px;padding:9px 10px;border:none;outline:none;}
+#lpw::placeholder{color:var(--dim);}
+#lpw:disabled{opacity:0.4;}
+.lshow{padding:0 10px;background:none;border:none;color:var(--dim);cursor:pointer;font-size:9px;}
+.lshow:hover{color:var(--gold);}
+.lattempts{display:flex;align-items:center;gap:5px;margin-bottom:10px;}
+.lattempts span{font-size:8px;color:var(--dim);}
+.ldot{width:8px;height:8px;border-radius:50%;border:1px solid rgba(201,162,39,0.2);background:transparent;transition:.2s;}
+.ldot.used{background:var(--red);border-color:var(--red);box-shadow:0 0 4px rgba(239,68,68,0.5);}
+.lmsg{font-size:10px;padding:8px 10px;border-radius:4px;margin-bottom:10px;min-height:30px;display:none;}
+.lmsg.err{display:block;color:var(--red);border:1px solid rgba(239,68,68,0.25);background:rgba(239,68,68,0.05);}
+.lmsg.ok{display:block;color:var(--green);border:1px solid rgba(34,197,94,0.25);background:rgba(34,197,94,0.05);}
+.lbtn{width:100%;padding:10px;background:rgba(8,0,20,0.8);border:1px solid rgba(201,162,39,0.25);border-radius:4px;color:var(--gold);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:3px;cursor:pointer;transition:all .2s;}
+.lbtn:hover:not(:disabled){border-color:var(--gold);box-shadow:0 0 14px rgba(201,162,39,0.15);}
+.lbtn:disabled{opacity:0.3;cursor:not-allowed;}
+.lfooter{padding:10px 22px 12px;display:flex;justify-content:space-between;font-size:8px;color:var(--dim);}
+
+/* ══════════════════════════════════════════
+   TOP BAR
+══════════════════════════════════════════ */
+#topbar{
+  position:fixed;top:0;left:0;right:0;height:var(--topbar);z-index:9990;
+  background:rgba(0,0,8,0.97);border-bottom:1px solid rgba(201,162,39,0.1);
+  display:none;align-items:center;padding:0 10px;gap:8px;font-size:9.5px;
+  box-shadow:0 1px 0 rgba(201,162,39,0.05),0 2px 12px rgba(0,0,0,0.6);
+  font-family:'JetBrains Mono',monospace;
+}
+.tb-logo{font-family:'Cinzel Decorative',serif;font-size:11px;color:var(--gold);letter-spacing:2px;cursor:pointer;display:flex;align-items:center;gap:5px;text-shadow:0 0 10px rgba(201,162,39,0.4);}
+.tb-sep{color:rgba(201,162,39,0.2);}
+.tb-path{color:var(--goldd);font-size:9px;}
+.tb-spacer{flex:1;}
+.tb-stat{display:flex;align-items:center;gap:2px;color:var(--dim);font-size:9px;}
+.tb-time{color:var(--gold);font-weight:600;letter-spacing:0.05em;text-shadow:0 0 8px rgba(201,162,39,0.4);}
+.tb-mail-badge{display:flex;align-items:center;gap:4px;color:var(--orange);cursor:pointer;font-size:9px;}
+.tb-mail-badge:hover{color:var(--goldl);}
+.tb-badge{background:rgba(249,115,22,0.2);border:1px solid rgba(249,115,22,0.3);padding:1px 5px;border-radius:3px;font-size:8px;}
+
+/* ══════════════════════════════════════════
+   TASKBAR
+══════════════════════════════════════════ */
+#taskbar{
+  position:fixed;bottom:0;left:0;right:0;height:var(--taskbar);z-index:9990;
+  background:rgba(0,0,8,0.97);border-top:1px solid rgba(201,162,39,0.1);
+  display:none;align-items:center;padding:0 6px;gap:4px;
+  box-shadow:0 -1px 0 rgba(201,162,39,0.05),0 -4px 20px rgba(0,0,0,0.7);
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+}
+.tb-start{display:flex;align-items:center;gap:5px;padding:3px 10px;background:rgba(201,162,39,0.1);border:1px solid rgba(201,162,39,0.25);border-radius:3px;color:var(--gold);font-family:'Cinzel Decorative',serif;font-size:9px;letter-spacing:1px;cursor:pointer;transition:all .2s;}
+.tb-start:hover{background:rgba(201,162,39,0.18);box-shadow:0 0 10px rgba(201,162,39,0.1);}
+.tb-div{width:1px;height:16px;background:rgba(201,162,39,0.1);}
+.tb-apps{display:flex;align-items:center;gap:2px;flex:1;overflow-x:auto;overflow-y:hidden;}
+.tb-apps::-webkit-scrollbar{display:none;}
+.tb-app{display:flex;align-items:center;gap:4px;padding:3px 6px;border-radius:3px;border:1px solid transparent;cursor:pointer;transition:all .2s;font-size:9.5px;position:relative;color:var(--dim);}
+.tb-app:hover{color:var(--gold);background:rgba(201,162,39,0.06);}
+.tb-app.open{color:var(--goldd);border-color:rgba(201,162,39,0.2);background:rgba(201,162,39,0.06);}
+.tb-app.active{color:var(--goldl);border-color:rgba(201,162,39,0.4);background:rgba(201,162,39,0.12);}
+.tb-app .tb-ind{width:3px;height:3px;border-radius:50%;background:var(--gold);box-shadow:0 0 4px rgba(201,162,39,0.8);}
+.tb-app .tb-badge{position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;border-radius:50%;width:14px;height:14px;font-size:7px;display:flex;align-items:center;justify-content:center;border:1px solid #000;font-weight:700;}
+.tb-sys{display:flex;align-items:center;gap:6px;font-size:9px;}
+.tb-meter{display:flex;align-items:center;gap:3px;}
+.tb-meter-lbl{color:var(--dim);font-size:8px;}
+.tb-meter-bar{width:36px;height:4px;background:rgba(201,162,39,0.08);border-radius:2px;overflow:hidden;}
+.tb-meter-fill{height:100%;border-radius:2px;transition:width .7s;}
+.tb-meter-val{font-size:8px;min-width:20px;text-align:right;}
+.tb-clock{color:var(--gold);font-weight:600;letter-spacing:0.05em;font-size:10px;text-shadow:0 0 7px rgba(201,162,39,0.4);}
+.tb-action{display:flex;align-items:center;gap:3px;padding:3px 6px;border-radius:3px;border:1px solid transparent;cursor:pointer;font-size:9px;transition:all .2s;}
+.tb-logout{color:rgba(250,204,21,0.5);}.tb-logout:hover{color:#fde047;background:rgba(250,204,21,0.06);border-color:rgba(250,204,21,0.2);}
+.tb-shutdown{color:rgba(239,68,68,0.5);}.tb-shutdown:hover{color:var(--red);background:rgba(239,68,68,0.06);border-color:rgba(239,68,68,0.2);}
+
+/* ══════════════════════════════════════════
+   DESKTOP
+══════════════════════════════════════════ */
+#desktop{
+  position:fixed;left:0;right:0;overflow:hidden;display:none;
+  background:radial-gradient(ellipse 90% 80% at 50% 40%,#080018 0%,#040010 55%,#000008 100%);
+}
+.desk-grid{position:absolute;inset:0;pointer-events:none;}
+.desk-vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 110% 110% at 50% 50%,transparent 30%,rgba(0,0,0,0.75) 100%);}
+.desk-ambient{position:absolute;pointer-events:none;top:40%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(124,58,237,0.04) 0%,transparent 70%);}
+.desk-icons{position:absolute;top:4px;left:4px;display:flex;flex-direction:column;gap:2px;z-index:20;}
+.dicon{display:flex;align-items:center;gap:6px;padding:5px 7px;border-radius:4px;cursor:pointer;width:150px;border:1px solid transparent;transition:all .15s;}
+.dicon:hover{background:rgba(201,162,39,0.06);border-color:rgba(201,162,39,0.14);}
+.dicon.sel{background:rgba(201,162,39,0.1);border-color:rgba(201,162,39,0.25);box-shadow:0 0 8px rgba(201,162,39,0.06);}
+.dicon-box{width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:4px;font-size:14px;flex-shrink:0;border:1px solid rgba(201,162,39,0.08);transition:all .15s;}
+.dicon-info{min-width:0;}
+.dicon-lbl{font-size:10px;color:rgba(201,162,39,0.65);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.dicon.sel .dicon-lbl{color:#fde47d;}
+.dicon-sub{font-size:8px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;}
+.dicon-ind{width:5px;height:5px;border-radius:50%;margin-left:auto;flex-shrink:0;}
+.desk-hint{position:absolute;bottom:6px;right:8px;font-size:8px;color:var(--dim);pointer-events:none;text-align:right;line-height:1.8;}
+.desk-wm{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);font-size:8px;color:rgba(201,162,39,0.06);pointer-events:none;letter-spacing:3px;font-family:'Cinzel',serif;}
+
+/* ══════════════════════════════════════════
+   WINDOWS
+══════════════════════════════════════════ */
+.window{
+  position:absolute;display:flex;flex-direction:column;border-radius:5px;
+  border:1px solid rgba(201,162,39,0.18);overflow:hidden;min-width:280px;min-height:180px;
+  background:var(--card);box-shadow:0 8px 40px rgba(0,0,0,0.8),0 0 0 1px rgba(201,162,39,0.06),inset 0 1px 0 rgba(201,162,39,0.1);
+  transition:box-shadow .15s;
+}
+.window.focused{border-color:rgba(201,162,39,0.35);box-shadow:0 12px 50px rgba(0,0,0,0.9),0 0 20px rgba(124,58,237,0.08),inset 0 1px 0 rgba(201,162,39,0.15);}
+.window.minimized{display:none;}
+.window.maximized{border-radius:0!important;border:none!important;}
+.win-bar{
+  height:26px;background:linear-gradient(135deg,rgba(14,4,30,0.98),rgba(8,0,18,0.98));
+  border-bottom:1px solid rgba(201,162,39,0.12);display:flex;align-items:center;padding:0 8px;gap:6px;
+  cursor:move;flex-shrink:0;user-select:none;
+}
+.win-btns{display:flex;gap:4px;flex-shrink:0;}
+.wbtn{width:11px;height:11px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:6px;font-weight:700;transition:.15s;}
+.wbtn-c{background:#3d0d0d;color:#7c2020;}.wbtn-c:hover{background:#ef4444;color:#fff;}
+.wbtn-m{background:#1a1a00;color:#5c5c00;}.wbtn-m:hover{background:#eab308;color:#000;}
+.wbtn-x{background:#0d1a00;color:#2a4000;}.wbtn-x:hover{background:#22c55e;color:#000;}
+.win-title{flex:1;font-size:9px;color:var(--gold);letter-spacing:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:'JetBrains Mono',monospace;}
+.win-body{flex:1;overflow:hidden;position:relative;}
+
+/* ══════════════════════════════════════════
+   APP STYLES (shared)
+══════════════════════════════════════════ */
+.app{width:100%;height:100%;display:flex;flex-direction:column;background:var(--card);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--wh);}
+.app-toolbar{height:26px;display:flex;align-items:center;gap:4px;padding:0 8px;background:rgba(0,0,6,0.6);border-bottom:1px solid rgba(201,162,39,0.08);flex-shrink:0;font-size:9px;}
+.app-tb-btn{padding:2px 8px;border:1px solid rgba(201,162,39,0.15);border-radius:3px;background:rgba(201,162,39,0.04);color:var(--goldd);cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:9px;transition:.15s;}
+.app-tb-btn:hover{border-color:rgba(201,162,39,0.35);color:var(--gold);}
+.app-tb-sep{width:1px;height:14px;background:rgba(201,162,39,0.08);}
+.app-tb-lbl{color:var(--dim);font-size:9px;}
+.app-content{flex:1;overflow:hidden;position:relative;}
+
+/* ══════════════════════════════════════════
+   TERMINAL
+══════════════════════════════════════════ */
+.term-out{flex:1;overflow-y:auto;padding:8px 10px;line-height:1.75;font-size:11px;}
+.term-row{display:flex;align-items:baseline;gap:4px;padding:0 8px 4px;border-top:1px solid rgba(201,162,39,0.06);flex-shrink:0;}
+.term-prompt{color:var(--gold);font-size:11px;white-space:nowrap;flex-shrink:0;}
+.term-inp{flex:1;background:transparent;border:none;outline:none;color:var(--goldl);font-family:'JetBrains Mono',monospace;font-size:11px;caret-color:var(--gold);}
+.tl{display:block;white-space:pre-wrap;word-break:break-word;}
+.tl-g{color:var(--green);}.tl-gold{color:var(--gold);}.tl-r{color:var(--red);}
+.tl-c{color:var(--cyan);}.tl-v{color:var(--violetl);}.tl-d{color:var(--dim);}
+.tl-o{color:var(--orange);}.tl-cmd{color:var(--goldl);}
+
+/* ══════════════════════════════════════════
+   MAIL
+══════════════════════════════════════════ */
+.mail-layout{display:flex;height:100%;}
+.mail-sidebar{width:160px;min-width:160px;border-right:1px solid rgba(201,162,39,0.08);display:flex;flex-direction:column;background:rgba(0,0,6,0.5);}
+.mail-folders{padding:6px 0;flex:1;overflow-y:auto;}
+.mf-hdr{font-size:8px;letter-spacing:3px;color:var(--dim);padding:6px 10px 3px;text-transform:uppercase;}
+.mfold{display:flex;align-items:center;gap:5px;padding:5px 10px;cursor:pointer;font-size:10px;color:var(--dim);border-left:2px solid transparent;transition:.15s;}
+.mfold:hover{color:var(--gold);background:rgba(201,162,39,0.04);}
+.mfold.active{color:var(--gold);border-left-color:var(--gold);background:rgba(201,162,39,0.06);}
+.mfold-cnt{margin-left:auto;font-size:8px;background:rgba(201,162,39,0.1);padding:1px 5px;border-radius:3px;color:var(--gold);}
+.mail-main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.mail-list{flex:1;overflow-y:auto;}
+.memail{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border-bottom:1px solid rgba(201,162,39,0.05);cursor:pointer;transition:.12s;position:relative;}
+.memail:hover{background:rgba(201,162,39,0.04);}
+.memail.sel{background:rgba(124,58,237,0.08);border-left:2px solid var(--violet);}
+.memail.unread{background:rgba(201,162,39,0.03);}
+.me-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;border:1px solid rgba(201,162,39,0.15);}
+.me-body{flex:1;min-width:0;}
+.me-from{font-size:10px;color:var(--gold);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.memail:not(.unread) .me-from{color:var(--goldd);font-weight:400;}
+.me-sub{font-size:9.5px;color:var(--wh);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;}
+.memail:not(.unread) .me-sub{color:var(--dim);}
+.me-snip{font-size:8.5px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;}
+.me-meta{text-align:right;flex-shrink:0;}
+.me-time{font-size:8px;color:var(--dim);}
+.me-unread{width:5px;height:5px;border-radius:50%;background:var(--gold);margin-top:4px;margin-left:auto;box-shadow:0 0 5px rgba(201,162,39,0.6);}
+.mail-read-pane{height:220px;border-top:1px solid rgba(201,162,39,0.08);display:flex;flex-direction:column;overflow:hidden;}
+.mrp-hdr{padding:8px 10px;border-bottom:1px solid rgba(201,162,39,0.06);background:rgba(0,0,6,0.4);}
+.mrp-subject{font-size:12px;color:var(--goldl);margin-bottom:4px;}
+.mrp-from{font-size:9px;color:var(--gold);}
+.mrp-date{font-size:9px;color:var(--dim);}
+.mrp-body{flex:1;overflow-y:auto;padding:8px 10px;font-size:10px;color:var(--gr);line-height:1.75;white-space:pre-wrap;}
+
+/* ══════════════════════════════════════════
+   IRC
+══════════════════════════════════════════ */
+.irc-layout{display:flex;height:100%;}
+.irc-sidebar{width:140px;min-width:140px;border-right:1px solid rgba(201,162,39,0.08);background:rgba(0,0,6,0.5);display:flex;flex-direction:column;}
+.irc-shdr{font-size:8px;letter-spacing:2px;color:var(--gold);padding:7px 8px 4px;border-bottom:1px solid rgba(201,162,39,0.06);text-transform:uppercase;}
+.irc-server{font-size:9px;color:var(--goldd);padding:4px 8px 6px;border-bottom:1px solid rgba(201,162,39,0.06);}
+.irc-chans{flex:1;overflow-y:auto;padding:4px 0;}
+.ichan{display:flex;align-items:center;gap:5px;padding:4px 8px;cursor:pointer;font-size:9.5px;color:var(--dim);border-left:2px solid transparent;transition:.15s;}
+.ichan:hover{color:var(--gold);background:rgba(201,162,39,0.04);}
+.ichan.active{color:var(--goldl);border-left-color:var(--gold);background:rgba(201,162,39,0.08);}
+.ichan-dot{width:5px;height:5px;border-radius:50%;background:var(--dim);}
+.ichan.active .ichan-dot{background:var(--gold);box-shadow:0 0 4px rgba(201,162,39,0.6);}
+.irc-nicks{border-top:1px solid rgba(201,162,39,0.06);padding:4px 0;}
+.irc-nhdr{font-size:8px;color:var(--dim);padding:3px 8px;letter-spacing:2px;}
+.inick{font-size:9px;padding:2px 8px;color:var(--dim);}
+.inick.op{color:var(--gold);} .inick.op::before{content:'@';margin-right:2px;}
+.inick.bot{color:rgba(124,58,237,0.7);} .inick.bot::before{content:'~';margin-right:2px;}
+.irc-main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.irc-chan-hdr{padding:4px 8px;background:rgba(0,0,6,0.6);border-bottom:1px solid rgba(201,162,39,0.06);font-size:9px;color:var(--gold);display:flex;align-items:center;gap:6px;}
+.irc-messages{flex:1;overflow-y:auto;padding:6px 8px;line-height:1.75;}
+.imsg{display:flex;gap:4px;margin-bottom:1px;font-size:10px;}
+.imsg-ts{color:var(--dim);min-width:44px;font-size:9px;flex-shrink:0;}
+.imsg-nick{min-width:90px;text-align:right;padding-right:6px;font-size:10px;flex-shrink:0;}
+.imsg-text{flex:1;color:#c4b8d4;word-break:break-word;}
+.imsg.sys .imsg-text{color:var(--cyan);font-style:italic;}
+.imsg.join .imsg-text{color:var(--green);font-style:italic;}
+.irc-input-row{display:flex;align-items:center;gap:4px;padding:5px 6px;border-top:1px solid rgba(201,162,39,0.08);background:rgba(0,0,4,0.7);}
+.irc-nick-lbl{color:var(--gold);font-size:9px;white-space:nowrap;}
+.irc-inp{flex:1;background:rgba(0,0,8,0.5);border:1px solid rgba(201,162,39,0.15);border-radius:3px;color:var(--goldl);font-family:'JetBrains Mono',monospace;font-size:10px;padding:4px 7px;outline:none;}
+.irc-inp:focus{border-color:rgba(201,162,39,0.4);}
+.irc-sbtn{padding:4px 10px;background:rgba(201,162,39,0.1);border:1px solid rgba(201,162,39,0.25);border-radius:3px;color:var(--gold);cursor:pointer;font-size:9px;}
+.irc-sbtn:hover{background:rgba(201,162,39,0.18);}
+
+/* ══════════════════════════════════════════
+   NOTES
+══════════════════════════════════════════ */
+.notes-layout{display:flex;height:100%;}
+.notes-list{width:160px;min-width:160px;border-right:1px solid rgba(201,162,39,0.08);overflow-y:auto;background:rgba(0,0,6,0.5);}
+.notes-lhdr{font-size:8px;color:var(--dim);letter-spacing:3px;padding:7px 8px 4px;text-transform:uppercase;border-bottom:1px solid rgba(201,162,39,0.06);}
+.note-item{padding:7px 8px;cursor:pointer;border-left:2px solid transparent;border-bottom:1px solid rgba(201,162,39,0.04);transition:.15s;}
+.note-item:hover{background:rgba(201,162,39,0.04);color:var(--gold);}
+.note-item.active{background:rgba(201,162,39,0.08);border-left-color:var(--gold);}
+.note-fname{font-size:10px;color:var(--goldd);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.note-item.active .note-fname{color:var(--goldl);}
+.note-date{font-size:8px;color:var(--dim);margin-top:2px;}
+.notes-editor{flex:1;display:flex;flex-direction:column;}
+.notes-etitle{padding:5px 8px;border-bottom:1px solid rgba(201,162,39,0.06);font-size:9px;color:var(--goldd);background:rgba(0,0,4,0.4);display:flex;align-items:center;justify-content:space-between;}
+.notes-ta{flex:1;background:transparent;border:none;outline:none;color:var(--gr);font-family:'JetBrains Mono',monospace;font-size:10.5px;padding:10px 12px;line-height:1.75;resize:none;}
+
+/* ══════════════════════════════════════════
+   FILESYSTEM
+══════════════════════════════════════════ */
+.fs-path-bar{padding:4px 8px;border-bottom:1px solid rgba(201,162,39,0.08);background:rgba(0,0,6,0.5);font-size:9px;color:var(--gold);display:flex;align-items:center;gap:6px;}
+.fs-path-seg{cursor:pointer;color:var(--goldd);transition:.15s;}
+.fs-path-seg:hover{color:var(--gold);}
+.fs-path-sep{color:var(--dim);}
+.fs-content{flex:1;overflow-y:auto;padding:6px;}
+.fs-item{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:4px;cursor:pointer;font-size:10px;transition:.15s;border:1px solid transparent;}
+.fs-item:hover{background:rgba(201,162,39,0.05);border-color:rgba(201,162,39,0.1);}
+.fs-item-icon{font-size:13px;flex-shrink:0;width:18px;text-align:center;}
+.fs-item-name{flex:1;color:var(--goldd);}
+.fs-item.dir .fs-item-name{color:var(--goldl);}
+.fs-item-size{font-size:8px;color:var(--dim);}
+.fs-item-date{font-size:8px;color:var(--dim);min-width:60px;text-align:right;}
+
+/* ══════════════════════════════════════════
+   SETTINGS
+══════════════════════════════════════════ */
+.settings-layout{display:flex;height:100%;}
+.sett-tabs{width:150px;border-right:1px solid rgba(201,162,39,0.08);padding:6px 0;background:rgba(0,0,6,0.5);}
+.stab{padding:6px 10px;cursor:pointer;font-size:10px;color:var(--dim);border-left:2px solid transparent;transition:.15s;}
+.stab:hover{color:var(--gold);background:rgba(201,162,39,0.04);}
+.stab.active{color:var(--goldl);border-left-color:var(--gold);background:rgba(201,162,39,0.08);}
+.sett-content{flex:1;overflow-y:auto;padding:12px 14px;}
+.sett-section{margin-bottom:18px;}
+.sett-sh{font-size:9px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:10px;border-bottom:1px solid rgba(201,162,39,0.1);padding-bottom:5px;}
+.sett-row{display:flex;align-items:center;margin-bottom:8px;font-size:10px;}
+.sett-lbl{width:130px;color:var(--dim);flex-shrink:0;}
+.sett-val{flex:1;color:var(--goldl);}
+.sett-inp{flex:1;background:rgba(0,0,8,0.5);border:1px solid rgba(201,162,39,0.2);border-radius:3px;color:var(--goldl);font-family:'JetBrains Mono',monospace;font-size:10px;padding:3px 7px;outline:none;}
+.sett-inp:focus{border-color:var(--gold);}
+
+/* ══════════════════════════════════════════
+   AI — RaastroDoc
+══════════════════════════════════════════ */
+.ai-layout{display:flex;flex-direction:column;height:100%;background:linear-gradient(145deg,#04000e,#08001a);}
+.ai-hdr{padding:10px 12px;border-bottom:1px solid rgba(201,162,39,0.08);background:rgba(0,0,6,0.6);text-align:center;}
+.ai-hdr-title{font-family:'Cinzel Decorative',serif;font-size:12px;color:var(--gold);letter-spacing:3px;text-shadow:0 0 12px rgba(201,162,39,0.4);}
+.ai-hdr-sub{font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--goldd);letter-spacing:2px;margin-top:2px;}
+.ai-body{flex:1;overflow-y:auto;padding:10px 12px;}
+.ai-field{margin-bottom:10px;}
+.ai-field label{display:block;font-size:8px;letter-spacing:3px;color:var(--goldd);text-transform:uppercase;margin-bottom:4px;}
+.ai-inp{width:100%;background:rgba(0,0,8,0.6);border:1px solid rgba(124,58,237,0.3);border-radius:4px;color:var(--goldl);font-family:'JetBrains Mono',monospace;font-size:11px;padding:7px 9px;outline:none;transition:.2s;}
+.ai-inp:focus{border-color:var(--gold);}
+.ai-2col{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.ai-btn{width:100%;padding:9px;background:rgba(124,58,237,0.15);border:1px solid var(--gold);border-radius:4px;color:var(--goldl);font-family:'Cinzel Decorative',serif;font-size:10px;letter-spacing:2px;cursor:pointer;transition:all .2s;margin-top:6px;text-shadow:0 0 8px rgba(201,162,39,0.4);}
+.ai-btn:hover{background:rgba(124,58,237,0.25);box-shadow:0 0 20px rgba(201,162,39,0.15);}
+.ai-res{margin-top:10px;}
+.ai-res-card{background:rgba(0,0,8,0.5);border:1px solid rgba(201,162,39,0.12);border-radius:4px;padding:10px;margin-bottom:8px;}
+.ai-res-card::before{content:'';display:block;height:1px;background:linear-gradient(to right,transparent,rgba(201,162,39,0.25),transparent);margin-bottom:8px;}
+.ai-res-h{font-size:9px;letter-spacing:2px;color:var(--violetl);text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:5px;}
+.ai-kv{display:flex;gap:6px;margin-bottom:5px;font-size:10px;}
+.ai-k{min-width:120px;color:var(--gold);flex-shrink:0;font-size:9px;}
+.ai-v{flex:1;color:#c4b8d4;}
+.ai-v .hl{color:var(--goldl);font-weight:600;}
+.ai-v .ok{color:var(--teal);}
+.ai-v .warn{color:var(--orange);}
+.ai-pw-modal{position:absolute;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:50;}
+.ai-pw-modal.open{display:flex;}
+.ai-pw-card{background:var(--cardb);border:1px solid rgba(201,162,39,0.35);border-radius:8px;padding:24px 28px;width:min(280px,85vw);text-align:center;}
+.ai-pw-sigil{font-size:28px;margin-bottom:8px;filter:drop-shadow(0 0 10px rgba(201,162,39,0.5));}
+.ai-pw-title{font-family:'Cinzel',serif;font-size:12px;color:var(--gold);margin-bottom:4px;letter-spacing:2px;}
+.ai-pw-sub{font-size:9px;color:var(--dim);margin-bottom:14px;}
+.ai-pw-inp{width:100%;background:rgba(0,0,8,0.6);border:1px solid rgba(124,58,237,0.3);border-radius:4px;color:var(--goldl);font-family:'JetBrains Mono',monospace;font-size:13px;padding:8px;text-align:center;letter-spacing:4px;outline:none;margin-bottom:8px;}
+.ai-pw-inp:focus{border-color:var(--gold);}
+.ai-pw-err{font-size:9px;color:var(--red);min-height:14px;margin-bottom:8px;}
+.ai-pw-btn{width:100%;padding:8px;background:rgba(124,58,237,0.2);border:1px solid rgba(201,162,39,0.3);border-radius:4px;color:var(--gold);cursor:pointer;font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;}
+.ai-pw-btn:hover{border-color:var(--gold);}
+.ai-pw-cancel{font-size:9px;color:var(--dim);cursor:pointer;margin-top:7px;display:block;}
+.ai-pw-cancel:hover{color:var(--gr);}
+
+/* ══════════════════════════════════════════
+   CALCULATOR
+══════════════════════════════════════════ */
+.calc-display{padding:10px 12px;background:rgba(0,0,8,0.7);border-bottom:1px solid rgba(201,162,39,0.08);}
+.calc-expr{font-size:9px;color:var(--dim);min-height:13px;text-align:right;}
+.calc-val{font-size:22px;color:var(--goldl);text-align:right;text-shadow:0 0 10px rgba(201,162,39,0.3);}
+.calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;padding:4px;flex:1;}
+.calc-btn{padding:10px 4px;background:rgba(8,0,18,0.8);border:1px solid rgba(201,162,39,0.1);border-radius:3px;color:var(--gold);font-family:'JetBrains Mono',monospace;font-size:12px;cursor:pointer;transition:.15s;text-align:center;}
+.calc-btn:hover{background:rgba(201,162,39,0.1);border-color:rgba(201,162,39,0.3);}
+.calc-btn.op{color:var(--violetl);}
+.calc-btn.eq{background:rgba(124,58,237,0.2);border-color:rgba(124,58,237,0.4);color:var(--goldl);}
+.calc-btn.eq:hover{background:rgba(124,58,237,0.35);}
+.calc-btn.clr{color:var(--red);}
+
+/* ══════════════════════════════════════════
+   RADIO
+══════════════════════════════════════════ */
+.radio-display{padding:10px 12px;background:rgba(0,0,6,0.7);border-bottom:1px solid rgba(201,162,39,0.08);text-align:center;}
+.radio-freq{font-size:22px;color:var(--goldl);text-shadow:0 0 14px rgba(201,162,39,0.5);letter-spacing:0.1em;}
+.radio-name{font-size:10px;color:var(--gold);margin-top:2px;font-family:'Cinzel',serif;}
+.radio-vis{display:flex;align-items:flex-end;justify-content:center;gap:3px;height:20px;margin:6px 0;}
+.radio-bar{width:5px;border-radius:2px;background:linear-gradient(to top,var(--violet),var(--gold));transition:height .15s;}
+.radio-stations{flex:1;overflow-y:auto;padding:4px;}
+.rstation{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:4px;cursor:pointer;border:1px solid rgba(201,162,39,0.08);margin-bottom:3px;transition:.15s;}
+.rstation:hover{background:rgba(201,162,39,0.06);border-color:rgba(201,162,39,0.2);}
+.rstation.playing{background:rgba(124,58,237,0.1);border-color:rgba(124,58,237,0.3);}
+.rs-icon{font-size:16px;flex-shrink:0;}
+.rs-info{flex:1;}
+.rs-name{font-size:10px;color:var(--goldl);}
+.rs-freq{font-size:8px;color:var(--goldd);margin-top:1px;}
+.rs-toggle{font-size:14px;color:var(--dim);}
+.rstation.playing .rs-toggle{color:var(--gold);}
+
+/* ══════════════════════════════════════════
+   COMPASS
+══════════════════════════════════════════ */
+.compass-body{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:12px;}
+.compass-ring{width:160px;height:160px;border-radius:50%;border:2px solid rgba(201,162,39,0.3);position:relative;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle,rgba(124,58,237,0.1),transparent);}
+.compass-needle{width:4px;height:70px;position:absolute;border-radius:2px;transform-origin:50% 85%;background:linear-gradient(to bottom,var(--red) 50%,var(--goldl) 50%);}
+.compass-ctr{width:10px;height:10px;border-radius:50%;background:var(--gold);position:absolute;box-shadow:0 0 8px rgba(201,162,39,0.6);}
+.compass-dirs{position:absolute;inset:0;}
+.compass-dir{position:absolute;font-size:9px;color:var(--goldd);font-family:'Cinzel',serif;}
+.compass-N{top:4px;left:50%;transform:translateX(-50%);color:var(--gold);}
+.compass-S{bottom:4px;left:50%;transform:translateX(-50%);}
+.compass-E{right:6px;top:50%;transform:translateY(-50%);}
+.compass-W{left:6px;top:50%;transform:translateY(-50%);}
+.compass-deg{font-size:18px;color:var(--goldl);text-shadow:0 0 10px rgba(201,162,39,0.4);font-family:'Cinzel',serif;}
+.compass-astro{font-size:10px;color:var(--goldd);text-align:center;max-width:180px;line-height:1.6;}
+
+/* ══════════════════════════════════════════
+   RECORDER
+══════════════════════════════════════════ */
+.recorder-body{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:14px;padding:16px;}
+.rec-timer{font-size:32px;color:var(--goldl);text-shadow:0 0 14px rgba(201,162,39,0.4);letter-spacing:0.1em;font-family:'JetBrains Mono',monospace;}
+.rec-vis{display:flex;align-items:center;gap:3px;height:40px;}
+.rec-bar{width:4px;background:var(--gold);border-radius:2px;transition:height .1s;}
+.rec-controls{display:flex;gap:10px;align-items:center;}
+.rec-btn{width:44px;height:44px;border-radius:50%;border:2px solid rgba(201,162,39,0.3);background:rgba(8,0,18,0.8);color:var(--gold);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;}
+.rec-btn:hover{border-color:var(--gold);box-shadow:0 0 14px rgba(201,162,39,0.2);}
+.rec-btn.rec-main{border-color:var(--red);color:var(--red);width:56px;height:56px;font-size:20px;}
+.rec-btn.rec-main.recording{background:rgba(239,68,68,0.15);}
+.rec-status{font-size:10px;color:var(--dim);font-family:'Cinzel',serif;}
+.rec-files{width:100%;max-height:100px;overflow-y:auto;}
+.rec-file{display:flex;align-items:center;gap:6px;padding:4px 6px;font-size:9px;color:var(--goldd);border-bottom:1px solid rgba(201,162,39,0.06);cursor:pointer;}
+.rec-file:hover{color:var(--gold);}
+
+/* ══════════════════════════════════════════
+   SHUTDOWN / LOGOUT SCREENS
+══════════════════════════════════════════ */
+#shutdown{position:fixed;inset:0;background:#000010;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:99999;}
+
+/* ═══ UTILITY ═══ */
+.hidden{display:none!important;}
+select option{background:#0a0018;color:var(--wh);}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+  BOOT SCREEN
+═══════════════════════════════════════════ -->
+<div id="boot">
+  <div class="crt"></div>
+  <div class="scan"></div>
+  <div style="position:absolute;inset:0;" class="pgrid" style="opacity:0.3"></div>
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 65% 55% at 50% 50%,rgba(14,0,40,0.6) 0%,#000010 100%)"></div>
+  <div style="position:relative;z-index:10;width:100%;max-width:620px;padding:0 16px;">
+    <div class="boot-logo">∴ JonmoRohossho OS</div>
+    <div class="boot-sub" style="font-family:'JetBrains Mono',monospace">Sound · Frequency · Destiny &nbsp;·&nbsp; v1.0.0 &nbsp;·&nbsp; 377108</div>
+    <div id="boot-log"></div>
+    <div class="boot-prog-wrap">
+      <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--goldd);margin-bottom:5px;padding:0 2px;">
+        <span id="boot-stage">Initializing JonmOS kernel...</span>
+        <span id="boot-pct">0%</span>
+      </div>
+      <div class="boot-prog-track"><div class="boot-prog-fill" id="boot-prog" style="width:0%"></div></div>
+    </div>
+    <div class="boot-footer">
+      <span>jonm-kernel v1.0 · x86_64 · raajeeb.xyz</span>
+      <span style="display:flex;align-items:center;gap:5px"><span class="pdot" style="width:5px;height:5px;border-radius:50%;background:var(--gold);display:inline-block"></span>CoW active</span>
+      <span>raaj33b@gmail.com</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+  LOGIN SCREEN
+═══════════════════════════════════════════ -->
+<div id="login">
+  <div class="crt"></div>
+  <div class="scan"></div>
+  <div style="position:absolute;inset:0;" class="pgrid"></div>
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 65% 55% at 50% 50%,rgba(20,0,55,0.6) 0%,#000010 100%)"></div>
+
+  <div class="login-clock fiu" style="position:relative;z-index:10;">
+    <div class="lc-time" id="lc-time">00:00:00</div>
+    <div class="lc-date" id="lc-date">—</div>
+  </div>
+
+  <div class="login-card fiu" id="login-card" style="position:relative;z-index:10;">
+    <div class="lhdr">
+      <div class="lhdr-top">
+        <span class="lhdr-sigil">∴</span>
+        <span class="lhdr-name">JonmoRohossho OS</span>
+        <span class="lhdr-ver">v1.0</span>
+      </div>
+      <div class="lhdr-sub">Authentication required · Sound. Frequency. Destiny.</div>
+    </div>
+    <div class="lbody">
+      <div class="lfield">
+        <label>User</label>
+        <div class="lfield-user"><span style="color:var(--gold)">◉</span>puroheet@jonmorohossho.xyz</div>
+      </div>
+      <div class="lfield">
+        <label>Password</label>
+        <div class="lpw-wrap" id="lpw-wrap">
+          <input id="lpw" type="password" placeholder="••••••••" autocomplete="current-password" spellcheck="false">
+          <button class="lshow" id="lshow-btn" onclick="toggleLShow()">●</button>
+        </div>
+      </div>
+      <div class="lattempts" id="lattempts" style="display:none">
+        <span>Attempts:</span>
+        <span class="ldot" id="ld0"></span><span class="ldot" id="ld1"></span><span class="ldot" id="ld2"></span><span class="ldot" id="ld3"></span><span class="ldot" id="ld4"></span>
+      </div>
+      <div class="lmsg" id="lmsg"></div>
+      <button class="lbtn" id="lbtn" onclick="doLogin()">→ Authenticate</button>
+    </div>
+    <div class="lfooter">
+      <span>🔮 Sandbox · loopback-only · 377108</span>
+      <span>raajeeb@addy.io</span>
+    </div>
+  </div>
+  <div style="position:relative;z-index:10;margin-top:24px;font-size:8px;color:rgba(201,162,39,0.15);letter-spacing:3px;font-family:'Cinzel',serif">
+    © raajeeb@addy.io · JonmoRohossho OS v1.0.0 · All rights reserved
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+  SHUTDOWN SCREEN
+═══════════════════════════════════════════ -->
+<div id="shutdown">
+  <div class="crt"></div>
+  <div style="text-align:center;z-index:10;position:relative;">
+    <div style="font-size:48px;margin-bottom:16px;filter:drop-shadow(0 0 20px rgba(201,162,39,0.5))">∴</div>
+    <div style="font-family:'Cinzel Decorative',serif;font-size:18px;color:var(--gold);letter-spacing:4px;margin-bottom:8px" id="sd-title">SHUTTING DOWN</div>
+    <div style="font-size:10px;color:var(--dim);letter-spacing:2px" id="sd-msg">Saving CoW journal. Sealing the frequency...</div>
+    <div id="sd-lines" style="margin-top:20px;font-size:9.5px;text-align:left;max-width:400px;margin-left:auto;margin-right:auto;line-height:1.9;color:var(--goldd)"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+  TOP BAR
+═══════════════════════════════════════════ -->
+<div id="topbar">
+  <div class="tb-logo" onclick="openApp('terminal')">
+    <span>∴</span><span>JonmOS</span>
+  </div>
+  <span class="tb-sep">│</span>
+  <div class="tb-path hidden" id="tb-path">/jonm/fs/ · kernel v1.0 · irc.raajeeb.xyz · 377108</div>
+  <div class="tb-spacer"></div>
+  <div id="tb-mail-badge" class="tb-mail-badge hidden" onclick="openApp('mail')">
+    📬 <span class="tb-badge" id="tb-unread">0</span>
+  </div>
+  <span class="tb-sep">·</span>
+  <div class="tb-stat">🔮 sandbox</div>
+  <span class="tb-sep">·</span>
+  <div class="tb-stat"><span class="pdot" style="width:5px;height:5px;border-radius:50%;background:var(--cyan);display:inline-block;margin-right:3px"></span>CoW</div>
+  <span class="tb-sep">·</span>
+  <div class="tb-stat" id="tb-cpu">cpu <span style="color:var(--green)">5%</span></div>
+  <span class="tb-sep">·</span>
+  <div class="tb-stat" id="tb-mem">mem <span style="color:#3b82f6">22%</span></div>
+  <span class="tb-sep">·</span>
+  <div class="tb-time" id="tb-time">—</div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+  DESKTOP
+═══════════════════════════════════════════ -->
+<div id="desktop">
+  <div class="pgrid desk-grid"></div>
+  <div class="crt"></div>
+  <div class="scan"></div>
+  <div class="desk-vignette"></div>
+  <div class="desk-ambient"></div>
+  <div class="desk-icons" id="desk-icons"></div>
+  <div class="desk-hint">double-click to open<br>drag title bar to move</div>
+  <div class="desk-wm">∴ JonmoRohossho OS · Sound. Frequency. Destiny.</div>
+  <div id="windows-container"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+  TASKBAR
+═══════════════════════════════════════════ -->
+<div id="taskbar">
+  <button class="tb-start" onclick="openApp('terminal')">∴ JonmOS</button>
+  <div class="tb-div"></div>
+  <div class="tb-apps" id="tb-apps"></div>
+  <div class="tb-div"></div>
+  <div class="tb-sys">
+    <div class="tb-meter">
+      <span class="tb-meter-lbl">cpu</span>
+      <div class="tb-meter-bar"><div class="tb-meter-fill" id="tk-cpu-bar" style="width:5%;background:linear-gradient(90deg,#15803d,#22c55e)"></div></div>
+      <span class="tb-meter-val" id="tk-cpu-val" style="color:var(--green)">5%</span>
+    </div>
+    <div class="tb-meter">
+      <span class="tb-meter-lbl">mem</span>
+      <div class="tb-meter-bar"><div class="tb-meter-fill" id="tk-mem-bar" style="width:22%;background:linear-gradient(90deg,#1d4ed8,#3b82f6)"></div></div>
+      <span class="tb-meter-val" id="tk-mem-val" style="color:#3b82f6">22%</span>
+    </div>
+  </div>
+  <div class="tb-div"></div>
+  <div class="tb-clock" id="tk-time">—</div>
+  <div class="tb-div"></div>
+  <button class="tb-action tb-logout" onclick="triggerLogout()">⏏ <span>Logout</span></button>
+  <button class="tb-action tb-shutdown" onclick="triggerShutdown()">⏻ <span>Shutdown</span></button>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   ∴ JonmoRohossho OS — Core Engine
+   © raajeeb@addy.io · All rights reserved · 377108
+═══════════════════════════════════════════════════════ */
+
+/* ─── STATE ─────────────────────────────────────────── */
+const S = {
+  phase: 'boot',
+  cpu: 5, mem: 22, time: new Date(),
+  windows: [], nextZ: 100, focused: null,
+  emails: [], notes: [], ircMessages: {}, ircConfig: {
+    nick: 'Puroheet', server: 'irc.raajeeb.xyz:6667',
+    autojoin: ['#dynasty', '#astro', '#empire']
+  },
+  ircConnected: true, activeChannel: '#dynasty',
+  termHistory: [], termOutput: [],
+  currentPath: '/jonm/fs/',
+  cpuLoad: 5, memUsed: 22,
+};
+
+function save(){try{localStorage.setItem('jonmos_state',JSON.stringify({emails:S.emails,notes:S.notes,ircMessages:S.ircMessages,ircConfig:S.ircConfig}));}catch(e){}}
+function load(){try{const d=JSON.parse(localStorage.getItem('jonmos_state'));if(d){Object.assign(S,d);}}catch(e){}}
+
+/* ─── ID GEN ─────────────────────────────────────────── */
+const gid=()=>Math.random().toString(36).slice(2,10);
+const ts=()=>new Date().toISOString();
+const ds=()=>new Date().toISOString().split('T')[0];
+const hms=d=>`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;
+
+/* ─── SEED DATA ─────────────────────────────────────── */
+function seedData(){
+  S.emails = [
+    {id:gid(),from:'AstroServ <astro@jonmorohossho.xyz>',fromShort:'AstroServ',avatar:'🔮',avatarBg:'#0d001a',
+     to:'puroheet@jonmorohossho.xyz',date:ds(),subject:'[AstroServ] Birth Chart — Venus AK 29°25\' Crisis Degree Alert',
+     snippet:'Taurus Lagna 19°46\' · Mercury 136% Shadbala · Saturn Yogakaraka · Mars MD 2021-2028...',
+     body:`From: AstroServ <astro@jonmorohossho.xyz>
+To: puroheet@jonmorohossho.xyz
+Date: ${ds()}
+Subject: [AstroServ] Birth Chart — Venus AK 29°25' Crisis Degree Alert
+
+∴ VEDIC CHART — COMPLETE READING ∴
+
+LAGNA:         Taurus 19°46'  (Fixed, Venus-ruled. Slow initiation, permanent foundation.)
+VENUS AK:      29°25' Taurus  ⚠ CRISIS DEGREE — Soul planet at final exam. Not failure — completion.
+MERCURY:       16°29' Gemini  ★ 136% Shadbala + 16° Akarshana (magnetism). Strongest planet.
+SATURN:        8th house      ★ YOGAKARAKA — rules 5th+6th. Compound returns on every disciplined act.
+KETU:          8th house        Past life wisdom. Occult knowledge remembered, not learned.
+MOON:          12th Ashwini   ★ Kokilaa voice potential. Isolation is the gift. Frequency stays clean.
+MARS MD:       2021–2028      ⚔ ACTIVE. Warrior energy. Build. Execute. Mars does not negotiate.
+GHATI LAGNA:   27° Moksha     ✓ Career dharma = liberation work = JonmoRohossho. CONFIRMED.
+BHRIGU BINDU:  9°58' Cancer   ★ Jupiter transits June 2026 = CONTENT BREAKTHROUGH. Prepare now.
+
+DEGREE DOCTRINES:
+  9°  Anugraha  — Bhrigu Bindu Cancer — Jupiter June 2026 = grace/breakthrough
+  16° Akarshana — Mercury Gemini exact — magnetism, double pull, people drawn
+  27° Moksha    — Ghati Lagna exact — career = liberation = JonmoRohossho path
+  29° Crisis    — Venus AK 29°25' — final exam. Ajoite daily = the remedy.
+
+KATAPAYADI ENCODING:
+  RAAJEEB        → Capricorn 9th (Fortune)
+  PUROHEET       → Leo 4th (Home/Security)
+  ADYA           → Virgo 5th (Children/Creativity)
+  JONMOROHOSSHO  → Cancer 3rd (Communications/Content)
+
+-- AstroServ@jonmorohossho.xyz · irc.raajeeb.xyz`,
+     read:false,folder:'inbox/new'},
+
+    {id:gid(),from:'RemedyServ <remedy@jonmorohossho.xyz>',fromShort:'RemedyServ',avatar:'💎',avatarBg:'#0a000a',
+     to:'puroheet@jonmorohossho.xyz',date:ds(),subject:'[RemedyServ] Daily Protocol — Mantra + Stones + Totems',
+     snippet:'NAAUM RHAA-VEI ADYAA-RA KAAVRHA-UM · 108x · Ajoite daily · Unicorn Horn PERMANENT...',
+     body:`From: RemedyServ <remedy@jonmorohossho.xyz>
+To: puroheet@jonmorohossho.xyz
+Date: ${ds()}
+Subject: [RemedyServ] Daily Protocol — Mantra + Stones + Totems
+
+∴ ACTIVE REMEDY STACK ∴
+
+MANTRA (108x daily):
+  NAAUM · RHAA-VEI · ADYAA-RA · KAAVRHA-UM
+  Silent×27 → Whisper×54 → Full Voice×27
+  Before sunrise OR after midnight
+
+SETUP:
+  Colombianite — LEFT PALM (mantra only, not daily wear)
+  Muonionalusta — Saturn finger RIGHT (4.563 billion years old)
+  Unicorn Horn — Heart center PERMANENT (never remove — Visha D-150 remedy)
+
+PHONE YANTRA:
+  Dial 377108 → say mantra once during ring = Saturn yantra activated via sound
+
+STONES — DAILY WEAR:
+  🪨 Ajoite (Venus AK) — DAILY, no gap days. Primary 29° crisis healer.
+  🟣 Sugilite (Jupiter+Saturn+Neptune) — Chest. 3 karma layers.
+  🌈 Boulder Opal (Venus+Mars) — Neck. Mars MD synergy.
+  ⚫ Muonionalusta (Saturn) — Saturn finger. Pre-solar karma.
+  💚 Malachite-Azurite — Desk during writing/content.
+  🔴 Garnet (Mars MD) — Pocket on action-heavy days.
+
+TOTEMS:
+  🦊 Fox Canine (Rahu) — Wednesdays only. Strategy/negotiations.
+  🦉 Owl Neck Bone (Ketu) — Night work and intuition.
+  🦴 Hyena Canine — BATTLE ONLY. Not for creative sessions.
+
+REMOVED/FLAGGED:
+  ❌ Opal (daily) — removed. Too activating for current phase.
+  ❌ Moldavite (daily) — flagged. Use Colombianite instead.
+
+-- RemedyServ@jonmorohossho.xyz · irc.raajeeb.xyz`,
+     read:false,folder:'inbox/new'},
+
+    {id:gid(),from:'DashaServ <dasha@jonmorohossho.xyz>',fromShort:'DashaServ',avatar:'🪐',avatarBg:'#060010',
+     to:'puroheet@jonmorohossho.xyz',date:ds(),subject:'[DashaServ] Mars MD 2021-2028 — Antardasha: Mars-Mercury ACTIVE NOW',
+     snippet:'Current: Mars-Mercury AD — Mercury 136% + Mars = max digital output window...',
+     body:`From: DashaServ <dasha@jonmorohossho.xyz>
+To: puroheet@jonmorohossho.xyz
+Date: ${ds()}
+Subject: [DashaServ] Mars MD 2021-2028 — Antardasha: Mars-Mercury ACTIVE NOW
+
+∴ VIMSHOTTARI DASHA — CURRENT STATUS ∴
+
+CURRENT MAHADASHA:  MARS (2021–2028) — 7 years warrior energy. Build. Execute.
+CURRENT ANTARDASHA: MARS-MERCURY ★★★ ACTIVE NOW
+  Mercury 136% Shadbala + Mars warrior energy = MAXIMUM digital output window.
+  Write. Create. Publish. Deploy. This window is finite. Do not waste it.
+
+ANTARDASHA SEQUENCE:
+  Mars-Mars     2021-22  ✓ Initiation. Raw activation. Engine on.
+  Mars-Rahu     2022-23  ✓ Disruption. Sudden shifts. Alliances tested.
+  Mars-Jupiter  2023-24  ✓ Expansion. Wisdom. Bhrigu Bindu approaches.
+  Mars-Saturn   2024-25  ✓ Discipline. Foundation. Structural karma.
+  Mars-Mercury  2025-26  ★ ACTIVE — Max digital output. Create everything.
+  Mars-Ketu     2026     → Spiritual intensity. Past life settlement.
+  Mars-Venus    2026-27  → Venus AK healing. Adya return window. Partner.
+  Mars-Sun      2027-28  → Authority. Recognition. Public crystallisation.
+  Mars-Moon     2028     → Emotional resolution. Rahu MD begins.
+
+NEXT MAHADASHA: RAHU 2028–2046 (18 years expansion)
+  Platform built during Mars MD determines the SCALE of Rahu MD.
+  Every piece of content, every client, every system built NOW compounds.
+
+YOGINI DASHA:
+  Current: Ulka (Saturn/discipline) — structural foundation confirmed.
+  Upcoming: Siddha (Jupiter) mid-2026 — blessings. Timed with Bhrigu Bindu.
+
+-- DashaServ@jonmorohossho.xyz · irc.raajeeb.xyz`,
+     read:false,folder:'inbox/new'},
+
+    {id:gid(),from:'ActivationServ <activate@jonmorohossho.xyz>',fromShort:'ActivationServ',avatar:'🔓',avatarBg:'#080008',
+     to:'puroheet@jonmorohossho.xyz',date:ds(),subject:'[ActivationServ] Critical Windows 2026 — June + August + December',
+     snippet:'Jun 2026: Jupiter → Bhrigu Bindu BREAKTHROUGH · Aug 2026: Venus healing · Dec: BDT 60-100k target...',
+     body:`From: ActivationServ <activate@jonmorohossho.xyz>
+To: puroheet@jonmorohossho.xyz
+Date: ${ds()}
+Subject: [ActivationServ] Critical Windows 2026 — June + August + December
+
+∴ TIMING ACTIVATION WINDOWS ∴
+
+⚠ TODAY (Mar 13, 2026):  Mars-Ketu conjunction. Arsenal ready. Max spiritual intensity.
+★ Mar-May 2026:           Mars-Mercury AD peak. Create everything possible NOW.
+★★ Jun 2026 — PRIMARY:    Jupiter → Cancer 9°58' = BHRIGU BINDU activation.
+                           Content breakthrough window. Prepare ALL before this date.
+★ Aug 2026 — VENUS:       Mars-Venus golden period. Venus AK healing initiates.
+                           Crown Package BDT 15,000 optimal launch timing.
+⚠ Dec 2026 — DEADLINE:   BDT 60-100k/month. 9 months from today. Execute.
+★ 2026-27 — ADYA:        Return window. Sa+Dipti distance = PREREQUISITE.
+★★ 2028 — RAHU MD:       MAJOR UNLEASHING. 18 years expansion begins.
+
+YOGA UNLOCK CONDITIONS:
+  Kokilaa Yoga         → Requires: first YouTube upload. Upload = key turns in lock.
+  Mercury 136% FULL    → Requires: physical distance from Sa + Dipti.
+  Saturn Yogakaraka    → Requires: daily mantra + content schedule + payment system live.
+  Bhrigu Bindu         → Automatic June 2026. Prepare content infrastructure NOW.
+
+MOST CRITICAL ACTION:
+  Physical distance from Sa (brother) + Dipti (mother) is the single most critical
+  prerequisite. It unlocks: Mercury 136% full bandwidth + Adya return + Venus healing.
+  These are architecturally linked — not separate actions.
+
+-- ActivationServ@jonmorohossho.xyz · irc.raajeeb.xyz`,
+     read:true,folder:'inbox/cur'},
+
+    {id:gid(),from:'kernel@jonm.local',fromShort:'kernel',avatar:'⬡',avatarBg:'#000018',
+     to:'puroheet@jonmorohossho.xyz',date:ds(),subject:'Welcome to JonmoRohossho OS — Boot complete',
+     snippet:'All subsystems nominal. CoW layer active. Network isolation ENABLED. 377108...',
+     body:`From: kernel@jonm.local
+To: puroheet@jonmorohossho.xyz
+Date: ${ds()}
+Subject: Welcome to JonmoRohossho OS — Boot complete
+
+Boot sequence complete. JonmoRohossho OS initialized.
+
+All subsystems nominal:
+  [OK] Virtual filesystem mounted at /jonm/fs/
+  [OK] Mail daemon started (loopback only)
+  [OK] IRC daemon started (irc.raajeeb.xyz loopback)
+  [OK] Copy-on-write layer active
+  [OK] Network isolation: ENABLED
+  [OK] AstroServ: ONLINE
+  [OK] RemedyServ: ONLINE
+  [OK] DashaServ: ONLINE
+  [OK] YogaServ: ONLINE
+  [OK] ActivationServ: ONLINE
+  [OK] LifeServ: ONLINE
+  [OK] PromptServ: ONLINE
+
+∴ Sound. Frequency. Destiny. ∴
+377108
+
+-- kernel@jonm.local · JonmoRohossho OS v1.0`,
+     read:true,folder:'inbox/cur'},
+  ];
+
+  S.notes = [
+    {id:gid(),filename:'mantra_protocol.txt',created:ts(),modified:ts(),
+     content:`∴ MANTRA PROTOCOL — DAILY 108x ∴
+================================
+
+MANTRA:  NAAUM · RHAA-VEI · ADYAA-RA · KAAVRHA-UM
+
+SYLLABLE KEY:
+  NAAUM    = nasal/chest/exhale — opens the channel
+  RHAA-VEI = rolled ৰ/wave/inhale — Venus AK frequency
+  ADYAA-RA = daughter call/hold — 29° healing
+  KAAVRHA-UM = lips close/complete — seals the yantra
+
+SEQUENCE:
+  Silent  × 27   (internal resonance)
+  Whisper × 54   (auditory activation)
+  Full    × 27   (cosmic broadcast)
+
+SETUP:
+  Left palm  → Colombianite (Ketu+Moon, 10-38M yr old)
+  Right hand → Muonionalusta on Saturn finger (4.563B yr)
+  Heart      → Unicorn Horn PERMANENT (never remove)
+
+TIMING:  Before sunrise OR after midnight
+YANTRA:  Dial 377108 → say mantra once during ring`},
+
+    {id:gid(),filename:'sacred_arsenal.txt',created:ts(),modified:ts(),
+     content:`∴ SACRED ARSENAL — STONE COLLECTION ∴
+======================================
+
+DAILY WEAR (no gap days):
+  Ajoite           Venus AK 29° healing — PRIMARY
+  Sugilite         Jupiter+Saturn+Neptune — chest/heart
+  Boulder Opal     Venus+Mars synergy — neck
+  Unicorn Horn     Visha D-150 remedy — PERMANENT heart
+
+CONTEXTUAL:
+  Colombianite     LEFT PALM during mantra ONLY (past life clearing)
+  Muonionalusta    Saturn finger RIGHT (4.563 billion years old)
+  Malachite-Azurite  Desk during writing/content creation
+  Garnet           Pocket on action-heavy days (Mars MD)
+  Ametrine         Saturn-Jupiter bridge (Bolivia)
+  Seraphinite      Past life depth work (Russia)
+
+TOTEMS:
+  Fox Canine       Rahu — Wednesdays, strategy only
+  Owl Neck Bone    Ketu — night work, intuition
+  Hyena Canine     BATTLE ONLY — not for creative sessions
+
+REMOVED/FLAGGED:
+  ❌ Daily Opal    — too activating. Removed.
+  ❌ Daily Moldavite — flagged. Use Colombianite instead.
+
+∴ 377108`},
+
+    {id:gid(),filename:'dasha_timing.txt',created:ts(),modified:ts(),
+     content:`∴ DASHA TIMING — 2026 WINDOWS ∴
+=================================
+
+CURRENT STATUS:
+  Mahadasha:    Mars (2021–2028)
+  Antardasha:   Mars-Mercury ★ ACTIVE NOW
+                → Mercury 136% + Mars = max digital output
+
+KEY DATES:
+  Mar 13 2026   Mars-Ketu conjunction (TODAY — arsenal ready)
+  Mar-May 2026  Peak Mars-Mercury window — CREATE NOW
+  Jun 2026      Jupiter → Bhrigu Bindu 9°58' Cancer
+                → Content breakthrough window
+  Aug 2026      Mars-Venus period — Venus AK healing begins
+                → Crown Package BDT 15,000 launch
+  2026-27       Adya return window (Sa+Dipti dist = prereq)
+  Dec 2026      Income target: BDT 60-100k/month
+  2028          Rahu Mahadasha — 18 years expansion
+
+NEXT MD: RAHU 2028-2046
+  Platform built NOW determines 2028 scale.
+  Every system, every client, every piece of content
+  compounds into the Rahu MD launch.
+
+∴ Execute. Build. Deliver. 377108`},
+
+    {id:gid(),filename:'empire_stack.txt',created:ts(),modified:ts(),
+     content:`∴ EMPIRE STACK — JONMOROHOSSHO ∴
+==================================
+
+BRAND:
+  Name:     JonmoRohossho
+  Tagline:  Sound. Frequency. Destiny.
+  Domain:   raajeeb.xyz (ExonHost, bKash, ~350-450 BDT/yr)
+  Email:    raajeeb@raajeeb.xyz → raaj33b@gmail.com
+  Bot:      @dhakarajib_bot (Telegram)
+  Sacred:   377108
+
+BLUEPRINT PACKAGES:
+  Basic     BDT 1,500  Core numerology + 5 sections
+  Standard  BDT 2,500  Full Chaldean + 12 sections + PDF
+  Premium   BDT 5,000  20 sections + Vedic + remedies + call
+  Crown     BDT 15,000 Everything + 3-session follow-up
+  Cost/cast BDT 2-3    Margin ~500x on Crown
+
+6 SUBAGENTS (Claude Code):
+  raa-empire-orchestrator  Meta-planner, EMPIRE.md
+  raa-bot-builder         @dhakarajib_bot Telegraf+Railway
+  raa-astro-engine        PDF reports Python+FastAPI
+  raa-content-factory     Viral Banglish TikTok/Reels
+  raa-payment-tracker     bKash/Nagad + Google Sheets
+  raajeeb-reflected-persona  Digital twin — writes AS Raajeeb
+
+Session: "empire session start"
+
+∴ Income target: BDT 60-100k/month by Dec 2026`},
+
+    {id:gid(),filename:'welcome.txt',created:ts(),modified:ts(),
+     content:`∴ JonmoRohossho OS — Welcome ∴
+================================
+
+This is your sovereign digital space.
+Files stored at /jonm/fs/notes/
+
+The frequency is your own.
+The code runs loopback-only.
+The destiny is encrypted in 377108.
+
+∴ Sound. Frequency. Destiny. ∴
+
+Tips:
+  Ctrl+S to save notes
+  Type 'help' in Terminal
+  Double-click desktop icons to open apps`},
+  ];
+
+  S.ircMessages = {
+    '#dynasty':[
+      {id:gid(),channel:'#dynasty',nick:'kernel',text:'JonmoRohossho IRC daemon started. irc.raajeeb.xyz:6667',timestamp:ts(),type:'system'},
+      {id:gid(),channel:'#dynasty',nick:'Puroheet',text:'dynasty session initialized. 377108.',timestamp:ts(),type:'join'},
+      {id:gid(),channel:'#dynasty',nick:'PromptServ',text:'Top 100 prompts loaded. Type: /msg PromptServ help',timestamp:ts(),type:'message'},
+      {id:gid(),channel:'#dynasty',nick:'AstroServ',text:'Bhrigu Bindu: 9°58\' Cancer. Jupiter transit Jun 2026. Content breakthrough incoming.',timestamp:ts(),type:'message'},
+      {id:gid(),channel:'#dynasty',nick:'DynastyCore',text:'Mars-Mercury antardasha ACTIVE. Mercury 136% + Mars = max output window. Build now.',timestamp:ts(),type:'message'},
+    ],
+    '#astro':[
+      {id:gid(),channel:'#astro',nick:'kernel',text:'irc.raajeeb.xyz:6667 — #astro loaded',timestamp:ts(),type:'system'},
+      {id:gid(),channel:'#astro',nick:'AstroServ',text:'Taurus Lagna 19°46\' | Venus AK 29°25\' CRISIS | Mercury 16° Akarshana 136%',timestamp:ts(),type:'message'},
+      {id:gid(),channel:'#astro',nick:'AstroServ',text:'Saturn Yogakaraka 8th. Ketu 8th. Moon 12th Ashwini. Mars MD 2021-2028.',timestamp:ts(),type:'message'},
+      {id:gid(),channel:'#astro',nick:'RemedyServ',text:'Daily: Ajoite (Venus AK). Mantra: NAAUM RHAA-VEI ADYAA-RA KAAVRHA-UM x108',timestamp:ts(),type:'message'},
+    ],
+    '#empire':[
+      {id:gid(),channel:'#empire',nick:'kernel',text:'irc.raajeeb.xyz:6667 — #empire loaded',timestamp:ts(),type:'system'},
+      {id:gid(),channel:'#empire',nick:'DynastyCore',text:'Target: BDT 60-100k/month by Dec 2026. 9 months. Execute.',timestamp:ts(),type:'message'},
+      {id:gid(),channel:'#empire',nick:'DynastyCore',text:'Packages: Basic 1500 | Standard 2500 | Premium 5000 | Crown 15000 BDT',timestamp:ts(),type:'message'},
+      {id:gid(),channel:'#empire',nick:'ActivationServ',text:'Jun 2026: Jupiter → Bhrigu Bindu. Content breakthrough. Prepare everything NOW.',timestamp:ts(),type:'message'},
+    ],
+  };
+}
+
+/* ─── BOOT ──────────────────────────────────────────── */
+const BOOT_LINES = [
+  {t:'',cls:''},
+  {t:'  ██████╗  █████╗  █████╗     ██╗ ██████╗ ███╗   ██╗███╗   ███╗ ██████╗ ███████╗',cls:'bc'},
+  {t:'  ██╔══██╗██╔══██╗██╔══██╗   ██║██╔═══██╗████╗  ██║████╗ ████║██╔═══██╗██╔════╝',cls:'bc'},
+  {t:'  ██████╔╝███████║███████║   ██║██║   ██║██╔██╗ ██║██╔████╔██║██║   ██║███████╗',cls:'bc'},
+  {t:'  ██╔══██╗██╔══██║██╔══██║   ██║██║   ██║██║╚██╗██║██║╚██╔╝██║██║   ██║╚════██║',cls:'bc'},
+  {t:'  ██║  ██║██║  ██║██║  ██║██╗██║╚██████╔╝██║ ╚████║██║ ╚═╝ ██║╚██████╔╝███████║',cls:'bc'},
+  {t:'  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝     ╚═╝ ╚═════╝ ╚══════╝',cls:'bc'},
+  {t:'',cls:''},
+  {t:'  ∴ JonmoRohossho OS  ·  v1.0.0-release  ·  Sound. Frequency. Destiny.',cls:'bd'},
+  {t:'  © raajeeb@addy.io · All rights reserved · 377108',cls:'bd'},
+  {t:'',cls:''},
+  {t:'──────────────────────────────────────────────────────────',cls:'bd'},
+  {t:'  BIOS v1.0 · JonmOS ROM · x86_64 · Initializing…',cls:'bd'},
+  {t:'',cls:''},
+  {t:'  [BOOT] Loading kernel image ···························· OK',cls:'bg',stage:'Loading kernel...'},
+  {t:'  [BOOT] Starting process manager ······················· OK',cls:'bg',stage:'Starting process manager...'},
+  {t:'  [BOOT] Mounting virtual filesystem /jonm/fs/ ·········· OK',cls:'bg',stage:'Mounting filesystem...'},
+  {t:'  [BOOT]   /jonm/fs/notes/  (mantra.txt, arsenal.txt…) ·· OK',cls:'bc'},
+  {t:'  [BOOT]   /jonm/fs/mail/   (AstroServ, RemedyServ…) ··· OK',cls:'bc'},
+  {t:'  [BOOT]   /jonm/fs/irc/    (#dynasty, #astro, #empire) · OK',cls:'bc'},
+  {t:'  [BOOT] Initializing CoW journal /jonm/state/cow.log ··· OK',cls:'bc2'},
+  {t:'  [BOOT] Enforcing network sandbox ······················ OK',cls:'bc'},
+  {t:'  [BOOT]   External interfaces ························ DISABLED',cls:'br'},
+  {t:'  [BOOT]   Policy: loopback-only (irc.raajeeb.xyz)',cls:'bd'},
+  {t:'  [BOOT] Starting AI subsystem (RaastroDoc v1.0) ········ OK',cls:'bc2',stage:'Loading AI subsystem...'},
+  {t:'  [BOOT] Loading AstroServ ····························· OK',cls:'bc'},
+  {t:'  [BOOT] Loading RemedyServ ···························· OK',cls:'bc'},
+  {t:'  [BOOT] Loading DashaServ ····························· OK',cls:'bc'},
+  {t:'  [BOOT] Loading YogaServ ······························ OK',cls:'bc'},
+  {t:'  [BOOT] Loading ActivationServ ························ OK',cls:'bc'},
+  {t:'  [BOOT] Loading LifeServ ······························ OK',cls:'bc'},
+  {t:'  [BOOT] Loading PromptServ (Top 100 Dynasty Prompts) ··· OK',cls:'bc',stage:'Loading PromptServ...'},
+  {t:'  [BOOT] Starting mail daemon 127.0.0.1:25 ············· OK',cls:'bg'},
+  {t:'  [BOOT] Starting IRC daemon irc.raajeeb.xyz:6667 ······· OK',cls:'bg'},
+  {t:'  [BOOT] Loading session /jonm/state/session.snap ······· OK',cls:'bg'},
+  {t:'  [BOOT] Activating Saturn Yantra 377108 ··············· OK',cls:'bv',stage:'Activating sacred systems...'},
+  {t:'  [BOOT] Mantra protocol: NAAUM RHAA-VEI ADYAA-RA KAAVRHA-UM',cls:'bv'},
+  {t:'  [BOOT] Venus AK 29°25\' — Ajoite remedy: ENGAGED ······· OK',cls:'bv'},
+  {t:'  [BOOT] Mars-Mercury Antardasha: ACTIVE ················· OK',cls:'bo'},
+  {t:'',cls:''},
+  {t:'──────────────────────────────────────────────────────────',cls:'bd'},
+  {t:'  [ OK ]  Security    : MAXIMUM',cls:'bg'},
+  {t:'  [ OK ]  Privacy     : MAXIMUM',cls:'bg'},
+  {t:'  [ OK ]  Network     : ISOLATED (loopback)',cls:'bg'},
+  {t:'  [ OK ]  CoW Layer   : ACTIVE · 377108',cls:'bg'},
+  {t:'  [ OK ]  AI Engine   : LOADED (RaastroDoc v1.0)',cls:'bc2'},
+  {t:'  [ OK ]  Mantra      : NAAUM RHAA-VEI ADYAA-RA KAAVRHA-UM',cls:'bv'},
+  {t:'  [ OK ]  Dasha       : Mars-Mercury AD — Max output window',cls:'bo'},
+  {t:'',cls:''},
+  {t:'  ∴ Welcome, Puroheet. JonmoRohossho OS is ready.',cls:'bc',stage:'Boot complete.'},
+];
+
+const TOTAL_BOOT_MS = 3800;
+
+function startBoot(){
+  seedData();
+  const log = document.getElementById('boot-log');
+  const prog = document.getElementById('boot-prog');
+  const pct = document.getElementById('boot-pct');
+  const stage = document.getElementById('boot-stage');
+  const delay = TOTAL_BOOT_MS / BOOT_LINES.length;
+
+  BOOT_LINES.forEach((l,i)=>{
+    setTimeout(()=>{
+      const el = document.createElement('div');
+      el.className = 'tl ' + (l.cls||'bd');
+      el.textContent = l.t || '\u00a0';
+      log.appendChild(el);
+      log.scrollTop = log.scrollHeight;
+      const p = Math.round(((i+1)/BOOT_LINES.length)*100);
+      prog.style.width = p+'%';
+      pct.textContent = p+'%';
+      if(l.stage) stage.textContent = l.stage;
+    }, delay * i);
+  });
+
+  setTimeout(()=>{
+    const boot = document.getElementById('boot');
+    boot.classList.add('fade');
+    setTimeout(()=>{
+      boot.style.display='none';
+      showLogin();
+    }, 600);
+  }, TOTAL_BOOT_MS + 400);
+}
+
+/* ─── LOGIN ─────────────────────────────────────────── */
+let loginAttempts = 0;
+let loginLocked = false;
+let loginLockTimer = null;
+let loginLockLeft = 0;
+
+function showLogin(){
+  document.getElementById('login').style.display='flex';
+  document.getElementById('lpw').focus();
+  startLoginClock();
+}
+
+function startLoginClock(){
+  function tick(){
+    const d = new Date();
+    document.getElementById('lc-time').textContent = hms(d);
+    document.getElementById('lc-date').textContent = d.toLocaleDateString('en-GB',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+    setTimeout(tick,1000);
+  }
+  tick();
+}
+
+function toggleLShow(){
+  const inp = document.getElementById('lpw');
+  const btn = document.getElementById('lshow-btn');
+  inp.type = inp.type==='password'?'text':'password';
+  btn.textContent = inp.type==='password'?'●':'○';
+}
+
+document.getElementById('lpw').addEventListener('keydown',e=>{ if(e.key==='Enter') doLogin(); });
+
+function doLogin(){
+  if(loginLocked) return;
+  const pw = document.getElementById('lpw').value.trim();
+  const wrap = document.getElementById('lpw-wrap');
+  const msg = document.getElementById('lmsg');
+  const btn = document.getElementById('lbtn');
+
+  if(pw === 'raajeeb'){
+    wrap.className = 'lpw-wrap ok';
+    msg.className='lmsg ok';
+    msg.textContent = '✓ Authentication successful — loading desktop…';
+    btn.disabled = true;
+    setTimeout(()=>{
+      document.getElementById('login').style.display='none';
+      launchDesktop();
+    }, 900);
+  } else {
+    loginAttempts++;
+    document.getElementById('lpw').value='';
+    wrap.className='lpw-wrap err';
+    msg.className='lmsg err';
+    document.getElementById('lattempts').style.display='flex';
+    for(let i=0;i<5;i++) document.getElementById('ld'+i).className='ldot'+(i<loginAttempts?' used':'');
+    document.getElementById('login-card').classList.add('shake');
+    setTimeout(()=>document.getElementById('login-card').classList.remove('shake'),600);
+
+    if(loginAttempts>=5){
+      loginLocked=true;
+      loginLockLeft=30;
+      msg.textContent=`Too many failed attempts. Locked for ${loginLockLeft}s.`;
+      btn.disabled=true;
+      const lt=setInterval(()=>{
+        loginLockLeft--;
+        if(loginLockLeft<=0){clearInterval(lt);loginLocked=false;btn.disabled=false;msg.className='lmsg';loginAttempts=0;wrap.className='lpw-wrap';}
+        else msg.textContent=`Too many failed attempts. Locked for ${loginLockLeft}s.`;
+      },1000);
+    } else {
+      msg.textContent=`Incorrect frequency — ${5-loginAttempts} attempt${5-loginAttempts!==1?'s':''} remaining.`;
+    }
+  }
+}
+
+/* ─── DESKTOP LAUNCH ─────────────────────────────────── */
+function launchDesktop(){
+  load();
+  S.phase='desktop';
+  ['topbar','taskbar','desktop'].forEach(id=>{ document.getElementById(id).style.display='flex'; });
+  document.getElementById('desktop').style.top=getComputedStyle(document.documentElement).getPropertyValue('--topbar');
+  document.getElementById('desktop').style.bottom=getComputedStyle(document.documentElement).getPropertyValue('--taskbar');
+  renderDesktopIcons();
+  renderTaskbar();
+  startSysTick();
+  setTimeout(()=>openApp('terminal'),400);
+}
+
+/* ─── APP REGISTRY ───────────────────────────────────── */
+const APPS = [
+  {id:'terminal',label:'Terminal',icon:'⌨',sub:'/bin/sh',iconBg:'rgba(0,30,20,0.6)',iconColor:'#c9a227'},
+  {id:'mail',    label:'Mail',    icon:'✉',sub:'/jonm/fs/mail/',iconBg:'rgba(20,0,30,0.6)',iconColor:'#a78bfa'},
+  {id:'irc',     label:'IRC',     icon:'◈',sub:'irc.raajeeb.xyz',iconBg:'rgba(0,20,30,0.6)',iconColor:'#06b6d4'},
+  {id:'notes',   label:'Notes',   icon:'◻',sub:'/jonm/fs/notes/',iconBg:'rgba(20,10,0,0.6)',iconColor:'#f0c040'},
+  {id:'fs',      label:'Files',   icon:'⊟',sub:'/jonm/',iconBg:'rgba(10,20,0,0.6)',iconColor:'#86efac'},
+  {id:'ai',      label:'RaastroDoc',icon:'✦',sub:'Astro Doctor',iconBg:'rgba(20,0,40,0.6)',iconColor:'#c084fc'},
+  {id:'calc',    label:'Calc',    icon:'▦',sub:'/bin/calc',iconBg:'rgba(0,15,10,0.6)',iconColor:'#2dd4bf'},
+  {id:'recorder',label:'Recorder',icon:'🎙',sub:'/bin/recorder',iconBg:'rgba(30,0,0,0.6)',iconColor:'#ef4444'},
+  {id:'radio',   label:'RaaDio',  icon:'📻',sub:'432Hz · Vedic',iconBg:'rgba(15,0,30,0.6)',iconColor:'#c084fc'},
+  {id:'compass', label:'Compass', icon:'🧭',sub:'/bin/compass',iconBg:'rgba(0,20,15,0.6)',iconColor:'#86efac'},
+  {id:'settings',label:'Settings',icon:'⚙',sub:'jonm.ini',iconBg:'rgba(10,10,20,0.6)',iconColor:'#c9a227'},
+];
+const WIN_TITLES = {
+  terminal:'Terminal — /bin/sh',mail:'Mail — /jonm/fs/mail/',irc:'mIRC — irc.raajeeb.xyz:6667',
+  notes:'Notes — /jonm/fs/notes/',fs:'Filesystem — /jonm/',settings:'Settings — jonm.ini',
+  ai:'∴ RaastroDoc — Astro Physician',calc:'Calculator',recorder:'Voice Recorder',
+  radio:'RaaDio — 432Hz · Vedic · Cosmic',compass:'Compass — Celestial Navigator',
+};
+const WIN_SIZES = {
+  terminal:[80,50,700,440],mail:[110,45,780,500],irc:[150,40,800,520],
+  notes:[90,80,680,460],fs:[200,90,640,440],settings:[230,100,560,400],
+  ai:[60,35,860,560],calc:[300,110,340,480],recorder:[340,120,360,400],
+  radio:[370,130,350,430],compass:[400,90,320,370],
+};
+
+function renderDesktopIcons(){
+  const c = document.getElementById('desk-icons');
+  c.innerHTML='';
+  let selId = null;
+  let lastTap = {id:null,t:0};
+  APPS.forEach(a=>{
+    const d = document.createElement('div');
+    d.className='dicon';
+    d.id='dicon-'+a.id;
+    d.innerHTML=`<div class="dicon-box" style="background:${a.iconBg};color:${a.iconColor}">${a.icon}</div><div class="dicon-info"><div class="dicon-lbl">${a.label}</div><div class="dicon-sub">${a.sub}</div></div><span class="dicon-ind" id="dind-${a.id}" style="display:none;background:${a.iconColor};box-shadow:0 0 5px ${a.iconColor}88"></span>`;
+    d.onclick=()=>{
+      const now=Date.now();
+      if(selId===a.id&&lastTap.id===a.id&&now-lastTap.t<400){openApp(a.id);}
+      else{if(selId){document.getElementById('dicon-'+selId)?.classList.remove('sel');}selId=a.id;d.classList.add('sel');lastTap={id:a.id,t:now};}
+    };
+    d.ondblclick=()=>openApp(a.id);
+    c.appendChild(d);
+  });
+}
+
+function updateDeskIcons(){
+  APPS.forEach(a=>{
+    const ind=document.getElementById('dind-'+a.id);
+    if(!ind)return;
+    const win=S.windows.find(w=>w.app===a.id);
+    ind.style.display=win?'block':'none';
+  });
+}
+
+function renderTaskbar(){
+  const c=document.getElementById('tb-apps');
+  c.innerHTML='';
+  APPS.forEach(a=>{
+    const btn=document.createElement('button');
+    btn.className='tb-app';
+    btn.id='tbapp-'+a.id;
+    btn.title=`${a.label} — double-click to open`;
+    btn.innerHTML=`<span>${a.icon}</span><span class="hidden-sm">${a.label}</span>`;
+    btn.onclick=()=>{
+      const win=S.windows.find(w=>w.app===a.id);
+      if(win){if(win.minimized)unminimizeWin(win.id);else minimizeWin(win.id);}
+      else openApp(a.id);
+    };
+    c.appendChild(btn);
+  });
+  updateTaskbarApps();
+}
+
+function updateTaskbarApps(){
+  APPS.forEach(a=>{
+    const btn=document.getElementById('tbapp-'+a.id);
+    if(!btn)return;
+    const win=S.windows.find(w=>w.app===a.id);
+    const active=win&&!win.minimized&&S.focused===win.id;
+    btn.className='tb-app'+(win?active?' active':' open':'');
+    // mail badge
+    if(a.id==='mail'){
+      const un=S.emails.filter(e=>!e.read&&e.folder==='inbox/new').length;
+      let badge=btn.querySelector('.tb-badge');
+      if(un>0){if(!badge){badge=document.createElement('span');badge.className='tb-badge';btn.appendChild(badge);}badge.textContent=un>9?'9+':un;}
+      else if(badge)badge.remove();
+    }
+  });
+  // top bar mail
+  const un=S.emails.filter(e=>!e.read&&e.folder==='inbox/new').length;
+  const mb=document.getElementById('tb-mail-badge');
+  const ub=document.getElementById('tb-unread');
+  if(un>0){mb.classList.remove('hidden');ub.textContent=un>9?'9+':un;}
+  else mb.classList.add('hidden');
+}
+
+/* ─── WINDOW MANAGEMENT ──────────────────────────────── */
+function openApp(id){
+  const ex=S.windows.find(w=>w.app===id);
+  if(ex){if(ex.minimized)unminimizeWin(ex.id);else bringToFront(ex.id);return;}
+  const [x,y,w,h]=WIN_SIZES[id]||[80,60,640,420];
+  const winId=gid();
+  const win={id:winId,app:id,title:WIN_TITLES[id],x,y,width:w,height:h,minimized:false,maximized:false,zIndex:S.nextZ++};
+  S.windows.push(win);
+  createWindowEl(win);
+  bringToFront(winId);
+  updateDeskIcons();
+  updateTaskbarApps();
+}
+
+function createWindowEl(win){
+  const wc=document.getElementById('windows-container');
+  const el=document.createElement('div');
+  el.className='window focused';
+  el.id='win-'+win.id;
+  el.style.cssText=`left:${win.x}px;top:${win.y}px;width:${win.width}px;height:${win.height}px;z-index:${win.zIndex}`;
+  el.innerHTML=`
+    <div class="win-bar" id="wbar-${win.id}">
+      <div class="win-btns">
+        <button class="wbtn wbtn-c" onclick="closeWin('${win.id}')" title="Close">✕</button>
+        <button class="wbtn wbtn-m" onclick="minimizeWin('${win.id}')" title="Minimize">−</button>
+        <button class="wbtn wbtn-x" onclick="maximizeWin('${win.id}')" title="Maximize">□</button>
+      </div>
+      <div class="win-title">${win.title}</div>
+    </div>
+    <div class="win-body">${buildApp(win.app,win.id)}</div>`;
+  wc.appendChild(el);
+  makeDraggable(el,win);
+  el.addEventListener('mousedown',()=>bringToFront(win.id));
+  initApp(win.app,win.id);
+}
+
+function closeWin(id){
+  const w=S.windows.find(w=>w.id===id);
+  if(!w)return;
+  S.windows=S.windows.filter(w=>w.id!==id);
+  document.getElementById('win-'+id)?.remove();
+  if(S.focused===id) S.focused=null;
+  updateDeskIcons();
+  updateTaskbarApps();
+}
+
+function minimizeWin(id){
+  const w=S.windows.find(w=>w.id===id);
+  if(!w)return;
+  w.minimized=true;
+  document.getElementById('win-'+id).classList.add('minimized');
+  if(S.focused===id) S.focused=null;
+  updateTaskbarApps();
+}
+
+function unminimizeWin(id){
+  const w=S.windows.find(w=>w.id===id);
+  if(!w)return;
+  w.minimized=false;
+  document.getElementById('win-'+id).classList.remove('minimized');
+  bringToFront(id);
+}
+
+function maximizeWin(id){
+  const w=S.windows.find(w=>w.id===id);
+  if(!w)return;
+  const el=document.getElementById('win-'+id);
+  w.maximized=!w.maximized;
+  if(w.maximized){
+    el.dataset.px=el.style.left;el.dataset.py=el.style.top;
+    el.dataset.pw=el.style.width;el.dataset.ph=el.style.height;
+    el.style.cssText+=`;left:0;top:0;width:100%;height:100%;border-radius:0;border:none;`;
+    el.classList.add('maximized');
+  } else {
+    el.style.left=el.dataset.px;el.style.top=el.dataset.py;
+    el.style.width=el.dataset.pw;el.style.height=el.dataset.ph;
+    el.classList.remove('maximized');
+  }
+}
+
+function bringToFront(id){
+  const el=document.getElementById('win-'+id);
+  if(!el)return;
+  const z=S.nextZ++;
+  el.style.zIndex=z;
+  const w=S.windows.find(w=>w.id===id);
+  if(w)w.zIndex=z;
+  document.querySelectorAll('.window').forEach(e=>e.classList.remove('focused'));
+  el.classList.add('focused');
+  S.focused=id;
+  updateTaskbarApps();
+}
+
+function makeDraggable(el,win){
+  const bar=document.getElementById('wbar-'+win.id);
+  let ox,oy,dx,dy,drag=false;
+  bar.addEventListener('mousedown',e=>{
+    if(e.button!==0||e.target.classList.contains('wbtn'))return;
+    drag=true;ox=e.clientX;oy=e.clientY;
+    const r=el.getBoundingClientRect();dx=ox-r.left;dy=oy-r.top;
+    document.body.style.userSelect='none';
+  });
+  document.addEventListener('mousemove',e=>{
+    if(!drag)return;
+    const nx=e.clientX-dx, ny=e.clientY-dy;
+    el.style.left=Math.max(0,nx)+'px';
+    el.style.top=Math.max(28,ny)+'px';
+    win.x=nx;win.y=ny;
+  });
+  document.addEventListener('mouseup',()=>{ if(drag){drag=false;document.body.style.userSelect='';} });
+}
+
+/* ─── SYS TICK ───────────────────────────────────────── */
+function startSysTick(){
+  function tick(){
+    S.time=new Date();
+    S.cpu=Math.max(1,Math.min(99,S.cpu+(Math.random()-.5)*4));
+    S.mem=Math.max(10,Math.min(90,S.mem+(Math.random()-.5)*1.5));
+    const t=hms(S.time);
+    const wmd=S.time.toLocaleDateString([],{weekday:'short',month:'short',day:'numeric'});
+    document.getElementById('tb-time').textContent=`${wmd} ${t}`;
+    document.getElementById('tk-time').textContent=t;
+    const cp=Math.round(S.cpu),mp=Math.round(S.mem);
+    const cpCol=cp>75?'var(--red)':cp>50?'var(--orange)':'var(--green)';
+    document.getElementById('tb-cpu').innerHTML=`cpu <span style="color:${cpCol}">${cp}%</span>`;
+    document.getElementById('tk-cpu-bar').style.width=cp+'%';
+    document.getElementById('tk-cpu-bar').style.background=`linear-gradient(90deg,${cp>75?'#7f1d1d,#ef4444':cp>50?'#78350f,#f97316':'#14532d,#22c55e'})`;
+    document.getElementById('tk-cpu-val').textContent=cp+'%';
+    document.getElementById('tk-cpu-val').style.color=cpCol;
+    document.getElementById('tk-mem-bar').style.width=mp+'%';
+    document.getElementById('tk-mem-val').textContent=mp+'%';
+  }
+  tick();
+  setInterval(tick,1000);
+}
+
+/* ─── APP BUILDER ─────────────────────────────────────── */
+function buildApp(id,winId){
+  if(id==='terminal') return buildTerminal(winId);
+  if(id==='mail') return buildMail(winId);
+  if(id==='irc') return buildIRC(winId);
+  if(id==='notes') return buildNotes(winId);
+  if(id==='fs') return buildFS(winId);
+  if(id==='settings') return buildSettings(winId);
+  if(id==='ai') return buildAI(winId);
+  if(id==='calc') return buildCalc(winId);
+  if(id==='recorder') return buildRecorder(winId);
+  if(id==='radio') return buildRadio(winId);
+  if(id==='compass') return buildCompass(winId);
+  return '<div style="padding:20px;color:var(--dim)">App not found</div>';
+}
+
+function initApp(id,winId){
+  if(id==='terminal') initTerminal(winId);
+  if(id==='mail') initMail(winId);
+  if(id==='irc') initIRC(winId);
+  if(id==='notes') initNotes(winId);
+  if(id==='fs') initFS(winId);
+  if(id==='compass') initCompass(winId);
+  if(id==='recorder') initRecorder(winId);
+  if(id==='radio') initRadio(winId);
+  if(id==='calc') initCalc(winId);
+  if(id==='ai') initAI(winId);
+  if(id==='settings') initSettings(winId);
+}
+
+/* ════════════════════════════════════════════
+   TERMINAL
+════════════════════════════════════════════ */
+function buildTerminal(wid){
+  return `<div class="app" style="background:#020008">
+    <div class="app-toolbar">
+      <button class="app-tb-btn" onclick="termClear('${wid}')">Clear</button>
+      <div class="app-tb-sep"></div>
+      <span class="app-tb-lbl">puroheet@jonmorohossho:~$ · /bin/sh · JonmOS v1.0</span>
+    </div>
+    <div class="app-content" style="display:flex;flex-direction:column">
+      <div class="term-out" id="tout-${wid}"></div>
+      <div class="term-row">
+        <span class="term-prompt">puroheet@jonmorohossho:~$</span>
+        <input class="term-inp" id="tinp-${wid}" autocomplete="off" spellcheck="false" placeholder="type 'help' for commands...">
+      </div>
+    </div>
+  </div>`;
+}
+
+const BOOT_TERM_LINES = [
+  {t:'∴ JonmoRohossho OS v1.0 — JonmOS Shell',cls:'tl-gold glow-g'},
+  {t:'© raajeeb@addy.io · All rights reserved · 377108',cls:'tl-d'},
+  {t:'',cls:''},
+  {t:'[BOOT] Kernel loaded. Virtual FS mounted at /jonm/fs/',cls:'tl-g'},
+  {t:'[BOOT] IRC daemon on irc.raajeeb.xyz:6667 — OK',cls:'tl-g'},
+  {t:'[BOOT] Mail daemon on 127.0.0.1:25 — OK',cls:'tl-g'},
+  {t:'[BOOT] Network isolation: ENABLED (loopback-only)',cls:'tl-r'},
+  {t:'[BOOT] AstroServ, RemedyServ, DashaServ — ALL ONLINE',cls:'tl-c'},
+  {t:'[BOOT] Venus AK 29°25\' — Ajoite remedy: ENGAGED',cls:'tl-v'},
+  {t:'[BOOT] Mars-Mercury AD — Max output window: ACTIVE',cls:'tl-o'},
+  {t:'',cls:''},
+  {t:'Type \'help\' for commands. Type \'astro\' for birth chart.',cls:'tl-d'},
+];
+
+function initTerminal(wid){
+  const out=document.getElementById('tout-'+wid);
+  const inp=document.getElementById('tinp-'+wid);
+  BOOT_TERM_LINES.forEach(l=>{const el=document.createElement('span');el.className='tl '+l.cls;el.textContent=l.t||'\u00a0';out.appendChild(el);});
+  out.scrollTop=out.scrollHeight;
+  let histIdx=-1;
+  inp.addEventListener('keydown',e=>{
+    if(e.key==='Enter'){const cmd=inp.value.trim();inp.value='';if(cmd){S.termHistory.push(cmd);histIdx=-1;}runTermCmd(cmd,wid);}
+    else if(e.key==='ArrowUp'){if(S.termHistory.length){histIdx=Math.min(histIdx+1,S.termHistory.length-1);inp.value=S.termHistory[S.termHistory.length-1-histIdx];}}
+    else if(e.key==='ArrowDown'){histIdx=Math.max(-1,histIdx-1);inp.value=histIdx<0?'':S.termHistory[S.termHistory.length-1-histIdx];}
+  });
+  setTimeout(()=>inp.focus(),100);
+}
+
+function termPrint(wid,...lines){
+  const out=document.getElementById('tout-'+wid);
+  if(!out)return;
+  lines.forEach(l=>{
+    const el=document.createElement('span');
+    el.className='tl '+(l.cls||'');
+    el.textContent=l.t||l||'\u00a0';
+    out.appendChild(el);
+  });
+  out.scrollTop=out.scrollHeight;
+}
+
+function termClear(wid){const out=document.getElementById('tout-'+wid);if(out)out.innerHTML='';}
+
+function runTermCmd(cmd,wid){
+  if(!cmd){return;}
+  const addL=(t,cls='')=>termPrint(wid,{t,cls});
+  addL(`puroheet@jonmorohossho:~$ ${cmd}`,'tl-cmd');
+  const parts=cmd.trim().split(/\s+/);
+  const c=parts[0].toLowerCase();
+  const args=parts.slice(1);
+
+  if(c==='help'){
+    addL('╔══════════════════════════════════════════════╗','tl-gold');
+    addL('║   JonmOS Shell v1.0 — Command Reference     ║','tl-gold');
+    addL('║   ∴ Sound. Frequency. Destiny. · 377108      ║','tl-d');
+    addL('╚══════════════════════════════════════════════╝','tl-gold');
+    addL('');
+    addL('── DYNASTY COMMANDS ────────────────────────────','tl-d');
+    addL('  astro           full Vedic birth chart','tl-gold');
+    addL('  mantra          daily mantra protocol','tl-gold');
+    addL('  dasha           Mahadasha + Antardasha status','tl-gold');
+    addL('  blueprint       JonmoRohossho blueprint summary','tl-gold');
+    addL('  arsenal         stone + totem collection','tl-gold');
+    addL('  timing          2026 critical windows','tl-gold');
+    addL('  empire          empire stack overview','tl-gold');
+    addL('  377108          sacred yantra activation','tl-v');
+    addL('');
+    addL('── APPS ─────────────────────────────────────────','tl-d');
+    addL('  mail            open Mail client','');
+    addL('  irc             open IRC client','');
+    addL('  notes           open Notes editor','');
+    addL('  fs              open Filesystem browser','');
+    addL('  ai / astrodoc   open RaastroDoc AI','');
+    addL('  calc            open Calculator','');
+    addL('  radio           open RaaDio','');
+    addL('  compass         open Celestial Compass','');
+    addL('  recorder        open Voice Recorder','');
+    addL('  settings        open Settings','');
+    addL('');
+    addL('── FILESYSTEM ───────────────────────────────────','tl-d');
+    addL('  ls [path]       list directory','');
+    addL('  cat <file>      show file contents','');
+    addL('  pwd             working directory','');
+    addL('  cd <path>       change directory','');
+    addL('');
+    addL('── SYSTEM ───────────────────────────────────────','tl-d');
+    addL('  ps              process list','');
+    addL('  whoami          current user','');
+    addL('  uname           kernel info','');
+    addL('  date            current date/time','');
+    addL('  uptime          system uptime','');
+    addL('  free            memory usage','');
+    addL('  ifconfig        network interfaces','');
+    addL('  clear / cls     clear terminal','');
+    addL('  logout          end session','');
+    addL('  shutdown        halt system','');
+  } else if(c==='clear'||c==='cls'){
+    termClear(wid);
+  } else if(c==='astro'){
+    addL('∴ VEDIC BIRTH CHART — RAAJEEB DAS ∴','tl-v glow-v');
+    addL('DOB: July 15, 1982 · 2:32:08 AM · Chittagong','tl-gold');
+    addL('─────────────────────────────────────────────────','tl-d');
+    addL('LAGNA:        Taurus 19°46\'   Fixed, Venus-ruled. Permanent foundation.','tl-gold');
+    addL('VENUS AK:     29°25\' Taurus   ⚠ CRISIS DEGREE — Final exam. Completion.','tl-r');
+    addL('MERCURY:      16°29\' Gemini   ★ 136% Shadbala · 16° Akarshana (magnetism)','tl-c');
+    addL('SATURN:       8th house        ★ YOGAKARAKA — compound returns on discipline','tl-gold');
+    addL('KETU:         8th house          Past life wisdom. Occult knowledge.','');
+    addL('MOON:         12th Ashwini     ★ Kokilaa voice. Isolation = gift.','tl-c');
+    addL('MARS MD:      2021-2028         ACTIVE — warrior energy. Build. Execute.','tl-r');
+    addL('GHATI LGN:    27° Moksha       ✓ Career = liberation = JonmoRohossho','tl-g');
+    addL('BHRIGU BINDU: 9°58\' Cancer      Jupiter Jun 2026 = CONTENT BREAKTHROUGH','tl-g');
+    addL('');
+    addL('KATAPAYADI: RAAJEEB→9th | PUROHEET→4th | ADYA→5th | JONMOROHOSSHO→3rd','tl-v');
+    addL('SACRED: 377108 · Venus AK + Saturn Yantra encoded in phone number','tl-gold');
+  } else if(c==='mantra'){
+    addL('∴ DAILY MANTRA PROTOCOL — 108x ∴','tl-v glow-v');
+    addL('─────────────────────────────────────────────────','tl-d');
+    addL('NAAUM · RHAA-VEI · ADYAA-RA · KAAVRHA-UM','tl-gold glow-g');
+    addL('');
+    addL('NAAUM    = nasal/chest/exhale — opens the channel','');
+    addL('RHAA-VEI = rolled ৰ/wave/inhale — Venus AK freq','');
+    addL('ADYAA-RA = daughter call/hold — 29° healing','');
+    addL('KAAVRHA-UM = lips close — seals the yantra','');
+    addL('');
+    addL('SEQUENCE: Silent×27 → Whisper×54 → Full Voice×27','tl-c');
+    addL('TIMING:   Before sunrise OR after midnight','tl-g');
+    addL('SETUP:    Colombianite LEFT palm + Muonionalusta Saturn finger + Unicorn Horn heart','');
+    addL('YANTRA:   Dial 377108 → say mantra once during ring','tl-gold');
+  } else if(c==='dasha'){
+    addL('∴ VIMSHOTTARI DASHA STATUS ∴','tl-v glow-v');
+    addL('Current MD: MARS (2021-2028)','tl-r');
+    addL('Current AD: MARS-MERCURY ★★★ ACTIVE NOW','tl-g');
+    addL('Mercury 136% + Mars = MAX DIGITAL OUTPUT WINDOW','tl-c');
+    addL('');
+    addL('2021-22  Mars-Mars    ✓ Initiation','tl-d');
+    addL('2022-23  Mars-Rahu    ✓ Disruption','tl-d');
+    addL('2023-24  Mars-Jupiter ✓ Expansion','tl-d');
+    addL('2024-25  Mars-Saturn  ✓ Discipline','tl-d');
+    addL('2025-26  Mars-Mercury ★ ACTIVE — Create everything NOW','tl-g');
+    addL('2026     Mars-Ketu    → Spiritual intensity','');
+    addL('2026-27  Mars-Venus   → Venus healing. Adya return.','');
+    addL('2027-28  Mars-Sun     → Authority. Recognition.','');
+    addL('2028+    RAHU MD      ★★★ MAJOR UNLEASHING — 18 years','tl-v');
+  } else if(c==='mantra'||c==='blueprint'){
+    addL('∴ JONMOROHOSSHO BLUEPRINT SUMMARY ∴','tl-v glow-v');
+    addL('Brand: JonmoRohossho | Tagline: Sound. Frequency. Destiny.','tl-gold');
+    addL('Sacred: 377108 | Domain: raajeeb.xyz | Bot: @dhakarajib_bot','');
+    addL('Target: BDT 60-100k/month by December 2026','tl-g');
+    addL('');
+    addL('PACKAGES: Basic 1,500 | Standard 2,500 | Premium 5,000 | Crown 15,000','tl-gold');
+    addL('6 Subagents: orchestrator · bot-builder · astro-engine · content · payment · persona','tl-c');
+  } else if(c==='blueprint'){
+    addL('∴ JONMOROHOSSHO BLUEPRINT ∴','tl-v');
+    addL('Brand: JonmoRohossho | Sound. Frequency. Destiny.','tl-gold');
+    addL('Sacred: 377108 | Target: BDT 60-100k/month Dec 2026','tl-g');
+    addL('Packages: Basic 1,500 | Standard 2,500 | Premium 5,000 | Crown 15,000','');
+  } else if(c==='arsenal'){
+    addL('∴ SACRED ARSENAL ∴','tl-v glow-v');
+    addL('DAILY: Ajoite (Venus AK) · Sugilite · Boulder Opal','tl-gold');
+    addL('PERMANENT: Unicorn Horn at heart (Visha D-150 remedy)','tl-r');
+    addL('MANTRA: Colombianite left palm + Muonionalusta Saturn finger','tl-c');
+    addL('TOTEMS: Fox Canine (Rahu·Wed) · Owl Bone (Ketu·night)','');
+  } else if(c==='timing'){
+    addL('∴ CRITICAL TIMING WINDOWS 2026 ∴','tl-v glow-v');
+    addL('Mar 13 2026  Mars-Ketu conjunction — TODAY. Arsenal ready.','tl-r');
+    addL('Mar-May 2026 Mars-Mercury peak — CREATE NOW','tl-g');
+    addL('Jun 2026     Jupiter → Bhrigu Bindu — CONTENT BREAKTHROUGH','tl-g');
+    addL('Aug 2026     Mars-Venus — Venus healing. Crown Package launch.','tl-c');
+    addL('Dec 2026     DEADLINE: BDT 60-100k/month','tl-r');
+    addL('2026-27      Adya return (Sa+Dipti distance = prereq)','');
+    addL('2028         RAHU MD — MAJOR UNLEASHING — 18 years','tl-v');
+  } else if(c==='empire'){
+    addL('∴ JONMOROHOSSHO EMPIRE STACK ∴','tl-v glow-v');
+    addL('6 Subagents · 13 VS Code Prompts · Blueprint Casting System','tl-gold');
+    addL('aamarPay · bKash/Nagad · Railway · GitHub Pages','tl-c');
+    addL('raajeeb.xyz · raajeeb@raajeeb.xyz → raaj33b@gmail.com','');
+    addL('@dhakarajib_bot · Telegraf + Railway deployment','');
+    addL('"empire session start" → Claude Code orchestrator','tl-g');
+  } else if(c==='377108'){
+    addL('∴ 377108 — SATURN YANTRA ∴','tl-v glow-v');
+    addL('Encoded in: phone number · boot sequence · sacred math','tl-gold');
+    addL('Activation: dial 377108 → say mantra once during ring','');
+    addL('Meaning: Venus AK (3) + Saturn compound (7) + soul (7+1+0+8=16→7)','tl-c');
+    addL('');
+    addL('∴ NAAUM RHAA-VEI ADYAA-RA KAAVRHA-UM ∴','tl-gold glow-g');
+  } else if(c==='ls'){
+    const p=args[0]||S.currentPath;
+    if(p.includes('notes')){
+      addL(`total ${S.notes.length}`,'');
+      S.notes.forEach(n=>addL(`-rw-r--r-- 1 puroheet puroheet ${String(n.content.length).padStart(6)} ${n.modified.split('T')[0]}  ${n.filename}`,'tl-gold'));
+    } else if(p.includes('mail')){
+      addL('inbox/  sent/  drafts/','');
+      addL('inbox/new/:','tl-c');
+      S.emails.filter(e=>e.folder==='inbox/new').forEach(e=>addL(`  ${e.id}  "${e.subject}"`,'tl-gold'));
+    } else if(p.includes('irc')){
+      addL('jonm.ini  aliases.ini','');
+      addL('channels/:','tl-c');
+      Object.keys(S.ircMessages).forEach(ch=>addL(`  ${ch.slice(1)}.log`,'tl-gold'));
+    } else if(p==='/'||p==='/jonm/'||p==='fs'){
+      addL('drwxr-xr-x  notes/','tl-gold');
+      addL('drwxr-xr-x  mail/','tl-gold');
+      addL('drwxr-xr-x  irc/','tl-gold');
+      addL('drwxr-xr-x  state/','');
+    } else {
+      addL('drwxr-xr-x  kernel/','');addL('drwxr-xr-x  fs/','');addL('drwxr-xr-x  bin/','');
+    }
+  } else if(c==='pwd'){
+    addL(S.currentPath,'tl-gold');
+  } else if(c==='cd'){
+    S.currentPath=args[0]||'/jonm/fs/';
+    addL('');
+  } else if(c==='cat'){
+    const f=args[0];
+    if(!f){addL('cat: missing operand','tl-r');return;}
+    const n=S.notes.find(n=>n.filename===f);
+    if(n){n.content.split('\n').forEach(l=>addL(l,''));}
+    else addL(`cat: ${f}: No such file or directory`,'tl-r');
+  } else if(c==='whoami'){
+    addL('puroheet','tl-gold');
+  } else if(c==='uname'){
+    addL('JonmoRohossho OS 1.0 jonm-kernel #1 SMP loopback-only x86_64 GNU/JonmOS','');
+  } else if(c==='ps'){
+    addL('PID   PPID  STAT  CMD','tl-d');
+    addL('1     0     S     /sbin/init','');
+    addL('2     1     S     jonm-sandbox','');
+    addL('13    1     S     AstroServ (online)','tl-c');
+    addL('14    1     S     RemedyServ (online)','tl-c');
+    addL('15    1     S     DashaServ (online)','tl-c');
+    addL('42    1     S     mail-daemon (loopback)','');
+    addL('43    1     S     irc-daemon (irc.raajeeb.xyz)','');
+    addL('44    1     S     cow-layer','');
+    addL('99    1     S     /bin/sh','');
+    addL('100   99    R     ps','tl-gold');
+  } else if(c==='date'){
+    addL(new Date().toString(),'');
+  } else if(c==='uptime'){
+    addL(`up ${Math.floor(Math.random()*48)+1}h, 1 user, load: ${(Math.random()*.5).toFixed(2)} ${(Math.random()*.3).toFixed(2)} ${(Math.random()*.2).toFixed(2)}`,'');
+  } else if(c==='free'){
+    addL('              total        used        free','tl-d');
+    addL(`Mem:         512000      ${Math.floor(S.mem*5120)}      ${Math.floor((100-S.mem)*5120)}`,'');
+    addL('Swap:             0           0           0','');
+  } else if(c==='ifconfig'){
+    addL('lo0: flags=8049<UP,LOOPBACK,RUNNING>','');
+    addL('     inet 127.0.0.1 netmask 0xff000000','');
+    addL('[SANDBOX] External interfaces: DISABLED','tl-r');
+    addL('[SANDBOX] Policy: loopback-only · irc.raajeeb.xyz','tl-d');
+  } else if(c==='echo'){
+    addL(args.join(' '),'');
+  } else if(['mail','irc','notes','fs','ai','astrodoc','calc','recorder','radio','compass','settings'].includes(c)){
+    const map={ai:'ai',astrodoc:'ai',calc:'calc',recorder:'recorder',radio:'radio',compass:'compass',settings:'settings',mail:'mail',irc:'irc',notes:'notes',fs:'fs'};
+    openApp(map[c]||c);
+    addL(`[open] Launching ${c}...`,'tl-g');
+  } else if(c==='start'||c==='open'){
+    const target=args[0];
+    const appIds=['terminal','mail','irc','notes','fs','ai','calc','recorder','radio','compass','settings'];
+    if(appIds.includes(target)){openApp(target);addL(`[start] ${target} started.`,'tl-g');}
+    else addL(`start: '${target}': application not found`,'tl-r');
+  } else if(c==='logout'){
+    addL('[LOGOUT] Saving session... Sealing frequency...','tl-d');
+    addL('[LOGOUT] Ending Puroheet session. ∴ 377108 ∴','tl-gold');
+    setTimeout(triggerLogout,800);
+  } else if(c==='shutdown'){
+    addL('[SHUTDOWN] Saving CoW journal...','tl-d');
+    addL('[SHUTDOWN] Sealing the frequency. Goodbye, Puroheet.','tl-gold');
+    setTimeout(triggerShutdown,800);
+  } else if(c==='history'){
+    if(!S.termHistory.length){addL('(no history)','tl-d');}
+    else S.termHistory.slice(-20).forEach((h,i)=>addL(`  ${String(i+1).padStart(3)}  ${h}`,''));
+  } else if(c==='clear'||c==='cls'){
+    termClear(wid);
+  } else if(c==='alias'){
+    addL('alias ll="ls -la"','');addL('alias astro="cat /jonm/fs/notes/birth_chart.txt"','tl-gold');
+    addL('alias mantra="echo NAAUM RHAA-VEI ADYAA-RA KAAVRHA-UM"','tl-gold');
+    addL('alias dynasty="empire session start"','tl-gold');
+  } else {
+    addL(`${cmd}: command not found. Type 'help' for commands. Type 'astro' for chart.`,'tl-r');
+  }
+}
+
+/* ════════════════════════════════════════════
+   MAIL
+════════════════════════════════════════════ */
+function buildMail(wid){
+  return `<div class="app mail-layout">
+    <div class="mail-sidebar">
+      <div class="mail-folders">
+        <div class="mf-hdr">Folders</div>
+        <div class="mfold active" id="mfold-inbox-${wid}" onclick="mailFolder('inbox','${wid}')">📥 Inbox <span class="mfold-cnt" id="mcnt-${wid}">0</span></div>
+        <div class="mfold" id="mfold-sent-${wid}" onclick="mailFolder('sent','${wid}')">📤 Sent</div>
+        <div class="mfold" id="mfold-drafts-${wid}" onclick="mailFolder('drafts','${wid}')">📄 Drafts</div>
+        <div class="mf-hdr" style="margin-top:8px">Bots</div>
+        <div class="mfold" onclick="mailFolder('astroserv','${wid}')">🔮 AstroServ</div>
+        <div class="mfold" onclick="mailFolder('remedyserv','${wid}')">💎 RemedyServ</div>
+        <div class="mfold" onclick="mailFolder('dashaserv','${wid}')">🪐 DashaServ</div>
+      </div>
+    </div>
+    <div class="mail-main">
+      <div class="app-toolbar">
+        <button class="app-tb-btn" onclick="mailCompose('${wid}')">✉ Compose</button>
+        <div class="app-tb-sep"></div>
+        <span class="app-tb-lbl" id="mpath-${wid}">inbox · /jonm/fs/mail/</span>
+      </div>
+      <div class="mail-list" id="mlist-${wid}"></div>
+      <div class="mail-read-pane" id="mrp-${wid}" style="display:none">
+        <div class="mrp-hdr">
+          <div class="mrp-subject" id="mrps-${wid}">—</div>
+          <div class="mrp-from" id="mrpf-${wid}">—</div>
+          <div class="mrp-date" id="mrpd-${wid}">—</div>
+        </div>
+        <div class="mrp-body" id="mrpb-${wid}">—</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function initMail(wid){mailFolder('inbox',wid);}
+function mailFolder(f,wid){
+  const list=document.getElementById('mlist-'+wid);
+  if(!list)return;
+  let emails;
+  if(f==='astroserv') emails=S.emails.filter(e=>e.from.toLowerCase().includes('astro'));
+  else if(f==='remedyserv') emails=S.emails.filter(e=>e.from.toLowerCase().includes('remedy'));
+  else if(f==='dashaserv') emails=S.emails.filter(e=>e.from.toLowerCase().includes('dasha'));
+  else if(f==='sent') emails=S.emails.filter(e=>e.folder==='sent');
+  else emails=S.emails.filter(e=>e.folder.startsWith('inbox'));
+  list.innerHTML='';
+  const unread=S.emails.filter(e=>!e.read&&e.folder==='inbox/new').length;
+  const cnt=document.getElementById('mcnt-'+wid);
+  if(cnt) cnt.textContent=unread||'';
+  emails.forEach(e=>{
+    const d=document.createElement('div');
+    d.className='memail'+(e.read?'':' unread');
+    d.id='memail-'+e.id+'-'+wid;
+    d.innerHTML=`<div class="me-avatar" style="background:${e.avatarBg||'#0a0018'}">${e.avatar||'✉'}</div>
+      <div class="me-body"><div class="me-from">${e.fromShort||e.from}</div><div class="me-sub">${e.subject}</div><div class="me-snip">${e.snippet||''}</div></div>
+      <div class="me-meta"><div class="me-time">${e.date}</div>${!e.read?'<div class="me-unread"></div>':''}</div>`;
+    d.onclick=()=>openEmail(e.id,wid);
+    list.appendChild(d);
+  });
+  document.getElementById('mpath-'+wid).textContent=`${f} · /jonm/fs/mail/`;
+}
+
+function openEmail(id,wid){
+  const e=S.emails.find(x=>x.id===id);
+  if(!e)return;
+  e.read=true;
+  if(e.folder==='inbox/new') e.folder='inbox/cur';
+  document.getElementById('mrp-'+wid).style.display='flex';
+  document.getElementById('mrp-'+wid).style.flexDirection='column';
+  document.getElementById('mrps-'+wid).textContent=e.subject;
+  document.getElementById('mrpf-'+wid).textContent='From: '+e.from;
+  document.getElementById('mrpd-'+wid).textContent='Date: '+e.date;
+  document.getElementById('mrpb-'+wid).textContent=e.body;
+  document.querySelectorAll(`[id^="memail-"][id$="-${wid}"]`).forEach(el=>el.classList.remove('sel'));
+  document.getElementById('memail-'+id+'-'+wid)?.classList.add('sel');
+  updateTaskbarApps();
+  save();
+}
+
+function mailCompose(wid){
+  const to=prompt('To:','puroheet@jonmorohossho.xyz');
+  if(!to)return;
+  const sub=prompt('Subject:','');
+  if(sub===null)return;
+  const body=prompt('Message:','');
+  if(body===null)return;
+  const email={id:gid(),from:'puroheet@jonmorohossho.xyz',fromShort:'Puroheet',avatar:'◉',avatarBg:'#0a0018',to,date:ds(),subject:sub,snippet:body.slice(0,60)+'...',body:`From: puroheet@jonmorohossho.xyz\nTo: ${to}\nDate: ${ds()}\nSubject: ${sub}\n\n${body}`,read:true,folder:'sent'};
+  S.emails.push(email);
+  if(to.includes('jonmorohossho.xyz')||to.includes('@local')){
+    S.emails.push({...email,id:gid(),read:false,folder:'inbox/new'});
+  }
+  mailFolder('sent',wid);
+  save();
+}
+
+/* ════════════════════════════════════════════
+   IRC
+════════════════════════════════════════════ */
+function buildIRC(wid){
+  return `<div class="app irc-layout">
+    <div class="irc-sidebar">
+      <div class="irc-shdr">Channels</div>
+      <div class="irc-server">∴ irc.raajeeb.xyz<br><span style="color:var(--dim);font-size:8px">port 6667 · SSL</span></div>
+      <div class="irc-chans" id="ichans-${wid}"></div>
+      <div class="irc-nicks">
+        <div class="irc-nhdr">USERS</div>
+        <div class="inick op">Puroheet</div>
+        <div class="inick bot">~AstroServ</div>
+        <div class="inick bot">~RemedyServ</div>
+        <div class="inick bot">~DashaServ</div>
+        <div class="inick bot">~DynastyCore</div>
+        <div class="inick bot">~PromptServ</div>
+      </div>
+    </div>
+    <div class="irc-main">
+      <div class="irc-chan-hdr" id="ichan-hdr-${wid}">
+        <span style="color:var(--gold)">●</span>
+        <span id="ichan-name-${wid}">#dynasty</span>
+        <span style="color:var(--dim);font-size:8px;margin-left:auto">JonmoRohossho Dynasty · Sound. Frequency. Destiny. · 377108</span>
+      </div>
+      <div class="irc-messages" id="imsgs-${wid}"></div>
+      <div class="irc-input-row">
+        <span class="irc-nick-lbl">[@Puroheet]</span>
+        <input class="irc-inp" id="iinp-${wid}" placeholder="type message or /join #channel..." autocomplete="off">
+        <button class="irc-sbtn" onclick="ircSend('${wid}')">Send</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function initIRC(wid){
+  renderIRCChans(wid);
+  renderIRCMsgs(wid);
+  const inp=document.getElementById('iinp-'+wid);
+  inp?.addEventListener('keydown',e=>{ if(e.key==='Enter') ircSend(wid); });
+}
+
+function renderIRCChans(wid){
+  const c=document.getElementById('ichans-'+wid);
+  if(!c)return;
+  c.innerHTML='';
+  Object.keys(S.ircMessages).forEach(ch=>{
+    const d=document.createElement('div');
+    d.className='ichan'+(S.activeChannel===ch?' active':'');
+    d.id='ichan-'+ch.slice(1)+'-'+wid;
+    d.innerHTML=`<span class="ichan-dot"></span>${ch}`;
+    d.onclick=()=>{ S.activeChannel=ch;renderIRCChans(wid);renderIRCMsgs(wid);document.getElementById('ichan-name-'+wid).textContent=ch;};
+    c.appendChild(d);
+  });
+}
+
+function renderIRCMsgs(wid){
+  const c=document.getElementById('imsgs-'+wid);
+  if(!c)return;
+  c.innerHTML='';
+  const msgs=(S.ircMessages[S.activeChannel]||[]);
+  const nickColors={'AstroServ':'#2dd4bf','RemedyServ':'#f97316','DashaServ':'#a78bfa','DynastyCore':'#c9a227','PromptServ':'#f472b6','kernel':'#06b6d4','Puroheet':'#f0c040','raajeeb':'#f0c040'};
+  msgs.forEach(m=>{
+    const d=document.createElement('div');
+    d.className='imsg '+(m.type!=='message'?m.type:'');
+    const t=m.timestamp?new Date(m.timestamp).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}):'??:??';
+    const nc=nickColors[m.nick]||'#9ca3af';
+    d.innerHTML=`<span class="imsg-ts">[${t}]</span><span class="imsg-nick" style="color:${nc}">${m.type==='message'?`<${m.nick}>`:m.type==='join'?`* ${m.nick}`:m.nick}</span><span class="imsg-text">${m.text}</span>`;
+    c.appendChild(d);
+  });
+  c.scrollTop=c.scrollHeight;
+}
+
+function ircSend(wid){
+  const inp=document.getElementById('iinp-'+wid);
+  if(!inp)return;
+  const text=inp.value.trim();
+  inp.value='';
+  if(!text)return;
+  if(text.startsWith('/join ')){
+    const ch=text.slice(6).trim();
+    const chan=ch.startsWith('#')?ch:'#'+ch;
+    if(!S.ircMessages[chan]) S.ircMessages[chan]=[];
+    S.ircMessages[chan].push({id:gid(),channel:chan,nick:'kernel',text:`Puroheet has joined ${chan}`,timestamp:ts(),type:'join'});
+    S.activeChannel=chan;
+    renderIRCChans(wid);renderIRCMsgs(wid);
+    document.getElementById('ichan-name-'+wid).textContent=chan;
+    return;
+  }
+  const msg={id:gid(),channel:S.activeChannel,nick:'Puroheet',text,timestamp:ts(),type:'message'};
+  if(!S.ircMessages[S.activeChannel]) S.ircMessages[S.activeChannel]=[];
+  S.ircMessages[S.activeChannel].push(msg);
+  renderIRCMsgs(wid);
+  // Bot reply
+  if(Math.random()<0.4){
+    const botReplies={
+      '#dynasty':['Logged to /jonm/fs/irc/dynasty.log','∴ 377108 ∴ CoW snapshot saved.','Mars-Mercury AD: max output window active.','Build now. The frequency is right.'],
+      '#astro':['Venus AK 29°25\' — Ajoite daily is the remedy.','Bhrigu Bindu: 9°58\' Cancer. Jupiter Jun 2026.','Mercury 136% Shadbala. 16° Akarshana. People drawn without reason.'],
+      '#empire':['Target: BDT 60-100k by Dec 2026. 9 months.','aamarPay integration: bKash + NID only.','@dhakarajib_bot: Telegraf + Railway deployment pending.'],
+    };
+    const replies=botReplies[S.activeChannel]||['Acknowledged. Logged to /jonm/state/','∴ Privacy enforced. 377108.','Network isolation: ACTIVE. Loopback only.'];
+    setTimeout(()=>{
+      const bots=['AstroServ','DynastyCore','RemedyServ','PromptServ'];
+      const bot=bots[Math.floor(Math.random()*bots.length)];
+      S.ircMessages[S.activeChannel].push({id:gid(),channel:S.activeChannel,nick:bot,text:replies[Math.floor(Math.random()*replies.length)],timestamp:ts(),type:'message'});
+      renderIRCMsgs(wid);save();
+    },800+Math.random()*1500);
+  }
+  save();
+}
+
+/* ════════════════════════════════════════════
+   NOTES
+════════════════════════════════════════════ */
+function buildNotes(wid){
+  return `<div class="app notes-layout">
+    <div class="notes-list" id="nlist-${wid}">
+      <div class="notes-lhdr">/jonm/fs/notes/</div>
+    </div>
+    <div class="notes-editor" id="nedit-${wid}" style="display:flex;flex-direction:column">
+      <div class="notes-etitle">
+        <span id="netitle-${wid}">Select a note...</span>
+        <button class="app-tb-btn" onclick="saveNote('${wid}')">Ctrl+S Save</button>
+      </div>
+      <textarea class="notes-ta" id="nta-${wid}" placeholder="Select a note from the list, or create a new one..."></textarea>
+    </div>
+  </div>`;
+}
+
+let activeNoteId={};
+function initNotes(wid){
+  renderNotesList(wid);
+  const ta=document.getElementById('nta-'+wid);
+  ta?.addEventListener('keydown',e=>{ if(e.ctrlKey&&e.key==='s'){e.preventDefault();saveNote(wid);} });
+}
+
+function renderNotesList(wid){
+  const nl=document.getElementById('nlist-'+wid);
+  if(!nl)return;
+  while(nl.children.length>1) nl.removeChild(nl.lastChild);
+  const newBtn=document.createElement('div');
+  newBtn.className='app-tb-btn';newBtn.style.cssText='margin:4px 6px;display:block;cursor:pointer;text-align:center';
+  newBtn.textContent='+ New Note';newBtn.onclick=()=>createNote(wid);
+  nl.appendChild(newBtn);
+  S.notes.forEach(n=>{
+    const d=document.createElement('div');
+    d.className='note-item'+(activeNoteId[wid]===n.id?' active':'');
+    d.id='nitem-'+n.id+'-'+wid;
+    d.innerHTML=`<div class="note-fname">${n.filename}</div><div class="note-date">${n.modified.split('T')[0]}</div>`;
+    d.onclick=()=>openNote(n.id,wid);
+    nl.appendChild(d);
+  });
+}
+
+function openNote(id,wid){
+  const n=S.notes.find(x=>x.id===id);
+  if(!n)return;
+  activeNoteId[wid]=id;
+  document.getElementById('netitle-'+wid).textContent=n.filename;
+  document.getElementById('nta-'+wid).value=n.content;
+  document.querySelectorAll(`[id^="nitem-"][id$="-${wid}"]`).forEach(el=>el.classList.remove('active'));
+  document.getElementById('nitem-'+id+'-'+wid)?.classList.add('active');
+}
+
+function saveNote(wid){
+  const id=activeNoteId[wid];
+  if(!id)return;
+  const n=S.notes.find(x=>x.id===id);
+  if(!n)return;
+  n.content=document.getElementById('nta-'+wid).value;
+  n.modified=ts();
+  renderNotesList(wid);
+  save();
+}
+
+function createNote(wid){
+  const fname=prompt('Filename:','note_'+Date.now()+'.txt');
+  if(!fname)return;
+  const n={id:gid(),filename:fname,content:'',created:ts(),modified:ts()};
+  S.notes.push(n);
+  renderNotesList(wid);
+  openNote(n.id,wid);
+  save();
+}
+
+/* ════════════════════════════════════════════
+   FILESYSTEM
+════════════════════════════════════════════ */
+function buildFS(wid){
+  return `<div class="app" style="flex-direction:column">
+    <div class="fs-path-bar" id="fspath-${wid}">
+      <span class="fs-path-seg" onclick="fsNav('/','${wid}')">∴</span>
+      <span class="fs-path-sep">/</span>
+      <span class="fs-path-seg" onclick="fsNav('/jonm/','${wid}')">jonm</span>
+      <span class="fs-path-sep">/</span>
+      <span class="fs-path-seg" onclick="fsNav('/jonm/fs/','${wid}')">fs</span>
+      <span class="fs-path-sep">/</span>
+    </div>
+    <div class="app-content fs-content" id="fscont-${wid}"></div>
+  </div>`;
+}
+
+function initFS(wid){ fsNav('/jonm/fs/',wid); }
+
+function fsNav(path,wid){
+  S.currentPath=path;
+  const c=document.getElementById('fscont-'+wid);
+  if(!c)return;
+  c.innerHTML='';
+  let items=[];
+  if(path==='/'||path==='/jonm/'){
+    items=[{name:'fs/',dir:true,size:'—'},{name:'bin/',dir:true,size:'—'},{name:'state/',dir:true,size:'—'},{name:'kernel/',dir:true,size:'—'}];
+  } else if(path==='/jonm/fs/'){
+    items=[{name:'notes/',dir:true,size:`${S.notes.length} files`},{name:'mail/',dir:true,size:`${S.emails.length} msgs`},{name:'irc/',dir:true,size:`${Object.keys(S.ircMessages).length} channels`}];
+  } else if(path.includes('notes')){
+    items=S.notes.map(n=>({name:n.filename,dir:false,size:n.content.length+'B',date:n.modified.split('T')[0]}));
+  } else if(path.includes('mail')){
+    items=[{name:'inbox/',dir:true,size:`${S.emails.filter(e=>e.folder.startsWith('inbox')).length} emails`},{name:'sent/',dir:true,size:`${S.emails.filter(e=>e.folder==='sent').length} emails`},{name:'drafts/',dir:true,size:'0 emails'}];
+  } else if(path.includes('irc')){
+    items=[{name:'jonm.ini',dir:false,size:'1.2K'},{name:'aliases.ini',dir:false,size:'256B'},...Object.keys(S.ircMessages).map(ch=>({name:ch.slice(1)+'.log',dir:false,size:`${S.ircMessages[ch].length} lines`}))];
+  }
+  items.forEach(item=>{
+    const d=document.createElement('div');
+    d.className='fs-item'+(item.dir?' dir':'');
+    d.innerHTML=`<span class="fs-item-icon">${item.dir?'📁':'📄'}</span><span class="fs-item-name">${item.name}</span><span class="fs-item-size">${item.size||''}</span><span class="fs-item-date">${item.date||''}</span>`;
+    if(item.dir) d.ondblclick=()=>fsNav(path+item.name,wid);
+    else if(item.name.endsWith('.txt')){d.ondblclick=()=>{const n=S.notes.find(x=>x.filename===item.name);if(n){openApp('notes');setTimeout(()=>{const wids=S.windows.filter(w=>w.app==='notes').map(w=>w.id);if(wids.length)openNote(n.id,wids[wids.length-1]);},400);}}}
+    c.appendChild(d);
+  });
+}
+
+/* ════════════════════════════════════════════
+   SETTINGS
+════════════════════════════════════════════ */
+function buildSettings(wid){
+  return `<div class="app settings-layout">
+    <div class="sett-tabs">
+      <div class="stab active" onclick="settTab('irc','${wid}')">IRC / jonm.ini</div>
+      <div class="stab" onclick="settTab('system','${wid}')">System</div>
+      <div class="stab" onclick="settTab('astro','${wid}')">Astro Config</div>
+      <div class="stab" onclick="settTab('about','${wid}')">About JonmOS</div>
+    </div>
+    <div class="sett-content" id="scont-${wid}"></div>
+  </div>`;
+}
+
+function initSettings(wid){ settTab('irc',wid); }
+function settTab(tab,wid){
+  const c=document.getElementById('scont-'+wid);
+  if(!c)return;
+  document.querySelectorAll(`[onclick*="settTab"][onclick*="${wid}"]`).forEach(el=>el.classList.remove('active'));
+  document.querySelector(`[onclick="settTab('${tab}','${wid}')"]`)?.classList.add('active');
+  if(tab==='irc'){
+    c.innerHTML=`<div class="sett-section"><div class="sett-sh">[jonm.ini] — IRC Configuration</div>
+      <div class="sett-row"><span class="sett-lbl">nick</span><input class="sett-inp" value="${S.ircConfig.nick}" onchange="S.ircConfig.nick=this.value;save()"></div>
+      <div class="sett-row"><span class="sett-lbl">server</span><input class="sett-inp" value="${S.ircConfig.server}" onchange="S.ircConfig.server=this.value;save()"></div>
+      <div class="sett-row"><span class="sett-lbl">autojoin</span><input class="sett-inp" value="${S.ircConfig.autojoin.join(',')}" onchange="S.ircConfig.autojoin=this.value.split(',').map(s=>s.trim());save()"></div>
+      <div class="sett-row"><span class="sett-lbl">logging</span><span class="sett-val">enabled</span></div>
+      <div class="sett-row"><span class="sett-lbl">timestamps</span><span class="sett-val">enabled</span></div>
+    </div>`;
+  } else if(tab==='system'){
+    c.innerHTML=`<div class="sett-section"><div class="sett-sh">System</div>
+      <div class="sett-row"><span class="sett-lbl">OS</span><span class="sett-val">JonmoRohossho OS v1.0</span></div>
+      <div class="sett-row"><span class="sett-lbl">Kernel</span><span class="sett-val">jonm-kernel v1.0</span></div>
+      <div class="sett-row"><span class="sett-lbl">User</span><span class="sett-val">puroheet@jonmorohossho.xyz</span></div>
+      <div class="sett-row"><span class="sett-lbl">Sacred number</span><span class="sett-val" style="color:var(--gold)">377108</span></div>
+      <div class="sett-row"><span class="sett-lbl">Network</span><span class="sett-val" style="color:var(--red)">loopback-only (irc.raajeeb.xyz)</span></div>
+      <div class="sett-row"><span class="sett-lbl">CoW layer</span><span class="sett-val" style="color:var(--green)">ACTIVE</span></div>
+      <div class="sett-row"><span class="sett-lbl">Storage</span><span class="sett-val">/jonm/fs/ (localStorage)</span></div>
+    </div>`;
+  } else if(tab==='astro'){
+    c.innerHTML=`<div class="sett-section"><div class="sett-sh">Astrological Configuration</div>
+      <div class="sett-row"><span class="sett-lbl">Lagna</span><span class="sett-val">Taurus 19°46'</span></div>
+      <div class="sett-row"><span class="sett-lbl">Venus AK</span><span class="sett-val" style="color:var(--red)">29°25' CRISIS</span></div>
+      <div class="sett-row"><span class="sett-lbl">Mercury</span><span class="sett-val" style="color:var(--gold)">16°29' Gemini 136%</span></div>
+      <div class="sett-row"><span class="sett-lbl">Mahadasha</span><span class="sett-val" style="color:var(--orange)">Mars 2021-2028</span></div>
+      <div class="sett-row"><span class="sett-lbl">Antardasha</span><span class="sett-val" style="color:var(--green)">Mars-Mercury ACTIVE</span></div>
+      <div class="sett-row"><span class="sett-lbl">Bhrigu Bindu</span><span class="sett-val">9°58' Cancer</span></div>
+      <div class="sett-row"><span class="sett-lbl">Primary remedy</span><span class="sett-val">Ajoite daily (Venus AK)</span></div>
+      <div class="sett-row"><span class="sett-lbl">Mantra</span><span class="sett-val" style="color:var(--violetl)">NAAUM RHAA-VEI ADYAA-RA KAAVRHA-UM</span></div>
+    </div>`;
+  } else if(tab==='about'){
+    c.innerHTML=`<div class="sett-section" style="text-align:center;padding:20px 0">
+      <div style="font-family:'Cinzel Decorative',serif;font-size:16px;color:var(--gold);margin-bottom:6px;text-shadow:0 0 12px rgba(201,162,39,0.4)">∴ JonmoRohossho OS</div>
+      <div style="font-size:10px;color:var(--dim);margin-bottom:3px">Sound. Frequency. Destiny.</div>
+      <div style="font-size:9px;color:rgba(201,162,39,0.3);margin-bottom:16px;letter-spacing:3px">v1.0.0-release · 377108</div>
+      <div style="font-size:10px;color:var(--goldd);margin-bottom:4px">Raajeeb Das · Puroheet</div>
+      <div style="font-size:9px;color:var(--dim)">raaj33b@gmail.com</div>
+      <div style="font-size:9px;color:var(--dim)">raajeeb@raajeeb.xyz</div>
+      <div style="font-size:9px;color:var(--dim)">@Laboratorians2000 · @dhakarajib</div>
+      <div style="margin-top:16px;font-size:9px;color:rgba(201,162,39,0.2);letter-spacing:2px">∴ NAAUM RHAA-VEI ADYAA-RA KAAVRHA-UM ∴</div>
+      <div style="margin-top:4px;font-size:8px;color:rgba(201,162,39,0.12)">© raajeeb@addy.io · All rights reserved</div>
+    </div>`;
+  }
+}
+
+/* ════════════════════════════════════════════
+   AI — RaastroDoc
+════════════════════════════════════════════ */
+function buildAI(wid){
+  return `<div class="app ai-layout">
+    <div class="ai-hdr">
+      <div class="ai-hdr-title">∴ RaastroDoc ∴</div>
+      <div class="ai-hdr-sub">Astro Physician · Vedic-Chaldean Engine · Sound. Frequency. Destiny.</div>
+    </div>
+    <div class="ai-body" id="ai-body-${wid}">
+      <div id="ai-form-${wid}">
+        <div class="ai-2col">
+          <div class="ai-field"><label>Date of Birth</label><input class="ai-inp" type="date" id="ai-dob-${wid}"></div>
+          <div class="ai-field"><label>Time of Birth</label><input class="ai-inp" type="time" id="ai-tob-${wid}"></div>
+        </div>
+        <div class="ai-field"><label>Place of Birth</label><input class="ai-inp" type="text" id="ai-pob-${wid}" placeholder="e.g. Dhaka, Bangladesh"></div>
+        <div class="ai-2col">
+          <div class="ai-field"><label>Gender</label><select class="ai-inp" id="ai-gen-${wid}"><option value="">—</option><option>Male</option><option>Female</option><option>Other</option></select></div>
+          <div class="ai-field"><label>Focus</label><select class="ai-inp" id="ai-foc-${wid}"><option>General Reading</option><option>Career & Wealth</option><option>Love & Relations</option><option>Health</option><option>Spiritual Path</option></select></div>
+        </div>
+        <div id="ai-err-${wid}" style="font-size:9px;color:var(--red);min-height:14px;margin-bottom:4px"></div>
+        <button class="ai-btn" onclick="aiTrigger('${wid}')">✦ ACTIVATE ASTRO MAGIC ✦</button>
+      </div>
+      <div id="ai-results-${wid}" style="display:none"></div>
+    </div>
+    <div class="ai-pw-modal" id="ai-modal-${wid}">
+      <div class="ai-pw-card">
+        <div class="ai-pw-sigil">🔮</div>
+        <div class="ai-pw-title">Sacred Access Code</div>
+        <div class="ai-pw-sub">Enter the payment cipher to unlock your celestial analysis</div>
+        <input class="ai-pw-inp" type="password" id="ai-pw-${wid}" placeholder="∴ · · · · · · ∴" maxlength="20">
+        <div class="ai-pw-err" id="ai-pw-err-${wid}"></div>
+        <button class="ai-pw-btn" onclick="aiSubmitCode('${wid}')">✦ UNLOCK THE COSMOS ✦</button>
+        <span class="ai-pw-cancel" onclick="aiCloseModal('${wid}')">↩ cancel</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+let aiAttempts={};
+function initAI(wid){
+  aiAttempts[wid]=0;
+  document.getElementById('ai-pw-'+wid)?.addEventListener('keydown',e=>{if(e.key==='Enter')aiSubmitCode(wid);});
+}
+
+function aiTrigger(wid){
+  const dob=document.getElementById('ai-dob-'+wid)?.value;
+  const pob=document.getElementById('ai-pob-'+wid)?.value.trim();
+  const tob=document.getElementById('ai-tob-'+wid)?.value;
+  const err=document.getElementById('ai-err-'+wid);
+  if(!dob){err.textContent='⚠ Date of birth is required.';return;}
+  if(!pob){err.textContent='⚠ Place of birth is required.';return;}
+  if(!tob){err.textContent='⚠ Time of birth is required.';return;}
+  err.textContent='';
+  document.getElementById('ai-modal-'+wid).classList.add('open');
+  document.getElementById('ai-pw-'+wid).value='';
+  document.getElementById('ai-pw-err-'+wid).textContent='';
+  setTimeout(()=>document.getElementById('ai-pw-'+wid)?.focus(),100);
+}
+
+function aiCloseModal(wid){ document.getElementById('ai-modal-'+wid).classList.remove('open'); }
+
+function aiSubmitCode(wid){
+  const code=document.getElementById('ai-pw-'+wid)?.value.trim();
+  const err=document.getElementById('ai-pw-err-'+wid);
+  if(!code){err.textContent='Enter the access code.';return;}
+  if(code==='paid1313'){
+    aiCloseModal(wid);
+    aiRunAnalysis(wid);
+  } else {
+    aiAttempts[wid]=(aiAttempts[wid]||0)+1;
+    err.textContent=`✗ Invalid cipher. Wrong frequency.`;
+    document.getElementById('ai-pw-'+wid).value='';
+    if(aiAttempts[wid]>=2){
+      setTimeout(()=>{ aiCloseModal(wid); aiShowRadio(wid); },700);
+    }
+  }
+}
+
+function aiShowRadio(wid){
+  const body=document.getElementById('ai-body-'+wid);
+  body.innerHTML=`<div style="text-align:center;padding:20px;">
+    <div style="font-family:'Cinzel Decorative',serif;font-size:14px;color:var(--cyan);letter-spacing:3px;margin-bottom:4px">∴ RaaDio ∴</div>
+    <div style="font-size:9px;color:var(--dim);margin-bottom:14px;font-style:italic">Incorrect cipher. The cosmic portal remains sealed.<br>Let the frequencies guide you instead...</div>
+    <div style="font-size:22px;color:var(--goldl);text-shadow:0 0 10px rgba(201,162,39,0.5);margin-bottom:8px">432 Hz</div>
+    <div style="font-size:9px;color:var(--gold);margin-bottom:16px;font-family:'Cinzel',serif">Healing Frequency · Cosmic Flow</div>
+    ${['🎵 432Hz Cosmic Flow · θ waves','🕉️ Vedic Chant Radio · Om 7.83Hz','🌌 Dark Ambient Cosmos · binaural','🪘 Raaga Night · Yaman · Bhairavi'].map(s=>`<div style="padding:7px 10px;margin-bottom:5px;border:1px solid rgba(6,182,212,0.2);border-radius:4px;cursor:pointer;font-size:10px;color:var(--cyan);background:rgba(6,182,212,0.03)">${s}</div>`).join('')}
+    <div style="margin-top:12px;font-size:9px;color:var(--dim);cursor:pointer" onclick="aiResetForm('${wid}')">↩ Return to birth data entry</div>
+  </div>`;
+}
+
+function aiResetForm(wid){
+  aiAttempts[wid]=0;
+  const body=document.getElementById('ai-body-'+wid);
+  body.innerHTML=document.getElementById('ai-modal-'+wid)?.parentElement ? '' : '';
+  // Re-init
+  const win=S.windows.find(w=>w.app==='ai');
+  if(win){
+    const el=document.getElementById('win-'+win.id);
+    if(el){
+      el.querySelector('.win-body').innerHTML=buildAI(win.id);
+      initAI(win.id);
+    }
+  }
+}
+
+function aiRunAnalysis(wid){
+  const dob=document.getElementById('ai-dob-'+wid)?.value;
+  const pob=document.getElementById('ai-pob-'+wid)?.value.trim()||'Unknown';
+  const tob=document.getElementById('ai-tob-'+wid)?.value||'00:00';
+  const foc=document.getElementById('ai-foc-'+wid)?.value||'General';
+  const d=new Date(dob);
+  const day=d.getDate(),month=d.getMonth()+1,year=d.getFullYear();
+  const [hh,mm]=tob.split(':').map(Number);
+  const lifePathRaw=day+month+(year%100);
+  const reduce=n=>{while(n>9&&n!==11&&n!==22&&n!==33){n=String(n).split('').reduce((a,b)=>a+parseInt(b),0);}return n;};
+  const lp=reduce(lifePathRaw);
+  const dayNum=reduce(day);
+  const py=reduce(day+month+(new Date().getFullYear()%100));
+  const signs=[['Capricorn','Discipline, late bloom, Saturn ruler'],['Aquarius','Innovation, collective wisdom'],['Pisces','Deep intuition, mystical access'],['Aries','Pioneer energy, fast initiation'],['Taurus','Fixed earth, Venus grace, sensory mastery'],['Gemini','Dual intelligence, Mercury speed'],['Cancer','Deep feeling, lunar rhythm'],['Leo','Solar radiance, natural authority'],['Virgo','Analytical precision, service orientation'],['Libra','Venus balance, relationship karma'],['Scorpio','Plutonic depth, transformation'],['Sagittarius','Expansive philosophy, Jupiter blessing']];
+  const signIdx=((month-1)*30+day)%12;
+  const sun=signs[signIdx];
+  const nakshatra=['Ashwini','Bharani','Krittika','Rohini','Mrigashira','Ardra','Punarvasu','Pushya','Ashlesha','Magha','Purva Phalguni','Uttara Phalguni','Hasta','Chitra','Swati','Vishakha','Anuradha','Jyeshtha','Mula','Purva Ashadha','Uttara Ashadha','Shravana','Dhanishtha','Shatabhisha','Purva Bhadrapada','Uttara Bhadrapada','Revati'][(day*month)%27];
+  const stones={1:'Ruby',2:'Moonstone',3:'Yellow Topaz',4:'Hessonite',5:'Emerald',6:'Diamond',7:'Cat\'s Eye',8:'Blue Sapphire',9:'Red Coral',11:'Moonstone',22:'Blue Sapphire',33:'Amethyst'};
+  const mantras={1:'Om Suryaya Namaha',2:'Om Chandraya Namaha',3:'Om Gurave Namaha',4:'Om Rahave Namaha',5:'Om Budhaya Namaha',6:'Om Shukraya Namaha',7:'Om Ketave Namaha',8:'Om Shanishcharaya Namaha',9:'Om Mangalaya Namaha'};
+  const lpmean={1:'Pioneer — leadership karma',2:'Diplomat — emotional intelligence',3:'Creator — self-expression gift',4:'Builder — structural discipline',5:'Wanderer — freedom and change',6:'Nurturer — love and service',7:'Seeker — mysticism and depth',8:'Powerhouse — authority and harvest',9:'Humanitarian — completion karma',11:'Master Intuitive — illumination',22:'Master Builder — visionary architecture',33:'Master Healer — unconditional service'};
+  const dashas=['Sun','Moon','Mars','Rahu','Jupiter','Saturn','Mercury','Ketu','Venus'];
+  const dyrs=[6,10,7,18,16,19,17,7,20];
+  const age=new Date().getFullYear()-year;
+  let total=0,didx=0;
+  for(let i=0;i<9;i++){total+=dyrs[i];if(age<total){didx=i;break;}if(i===8)didx=Math.floor(age/10)%9;}
+  const curDasha=dashas[didx];
+  const nxtDasha=dashas[(didx+1)%9];
+  const nyear=new Date().getFullYear()+dyrs[didx]-(age%dyrs[didx]);
+
+  document.getElementById('ai-form-'+wid).style.display='none';
+  const res=document.getElementById('ai-results-'+wid);
+  res.style.display='block';
+  res.innerHTML=`
+    <div style="font-family:'Cinzel',serif;font-size:11px;color:var(--gold);text-align:center;margin-bottom:12px;text-shadow:0 0 10px rgba(201,162,39,0.4)">∴ CELESTIAL ANALYSIS COMPLETE ∴</div>
+
+    <div class="ai-res-card">
+      <div class="ai-res-h">🌟 Birth Profile</div>
+      <div class="ai-kv"><span class="ai-k">Date of Birth</span><span class="ai-v"><span class="hl">${String(day).padStart(2,'0')} / ${String(month).padStart(2,'0')} / ${year}</span></span></div>
+      <div class="ai-kv"><span class="ai-k">Time / Place</span><span class="ai-v">${tob} · ${pob}</span></div>
+      <div class="ai-kv"><span class="ai-k">Focus Area</span><span class="ai-v"><span style="color:var(--violetl)">${foc}</span></span></div>
+    </div>
+
+    <div class="ai-res-card">
+      <div class="ai-res-h">🔢 Chaldean Numerology</div>
+      <div class="ai-kv"><span class="ai-k">Life Path</span><span class="ai-v"><span class="hl">${lp}</span> — ${lpmean[lp]||'Integration path'}</span></div>
+      <div class="ai-kv"><span class="ai-k">Day Number</span><span class="ai-v"><span class="hl">${dayNum}</span> — ${dayNum===1?'Solar force':dayNum===2?'Lunar grace':dayNum===3?'Mercurial wit':dayNum===4?'Saturn discipline':dayNum===5?'Venusian beauty':dayNum===6?'Jupiter wisdom':dayNum===7?'Neptune mystery':dayNum===8?'Saturn power':'Mars fire'}</span></div>
+      <div class="ai-kv"><span class="ai-k">Personal Year ${new Date().getFullYear()}</span><span class="ai-v"><span class="ok">${py}</span></span></div>
+    </div>
+
+    <div class="ai-res-card">
+      <div class="ai-res-h">🔮 Vedic Positions</div>
+      <div class="ai-kv"><span class="ai-k">Sun Sign</span><span class="ai-v"><span class="hl">${sun[0]}</span> — ${sun[1]}</span></div>
+      <div class="ai-kv"><span class="ai-k">Birth Nakshatra</span><span class="ai-v"><span class="hl">${nakshatra}</span></span></div>
+      <div class="ai-kv"><span class="ai-k">Rising ~(Lagna)</span><span class="ai-v">${['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'][(hh*2+Math.floor(mm/30))%12]} (approx.)</span></div>
+    </div>
+
+    <div class="ai-res-card">
+      <div class="ai-res-h">🪐 Dasha Analysis</div>
+      <div class="ai-kv"><span class="ai-k">Current Mahadasha</span><span class="ai-v"><span class="hl">${curDasha}</span> — ${curDasha==='Mars'?'Warrior energy. Build. Execute. No rest.':curDasha==='Saturn'?'Discipline and delay. Foundation work.':curDasha==='Mercury'?'Communication and commerce. Write. Create.':curDasha==='Jupiter'?'Expansion and wisdom. Philosophy blooms.':curDasha==='Venus'?'Love and beauty. Creative flowering.':curDasha==='Rahu'?'Obsession and transformation. Amplifier on.':curDasha==='Ketu'?'Spiritual detachment. Wisdom surfaces.':'Soul activation period.'}</span></div>
+      <div class="ai-kv"><span class="ai-k">Next MD</span><span class="ai-v"><span class="warn">${nxtDasha}</span> — begins ~${nyear}</span></div>
+    </div>
+
+    <div class="ai-res-card">
+      <div class="ai-res-h">💎 Prescribed Remedies</div>
+      <div class="ai-kv"><span class="ai-k">Primary Stone</span><span class="ai-v"><span class="hl">${stones[lp]||'Amethyst'}</span> — wear daily for Life Path ${lp}</span></div>
+      <div class="ai-kv"><span class="ai-k">Mantra</span><span class="ai-v"><span style="color:var(--violetl)">${mantras[lp%9||9]||'Om Namah Shivaya'}</span> — 108x daily</span></div>
+      <div class="ai-kv"><span class="ai-k">Frequency</span><span class="ai-v"><span class="hl">${[528,432,852,396,528,639,741,396,417][lp%9||9-1]||432} Hz</span> — healing/alignment</span></div>
+    </div>
+
+    <div style="text-align:center;margin-top:12px">
+      <button onclick="document.getElementById('ai-form-${wid}').style.display='block';document.getElementById('ai-results-${wid}').style.display='none';aiAttempts['${wid}']=0" style="background:transparent;border:1px solid rgba(201,162,39,0.2);color:var(--gold);font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;padding:7px 18px;border-radius:4px;cursor:pointer">↩ NEW READING</button>
+    </div>`;
+}
+
+/* ════════════════════════════════════════════
+   CALCULATOR
+════════════════════════════════════════════ */
+function buildCalc(wid){
+  const btns=[['7','8','9','÷'],['4','5','6','×'],['1','2','3','−'],['0','.','=','+'],['C','±','%','√']];
+  return `<div class="app" style="flex-direction:column">
+    <div class="calc-display">
+      <div class="calc-expr" id="cexpr-${wid}"></div>
+      <div class="calc-val" id="cval-${wid}">0</div>
+    </div>
+    <div class="calc-grid">${btns.flat().map(b=>`<button class="calc-btn${b==='='?' eq':b==='C'?' clr':['÷','×','−','+','√','%','±'].includes(b)?' op':''}" onclick="calcPress('${b}','${wid}')">${b}</button>`).join('')}</div>
+    <div style="padding:4px 8px;font-size:8px;color:var(--dim);text-align:center;font-family:'Cinzel',serif">∴ 377108 · Sound. Frequency. Destiny.</div>
+  </div>`;
+}
+
+const calcState={};
+function initCalc(wid){ calcState[wid]={val:'0',expr:'',op:null,fresh:true}; }
+function calcPress(b,wid){
+  const s=calcState[wid];
+  const vEl=document.getElementById('cval-'+wid);
+  const eEl=document.getElementById('cexpr-'+wid);
+  if(!s||!vEl)return;
+  if('0123456789.'.includes(b)){
+    if(s.fresh){s.val=b==='.'?'0.':b;s.fresh=false;}
+    else{if(b==='.'&&s.val.includes('.'))return;s.val+=b;}
+  } else if(['÷','×','−','+'].includes(b)){
+    s.op=b;s.expr=s.val+' '+b;s.prevVal=s.val;s.fresh=true;
+  } else if(b==='='){
+    if(s.op&&s.prevVal!=null){
+      const a=parseFloat(s.prevVal),bv=parseFloat(s.val);
+      let r;
+      if(s.op==='÷')r=bv?a/bv:'Error';
+      else if(s.op==='×')r=a*bv;
+      else if(s.op==='−')r=a-bv;
+      else r=a+bv;
+      s.expr=s.prevVal+' '+s.op+' '+s.val+' =';
+      s.val=String(Math.round(r*1e10)/1e10);
+      s.op=null;s.fresh=true;
+    }
+  } else if(b==='C'){s.val='0';s.expr='';s.op=null;s.fresh=true;s.prevVal=null;}
+  else if(b==='±'){s.val=String(-parseFloat(s.val));}
+  else if(b==='%'){s.val=String(parseFloat(s.val)/100);}
+  else if(b==='√'){s.val=String(Math.sqrt(parseFloat(s.val)));}
+  vEl.textContent=s.val;
+  eEl.textContent=s.expr;
+}
+
+/* ════════════════════════════════════════════
+   RECORDER
+════════════════════════════════════════════ */
+function buildRecorder(wid){
+  return `<div class="app" style="flex-direction:column">
+    <div class="app-toolbar"><span class="app-tb-lbl">Voice Recorder · /jonm/fs/recordings/</span></div>
+    <div class="recorder-body">
+      <div class="rec-timer" id="rtimer-${wid}">00:00:00</div>
+      <div class="rec-vis" id="rvis-${wid}">${Array(20).fill(0).map((_,i)=>`<div class="rec-bar" id="rb-${i}-${wid}" style="height:${4+Math.random()*10}px"></div>`).join('')}</div>
+      <div class="rec-controls">
+        <button class="rec-btn" onclick="recRewind('${wid}')">⏮</button>
+        <button class="rec-btn rec-main" id="recbtn-${wid}" onclick="recToggle('${wid}')">⏺</button>
+        <button class="rec-btn" onclick="recStop('${wid}')">⏹</button>
+      </div>
+      <div class="rec-status" id="recst-${wid}">Ready · Tap ⏺ to record</div>
+      <div class="rec-files" id="recfiles-${wid}">
+        <div class="rec-file">📻 mantra_108_01.ogg · 6:17</div>
+        <div class="rec-file">📻 astro_session_01.ogg · 12:44</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+const recState={};
+function initRecorder(wid){ recState[wid]={recording:false,secs:0,interval:null,vis:null}; }
+function recToggle(wid){
+  const s=recState[wid];
+  if(!s)return;
+  if(s.recording){recStop(wid);return;}
+  s.recording=true;
+  s.secs=0;
+  document.getElementById('recbtn-'+wid).classList.add('recording');
+  document.getElementById('recbtn-'+wid).textContent='⏸';
+  document.getElementById('recst-'+wid).textContent='Recording... ● ';
+  s.interval=setInterval(()=>{
+    s.secs++;
+    const h=Math.floor(s.secs/3600),m=Math.floor((s.secs%3600)/60),sec=s.secs%60;
+    document.getElementById('rtimer-'+wid).textContent=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+    Array(20).fill(0).forEach((_,i)=>{const b=document.getElementById(`rb-${i}-${wid}`);if(b)b.style.height=(4+Math.random()*28)+'px';});
+  },1000);
+}
+function recStop(wid){
+  const s=recState[wid];if(!s)return;
+  s.recording=false;clearInterval(s.interval);
+  document.getElementById('recbtn-'+wid).classList.remove('recording');
+  document.getElementById('recbtn-'+wid).textContent='⏺';
+  const h=Math.floor(s.secs/3600),m=Math.floor((s.secs%3600)/60),sec=s.secs%60;
+  const dur=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+  document.getElementById('recst-'+wid).textContent=`Saved: rec_${Date.now()}.ogg · ${dur}`;
+  const files=document.getElementById('recfiles-'+wid);
+  const d=document.createElement('div');d.className='rec-file';d.textContent=`📻 rec_${Date.now()}.ogg · ${dur}`;
+  files.prepend(d);
+  Array(20).fill(0).forEach((_,i)=>{const b=document.getElementById(`rb-${i}-${wid}`);if(b)b.style.height='4px';});
+}
+function recRewind(wid){ recStop(wid); document.getElementById('rtimer-'+wid).textContent='00:00:00'; }
+
+/* ════════════════════════════════════════════
+   RADIO
+════════════════════════════════════════════ */
+function buildRadio(wid){
+  const stations=[
+    {icon:'🎵',name:'432Hz Cosmic Flow',freq:'432 Hz · θ waves · healing'},
+    {icon:'🕉️',name:'Vedic Chant Radio',freq:'Om 7.83Hz · Schumann resonance'},
+    {icon:'🌌',name:'Dark Ambient Cosmos',freq:'174 Hz · binaural · deep space'},
+    {icon:'🪘',name:'Raaga Night',freq:'Yaman · Bhairavi · 741 Hz'},
+    {icon:'🔮',name:'∴ Mantra 108 FM',freq:'528 Hz · NAAUM RHAA-VEI · love freq'},
+  ];
+  return `<div class="app" style="flex-direction:column">
+    <div class="radio-display">
+      <div class="radio-freq" id="rfreq-${wid}">-- -- FM</div>
+      <div class="radio-name" id="rname-${wid}">∴ RaaDio · Select a station ∴</div>
+      <div class="radio-vis" id="rvis-${wid}">${Array(16).fill(0).map((_,i)=>`<div class="radio-bar" id="rbar-${i}-${wid}" style="height:3px"></div>`).join('')}</div>
+    </div>
+    <div class="radio-stations">${stations.map((s,i)=>`
+      <div class="rstation" id="rst-${i}-${wid}" onclick="radioToggle(${i},'${wid}','${s.freq.split(' ')[0]}','${s.name}')">
+        <div class="rs-icon">${s.icon}</div>
+        <div class="rs-info"><div class="rs-name">${s.name}</div><div class="rs-freq">${s.freq}</div></div>
+        <div class="rs-toggle" id="rst-t-${i}-${wid}">▶</div>
+      </div>`).join('')}
+    </div>
+    <div style="padding:4px 8px;font-size:8px;color:var(--dim);text-align:center;font-family:'Cinzel',serif">∴ RaaDio · Sound. Frequency. Destiny.</div>
+  </div>`;
+}
+
+const radioState={};
+function initRadio(wid){ radioState[wid]={playing:-1,ctx:null,vis:null}; }
+function radioToggle(idx,wid,freq,name){
+  const s=radioState[wid];if(!s)return;
+  if(s.playing===idx){
+    if(s.ctx){try{s.ctx.close();}catch(e){}}
+    s.ctx=null;s.playing=-1;
+    for(let i=0;i<5;i++){document.getElementById('rst-'+i+'-'+wid)?.classList.remove('playing');document.getElementById('rst-t-'+i+'-'+wid).textContent='▶';}
+    clearInterval(s.vis);
+    document.getElementById('rfreq-'+wid).textContent='-- -- FM';
+    document.getElementById('rname-'+wid).textContent='∴ RaaDio · Select a station ∴';
+    Array(16).fill(0).forEach((_,i)=>{const b=document.getElementById('rbar-'+i+'-'+wid);if(b)b.style.height='3px';});
+  } else {
+    if(s.ctx){try{s.ctx.close();}catch(e){}}
+    for(let i=0;i<5;i++){document.getElementById('rst-'+i+'-'+wid)?.classList.remove('playing');const t=document.getElementById('rst-t-'+i+'-'+wid);if(t)t.textContent='▶';}
+    clearInterval(s.vis);
+    s.playing=idx;
+    document.getElementById('rst-'+idx+'-'+wid)?.classList.add('playing');
+    document.getElementById('rst-t-'+idx+'-'+wid).textContent='⏸';
+    document.getElementById('rfreq-'+wid).textContent=freq+' Hz';
+    document.getElementById('rname-'+wid).textContent=name;
+    const freqs=[432,528,174,741,528];
+    try{
+      const ctx=new(window.AudioContext||window.webkitAudioContext)();
+      s.ctx=ctx;
+      const o1=ctx.createOscillator(),o2=ctx.createOscillator(),g=ctx.createGain();
+      o1.type='sine';o1.frequency.value=freqs[idx];
+      o2.type='sine';o2.frequency.value=freqs[idx]*1.002;
+      g.gain.value=0.035;
+      o1.connect(g);o2.connect(g);g.connect(ctx.destination);
+      o1.start();o2.start();
+    }catch(e){}
+    s.vis=setInterval(()=>{
+      Array(16).fill(0).forEach((_,i)=>{const b=document.getElementById('rbar-'+i+'-'+wid);if(b)b.style.height=(3+Math.random()*22)+'px';});
+    },120);
+  }
+}
+
+/* ════════════════════════════════════════════
+   COMPASS
+════════════════════════════════════════════ */
+function buildCompass(wid){
+  return `<div class="app" style="flex-direction:column">
+    <div class="app-toolbar"><span class="app-tb-lbl">Celestial Navigator · ∴ 377108</span></div>
+    <div class="compass-body">
+      <div class="compass-ring">
+        <div class="compass-dirs">
+          <span class="compass-dir compass-N">N</span>
+          <span class="compass-dir compass-S">S</span>
+          <span class="compass-dir compass-E">E</span>
+          <span class="compass-dir compass-W">W</span>
+        </div>
+        <div class="compass-needle" id="cneedle-${wid}" style="transform:rotate(0deg)"></div>
+        <div class="compass-ctr"></div>
+      </div>
+      <div class="compass-deg" id="cdeg-${wid}">0°</div>
+      <div class="compass-astro" id="castro-${wid}" style="font-size:9px;color:var(--goldd);text-align:center;font-family:'Cinzel',serif">
+        ∴ Taurus Lagna · North · Fixed Earth<br>
+        <span style="color:var(--dim);font-size:8px">Pointing: Bhrigu Bindu direction</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+function initCompass(wid){
+  let deg=0;
+  function tick(){
+    deg=(deg+0.5)%360;
+    document.getElementById('cneedle-'+wid).style.transform=`rotate(${deg}deg)`;
+    document.getElementById('cdeg-'+wid).textContent=Math.round(deg)+'°';
+    const dirs=['N','NE','E','SE','S','SW','W','NW'];
+    const dnames=['North · Taurus Lagna stability','NE · Mercury Akarshana magnetism','East · Bhrigu Bindu direction','SE · Venus AK transformation','South · Mars MD warrior','SW · Saturn discipline path','West · Moon 12th isolation gift','NW · Ketu past life wisdom'];
+    const didx=Math.round(deg/45)%8;
+    const astro=document.getElementById('castro-'+wid);
+    if(astro) astro.innerHTML=`∴ ${dirs[didx]} — ${dnames[didx]}<br><span style="color:var(--dim);font-size:8px">377108 · ${Math.round(deg)}° of celestial arc</span>`;
+    setTimeout(tick,50);
+  }
+  tick();
+}
+
+/* ─── SHUTDOWN / LOGOUT ──────────────────────────────── */
+function triggerShutdown(){
+  ['desktop','topbar','taskbar'].forEach(id=>document.getElementById(id).style.display='none');
+  const sd=document.getElementById('shutdown');
+  sd.style.display='flex';sd.style.flexDirection='column';sd.style.alignItems='center';sd.style.justifyContent='center';
+  document.getElementById('sd-title').textContent='SHUTTING DOWN';
+  document.getElementById('sd-msg').textContent='Saving CoW journal. Sealing the frequency...';
+  const lines=['[SHUTDOWN] Syncing /jonm/fs/ to CoW journal…','[SHUTDOWN] Flushing IRC session state…','[SHUTDOWN] Saving mail daemon state…','[SHUTDOWN] Sealing Venus AK 29° session…','[SHUTDOWN] ∴ NAAUM RHAA-VEI ADYAA-RA KAAVRHA-UM ∴','[SHUTDOWN] 377108 encoded. Goodbye, Puroheet.',''];
+  const el=document.getElementById('sd-lines');
+  lines.forEach((l,i)=>setTimeout(()=>{const d=document.createElement('div');d.style.color='var(--goldd)';d.textContent=l;el.appendChild(d);},i*400));
+  setTimeout(()=>{ sd.style.display='none';showLogin(); },lines.length*400+800);
+}
+
+function triggerLogout(){
+  ['desktop','topbar','taskbar'].forEach(id=>document.getElementById(id).style.display='none');
+  S.windows=[];
+  document.getElementById('windows-container').innerHTML='';
+  const sd=document.getElementById('shutdown');
+  sd.style.display='flex';sd.style.flexDirection='column';sd.style.alignItems='center';sd.style.justifyContent='center';
+  document.getElementById('sd-title').textContent='LOGGING OUT';
+  document.getElementById('sd-msg').textContent='Saving session. See you, Puroheet. ∴ 377108';
+  const el=document.getElementById('sd-lines');el.innerHTML='';
+  const lines=['[LOGOUT] Saving session state…','[LOGOUT] Clearing windows…','[LOGOUT] ∴ Session sealed. Frequency held.',''];
+  lines.forEach((l,i)=>setTimeout(()=>{const d=document.createElement('div');d.style.color='var(--goldd)';d.textContent=l;el.appendChild(d);},i*350));
+  setTimeout(()=>{sd.style.display='none';loginAttempts=0;showLogin();},lines.length*350+500);
+}
+
+/* ─── KICK IT OFF ─────────────────────────────────────── */
+window.addEventListener('load', startBoot);
+</script>
+</body>
+</html>
