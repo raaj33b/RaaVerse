@@ -12,20 +12,32 @@ $destFolder = "$HOME\Desktop\RaaVerse_Malware_Utility"
 
 Try {
     # Step 1: Download
-    Write-Host ">>> Downloading Malware Removal Utility..." -ForegroundColor Yellow
+    Write-Host ">>> Downloading RaafighterPro Utility..." -ForegroundColor Yellow
     Invoke-WebRequest -Uri $repoUrl -OutFile $tempZip -UseBasicParsing
 
     # Step 2: Extract
     Write-Host ">>> Extracting files to your Desktop..." -ForegroundColor Yellow
     Expand-Archive -Path $tempZip -DestinationPath $destFolder -Force
 
-    # Step 3: Cleanup
+    # Step 3: Smart Launch (Finds the HTML file automatically)
+    Write-Host ">>> Launching RaafighterPro..." -ForegroundColor Cyan
+    
+    # Ei line ta automatically apnar folder theke .html file ta khuje nibe
+    $htmlFile = Get-ChildItem -Path $destFolder -Filter *.html -Recurse | Select-Object -First 1
+    
+    if ($htmlFile) {
+        # App ta srasori apnar default browser e open hobe
+        Start-Process $htmlFile.FullName
+    } else {
+        Write-Host "⚠️ Warning: Could not find the HTML app file to launch automatically." -ForegroundColor Yellow
+    }
+
+    # Step 4: Cleanup
     Write-Host ">>> Cleaning up temporary files..." -ForegroundColor Yellow
     if (Test-Path $tempZip) { Remove-Item -Path $tempZip -Force }
 
     Write-Host "`n=======================================================" -ForegroundColor Green
     Write-Host "  ✅ INSTALLATION COMPLETE! " -ForegroundColor Green
-    Write-Host "  Check your Desktop for the 'RaaVerse_Malware_Utility' folder." -ForegroundColor Green
     Write-Host "=======================================================`n" -ForegroundColor Green
 
 } Catch {
